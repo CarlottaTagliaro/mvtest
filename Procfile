@@ -1,2 +1,2 @@
-web: node mvtest.js
+web: node src/index.js
 
