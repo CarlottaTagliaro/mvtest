@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/CarlottaTagliaro/mvtest/issues"
   },
-  "homepage": "https://github.com/CarlottaTagliaro/mvtest#readme"
+  "homepage": "https://github.com/CarlottaTagliaro/mvtest#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "pg": "^7.5.0",
+    "pug": "^2.0.3"
+  }
 }
