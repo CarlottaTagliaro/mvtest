@@ -11,3 +11,5 @@ app.use(bodyParser.urlencoded({
 app.get('/', (req, res) => {
 	res.send('Hello World!');
 });
+
+app.listen(PORT, () => console.log('mvtest listening on port ' + PORT))
