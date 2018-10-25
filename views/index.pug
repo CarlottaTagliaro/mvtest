@@ -3,5 +3,24 @@ extends ./templates/home.pug
 block head
   title|mvtest
 
+block nav
+  nav.navbar.navbar-expand-md.navbar-light.bg-light.shadow
+    a.navbar-brand(href="/")|mvtest
+    button.navbar-toggler(data-toggle="collapse" data-target="#navMenu")
+      span.navbar-toggler-icon
+    div#navMenu.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        li.nav-item
+          a.nav-link(href="#")|Tasks
+        li.nav-item
+          a.nav-link(href="#")|Exams
+      ul.navbar-nav
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(href="#" id="usrDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")|User Name
+          div.dropdown-menu(aria-labelledby="usrDropdown")
+            a.dropdown-item(href="#")|Profile Info
+            div.dropdown-divider
+            a.dropdown-item(href="#")|Log out
+
 block body
   h1|Welcome to mvtest
