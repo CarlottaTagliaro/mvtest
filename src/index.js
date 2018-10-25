@@ -12,9 +12,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+app.set('view engine', 'pug');
 
-app.get('/', (req, res) => {
-	res.send('Hello World!');
-});
+var homeRouter = require('./routes/home.js');
+app.get('/', homeRouter);
 
 app.listen(PORT, () => console.log('mvtest listening on port ' + PORT));
