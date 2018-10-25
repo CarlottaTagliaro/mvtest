@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.set('view engine', 'pug');
 
-var homeRouter = require('./routes/home.js');
+var homeRouter = require('../routes/home.js');
 app.get('/', homeRouter);
 
 app.listen(PORT, () => console.log('mvtest listening on port ' + PORT));
