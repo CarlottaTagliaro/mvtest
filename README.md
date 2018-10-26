@@ -20,4 +20,4 @@ Posso anche ritirarmi cancellando il submit.
 Se voglio fare un esame con gli stessi task allora faccio direttamente una copia del modello e lo assegno a persone differenti. I task infatti sono entità persistenti salvate nel DB anche dopo che un determinato esame è concluso (saranno identificate da un proprio ID). 
 
 # Studenti
-Matteo Bonora, Carlotta Tagliaro
+Matteo Bonora, Carlotta Tagliaro, Francesco Cadei
