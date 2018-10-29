@@ -7,7 +7,7 @@ info:
     name: GPLv3
     url: https://github.com/CarlottaTagliaro/mvtest/blob/master/LICENSE
 host: mvtestse.herokuapp.io
-basePath: /api
+basePath: /
 schemes:
 - http
 consumes:
@@ -16,22 +16,24 @@ produces:
 - application/json
 paths:
   /tasks:
-    x-summary: Questions Collection
+    x-summary: Tasks Collection
     get:
       summary: List all tasks made by the user
       responses:
-        '200':
+        200:
           description: OK
           schema:
             type: array
-            items:
-              $ref: '#/definitions/Task'
-              users:
-                type: array
-                items:
-                  $ref: '#/definitions/UserPerms'
-                
+            allOf:
+              - $ref: '#/definitions/Task'
+              - $ref: '#/definitions/UserPerms'
+         # users:
+          #  type: array
+           # items: 
+            #  $ref: '#/definitions/UserPerms'
     post:
+      description: >-
+        You may create your own task using this action. 
       summary: Create a New Task
       parameters:
         - name: body
@@ -40,11 +42,11 @@ paths:
           schema:
             $ref: '#/definitions/TaskRequest'
       responses:
-        '201':
+        201:
           description: 'OK'
           schema:
             $ref: '#/definitions/Task'
-          
+            
 definitions:
   Task:
     title: Task
@@ -67,38 +69,16 @@ definitions:
       - question
       - choices
     example:
-            application/json:
-                id:  0
-                question: Example question
-                type: 1
-                choices:
-                  - First Answer
-                  - Second Answer
-                  - Third Answer
-                  - Fourth Answer
-                  
-  TaskRequest:
-    title: Task Request
-    type: object
-    properties:
-      question:
-        type: string
-      choices:
-        type: array
-        items:
-          type: string
-
-    required:
-      - question
-      - choices
-    example:
-      question: Example Question
+      application/json:
+      id:  0
+      question: Example question
+      type: 1
       choices:
         - First Answer
         - Second Answer
         - Third Answer
         - Fourth Answer
-        
+ 
   User:
     title: User
     type: object
@@ -122,4 +102,24 @@ definitions:
       [email: owner@email.com,
       owner: true,
       canWrite: true]
-      
+  
+  TaskRequest:
+    title: Task Request
+    type: object
+    properties:
+      question:
+        type: string
+      choices:
+        type: array
+        items:
+          type: string
+    required:
+      - question
+      - choices
+    example:
+      question: Example Question
+      choices:
+        - First Answer
+        - Second Answer
+        - Third Answer
+        - Fourth Answer
