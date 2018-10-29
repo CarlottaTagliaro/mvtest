@@ -1,3 +1,8 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+
 CREATE TABLE IF NOT EXISTS Users(
   Id SERIAL,
   Email CHAR(255) NOT NULL,
@@ -57,13 +62,8 @@ CREATE TABLE IF NOT EXISTS Assign(
   Id_User INTEGER NOT NULL REFERENCES Users(Id),
   Id_Exam INTEGER NOT NULL REFERENCES Exam(Id),
   Id_Class INTEGER NOT NULL REFERENCES Class(Id),
-);
 
-CREATE TABLE IF NOT EXISTS Evaluation(
-  Mark INTEGER NOT NULL,
-  Comment CHAR(1024),
-  Id_User INTEGER NOT NULL REFERENCES Users(Id),
-  Id_Submission INTEGER NOT NULL REFERENCES Submission(Id)
+  PRIMARY KEY(Id)
 );
 
 CREATE TABLE IF NOT EXISTS Submission(
@@ -75,3 +75,13 @@ CREATE TABLE IF NOT EXISTS Submission(
   Id_Task INTEGER NOT NULL REFERENCES Task(Id),
   PRIMARY KEY(Id, Time)
 );
+
+CREATE TABLE IF NOT EXISTS Evaluation(
+  Mark INTEGER NOT NULL,
+  Comment CHAR(1024),
+  Id_User INTEGER NOT NULL REFERENCES Users(Id),
+  Id_Submission INTEGER NOT NULL,
+  Time_Submission DATE NOT NULL,
+  FOREIGN KEY (Id_Submission, Time_Submission) REFERENCES Submission(Id, Time)
+);
+
