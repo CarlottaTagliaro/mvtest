@@ -1,6 +1,7 @@
 var express = require('express'),
   router = express.Router();
-const db = require('./db.js');
+const piergiorgio = require('../controllers/db.js');
+const db = new piergiorgio();
 
 router.get('/tasks', db.getAllTasks);
 router.get('/tasks/:id', db.getOneTask);
