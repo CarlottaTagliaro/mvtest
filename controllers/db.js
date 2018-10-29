@@ -4,25 +4,26 @@ const {
 
 const connString = 'postgres://eewihfqsafueky:eebe4a30c72b77efeecc7a5e4fac12d245b74747c629e78ee4258c4aa3fbd5a2@ec2-107-22-174-187.compute-1.amazonaws.com:5432/d490aujo856j8c'
 
-module.exports = class DB {
-	constructor() {
-		this._piergiorgio = new Client(connString);
+function DB() {
+	var self = this;
+	self._piergiorgio = new Client(connString);
 
-		this._piergiorgio.connect((err) => {
-			if (err) {
-				console.error('DB connection error: ', err.stack);
-			} else {
-				console.log('DB connected.');
-			}
-		});
+	self._piergiorgio.connect((err) => {
+		if (err) {
+			console.error('DB connection error: ', err.stack);
+		} else {
+			console.log('DB connected.');
+		}
+		console.log(this);
+	});
 
-		this._piergiorgio.on('error', (err) => {
-			console.error('DB error: ', err.stack);
-		})
-	}
+	self._piergiorgio.on('error', (err) => {
+		console.error('DB error: ', err.stack);
+	})
 
-	getAllTasks(req, res, next) {
-		this._piergiorgio.any('SELECT * FROM Tasks')
+	self.getAllTasks = (req, res, next) => {
+		console.log(self);
+		self._piergiorgio.query('SELECT * FROM Task')
 			.then((data) => {
 				res.status(200)
 					.json({
@@ -36,10 +37,10 @@ module.exports = class DB {
 			});
 	}
 
-	getOneTask(req, res, next) {
+	self.getOneTask = (req, res, next) => {
 		let taskID = req.params.id;
 
-		this._piergiorgio.once('SELECT * FROM Tasks WHERE id=$1', taskID).then((data) => {
+		self._piergiorgio.query('SELECT * FROM Task WHERE id=$1', taskID).then((data) => {
 			res.status(200).json({
 				status: 'success',
 				data: data,
@@ -51,19 +52,21 @@ module.exports = class DB {
 		});
 	}
 
-	createTask(req, res, next) {
-		db.none('INSERT INTO Tasks(id_type, text)' +
+	self.createTask = (req, res, next) => {
+		db.query('INSERT INTO Task(id_type, text)' +
 				'VALUES(${id_type}, ${text})',
 				req.body)
-			.then(function () {
+			.then(() => {
 				res.status(200)
 					.json({
 						status: 'success',
 						message: 'Inserted one task'
 					});
 			})
-			.catch(function (err) {
+			.catch((err) => {
 				return next(err);
 			});
 	}
 }
+
+module.exports = DB;
