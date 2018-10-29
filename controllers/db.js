@@ -5,7 +5,7 @@ const {
 const connString = 'postgres://eewihfqsafueky:eebe4a30c72b77efeecc7a5e4fac12d245b74747c629e78ee4258c4aa3fbd5a2@ec2-107-22-174-187.compute-1.amazonaws.com:5432/d490aujo856j8c'
 
 module.exports = class DB {
-	constructor(connString) {
+	constructor() {
 		this._piergiorgio = new Client(connString);
 
 		this._piergiorgio.connect((err) => {
