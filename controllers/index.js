@@ -15,6 +15,6 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'pug');
 
 app.use('/', require('../routes/site.js'));
-app.use('/api', require('../routes/api.js'));
+app.use('/v1', require('../routes/api.js'));
 
 app.listen(PORT, () => console.log('mvtest listening on port ' + PORT));
