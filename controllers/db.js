@@ -57,10 +57,24 @@ function DB() {
 				'VALUES(${id_type}, ${text})',
 				req.body)
 			.then(() => {
-				res.status(200)
+				res.status(201)
 					.json({
 						status: 'success',
 						message: 'Inserted one task'
+					});
+			})
+			.catch((err) => {
+				return next(err);
+			});
+	}
+
+	self.deleteTask = (req, res, next) => {
+		db.query('DELETE FROM Task WHERE id=$1', req.body.id)
+			.then(() => {
+				res.status(200)
+					.json({
+						status: 'success',
+						message: 'Removed one task'
 					});
 			})
 			.catch((err) => {
