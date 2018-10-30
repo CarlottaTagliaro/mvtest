@@ -14,7 +14,6 @@ function DB() {
 		} else {
 			console.log('DB connected.');
 		}
-		console.log(this);
 	});
 
 	self._piergiorgio.on('error', (err) => {
@@ -22,7 +21,6 @@ function DB() {
 	})
 
 	self.getAllTasks = (req, res, next) => {
-		console.log(self);
 		self._piergiorgio.query('SELECT * FROM Task')
 			.then((data) => {
 				res.status(200)
