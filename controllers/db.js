@@ -2,7 +2,7 @@ const {
 	Client
 } = require('pg');
 
-const connString = 'postgres://eewihfqsafueky:eebe4a30c72b77efeecc7a5e4fac12d245b74747c629e78ee4258c4aa3fbd5a2@ec2-107-22-174-187.compute-1.amazonaws.com:5432/d490aujo856j8c'
+const connString = process.env.DATABASE_URL;
 
 function DB() {
 	var self = this;
@@ -23,12 +23,8 @@ function DB() {
 	self.getAllTasks = (req, res, next) => {
 		self._piergiorgio.query('SELECT * FROM Task')
 			.then((data) => {
-				res.status(200)
-					.json({
-						status: 'success',
-						data: data,
-						message: 'got \'em all'
-					});
+				res.locals.data = data;
+				next();
 			})
 			.catch((err) => {
 				return next(err);
@@ -78,6 +74,15 @@ function DB() {
 			.catch((err) => {
 				return next(err);
 			});
+	}
+
+	self.editTask = (req, res, next) => {
+		db.query('').then(() => {
+			res.status(200);
+		}).catch((err) => {
+			res.status(500);
+			return next(err);
+		});
 	}
 }
 
