@@ -7,7 +7,12 @@ info:
     name: GPLv3
     url: https://github.com/CarlottaTagliaro/mvtest/blob/master/LICENSE
 host: mvtestse.herokuapp.io
-basePath: /
+basePath: "/"
+tags:
+- name: "Task"
+  description: "Find everything about your tasks" 
+- name: "Exam"
+  description: "Find everything about your exams"
 schemes:
 - http
 consumes:
@@ -18,6 +23,8 @@ paths:
   /tasks:
     x-summary: Tasks Collection
     get:
+      tags:
+      - "Task"
       summary: List all tasks the user has access to
       produces:
         - application/json
@@ -30,6 +37,8 @@ paths:
               $ref: '#/definitions/Task'
           
     put:
+      tags:
+      - "Task"
       description:
         You may create your own task using this action. 
       summary: Adds a Task
@@ -48,6 +57,8 @@ paths:
   /tasks/{id}:
     x-summary: Task
     get:
+      tags:
+      - "Task"
       summary: Find task by id
       description: Returns a single task
       produces:
@@ -64,6 +75,8 @@ paths:
           schema:
             $ref: '#/definitions/Task'
     post:
+      tags:
+      - "Task"
       summary: Edits a task
       description: Edits a given task
       produces:
@@ -80,6 +93,8 @@ paths:
           schema:
             $ref: '#/definitions/Task'
     delete:
+      tags:
+      - "Task"
       summary: Deletes a task
       description: Deletes a given task
       parameters:
@@ -91,6 +106,22 @@ paths:
       responses:
         204:
           description: Deleted
+  
+  /exams:
+    x-summary: Exams Collection
+    get:
+      tags:
+      - "Exam"
+      summary: List all exams the user has access to
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Exam'
           
 definitions:
   Task:
@@ -138,7 +169,41 @@ definitions:
         type: string
       name:
         type: string
-        
+
+  Exam:
+    title: Exam
+    type: object
+    properties: 
+      id:
+        type: number
+      owner:
+          $ref: '#/definitions/User'
+      tasks:
+        type: array
+        items:
+          $ref: '#/definitions/Task'
+    example:
+      id: 0
+      owner:
+        email: g.s@agg.it
+        name: Mario
+      tasks:
+        - id:  0
+          question: Example question
+          type: 1
+          choices:
+            - First Answer
+            - Second Answer
+            - Third Answer
+            - Fourth Answer
+          users:
+            - email: "owner@mail.com"
+              owner: true
+              canWrite: true
+            - email: "user@mail.com"
+              owner: false
+              canwrite: false
+      
   UserPerms:
     title: User Perms
     type: object
