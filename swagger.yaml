@@ -13,6 +13,8 @@ tags:
   description: "Find everything about your tasks" 
 - name: "Exam"
   description: "Find everything about your exams"
+- name: "Class"
+  description: "Find everything about your classes"
 schemes:
 - http
 consumes:
@@ -182,6 +184,39 @@ paths:
           description: 'Added'
           schema:
             $ref: '#/definitions/Exam'
+
+  /classes:
+    x-summary: Classes collection
+    get:
+      tags:
+      - "Class"
+      summary: Lists all classes the user belongs to
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Class'
+    put:
+      tags:
+      - "Class"
+      summary: Creates a new class
+      produces:
+      - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassRequest'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Class'
           
 definitions:
   Task:
@@ -227,8 +262,44 @@ definitions:
     properties:
       email:
         type: string
+        format: email
       name:
         type: string
+
+  ClassRequest:
+    title: ClassRequest
+    type: object
+    properties:
+      name:
+        type: string
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+    example:
+      name: Software Engeneering
+      users:
+      - email: student@mail.com
+        name: Good Student
+
+  Class:
+    title: Class
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+    example:
+      id: 0
+      name: Software Engeneering
+      users:
+      - email: student@mail.com
+        name: Good Student
 
   Exam:
     title: Exam
