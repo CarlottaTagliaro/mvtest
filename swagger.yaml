@@ -19,18 +19,16 @@ paths:
     x-summary: Tasks Collection
     get:
       summary: List all tasks made by the user
+      produces:
+        - application/json
       responses:
         200:
           description: OK
           schema:
             type: array
-            allOf:
-              - $ref: '#/definitions/Task'
-              - $ref: '#/definitions/UserPerms'
-         # users:
-          #  type: array
-           # items: 
-            #  $ref: '#/definitions/UserPerms'
+            items:
+              $ref: '#/definitions/Task'
+          
     post:
       description: >-
         You may create your own task using this action. 
@@ -63,7 +61,7 @@ definitions:
       users:
         type: array
         items:
-          $ref: '#/definitions/User'
+          $ref: '#/definitions/UserPerms'
     required:
       - id
       - question
@@ -78,6 +76,13 @@ definitions:
         - Second Answer
         - Third Answer
         - Fourth Answer
+      users:
+        - email: "owner@mail.com"
+          owner: true
+          canWrite: true
+        - email: "user@mail.com"
+          owner: false
+          canwrite: false
  
   User:
     title: User
@@ -98,10 +103,6 @@ definitions:
         type: boolean
       canWrite:
         type: boolean
-    example:
-      [email: owner@email.com,
-      owner: true,
-      canWrite: true]
   
   TaskRequest:
     title: Task Request
