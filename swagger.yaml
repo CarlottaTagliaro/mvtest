@@ -18,7 +18,7 @@ paths:
   /tasks:
     x-summary: Tasks Collection
     get:
-      summary: List all tasks made by the user
+      summary: List all tasks the user has access to
       produces:
         - application/json
       responses:
@@ -29,10 +29,10 @@ paths:
             items:
               $ref: '#/definitions/Task'
           
-    post:
-      description: >-
+    put:
+      description:
         You may create your own task using this action. 
-      summary: Create a New Task
+      summary: Adds a Task
       parameters:
         - name: body
           in: body
@@ -41,10 +41,57 @@ paths:
             $ref: '#/definitions/TaskRequest'
       responses:
         201:
-          description: 'OK'
+          description: 'Created'
           schema:
             $ref: '#/definitions/Task'
             
+  /tasks/{id}:
+    x-summary: Task
+    get:
+      summary: Find task by id
+      description: Returns a single task
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of the task to return
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+    post:
+      summary: Edits a task
+      description: Edits a given task
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of the task to edit
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Updated
+          schema:
+            $ref: '#/definitions/Task'
+    delete:
+      summary: Deletes a task
+      description: Deletes a given task
+      parameters:
+      - name: id
+        in: path
+        description: ID of the task to delete
+        required: true
+        type: integer
+      responses:
+        204:
+          description: Deleted
+          
 definitions:
   Task:
     title: Task
@@ -67,7 +114,6 @@ definitions:
       - question
       - choices
     example:
-      application/json:
       id:  0
       question: Example question
       type: 1
