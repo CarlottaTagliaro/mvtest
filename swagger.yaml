@@ -122,6 +122,66 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Exam'
+    put:
+      tags:
+      - "Exam"
+      summary: Creates an exam
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Exam'
+      responses:
+        201:
+          description: 'Created'
+          schema:
+            $ref: '#/definitions/Exam'
+  /exams/{id}:
+    get:
+      tags:
+      - "Exam"
+      summary: Find exam by id
+      description: Returns a single exam
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to return
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Exam'
+    put:
+      tags:
+      - "Exam"
+      description: You may want to add a Task to an existing exam
+      summary: Adds a Task to an Exam
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to return
+        required: true
+        type: integer
+      - in: body
+        name: task id
+        schema: 
+          type: array
+          items:
+            type: number 
+          example:
+            - 1
+            - 2
+            - 3
+      responses:
+        202:
+          description: 'Added'
+          schema:
+            $ref: '#/definitions/Exam'
           
 definitions:
   Task:
@@ -181,28 +241,15 @@ definitions:
       tasks:
         type: array
         items:
-          $ref: '#/definitions/Task'
+          type: number
     example:
       id: 0
       owner:
         email: g.s@agg.it
         name: Mario
       tasks:
-        - id:  0
-          question: Example question
-          type: 1
-          choices:
-            - First Answer
-            - Second Answer
-            - Third Answer
-            - Fourth Answer
-          users:
-            - email: "owner@mail.com"
-              owner: true
-              canWrite: true
-            - email: "user@mail.com"
-              owner: false
-              canwrite: false
+        - 0
+        - 1
       
   UserPerms:
     title: User Perms
