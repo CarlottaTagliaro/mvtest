@@ -217,6 +217,51 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/Class'
+  /classes/{id}:
+    x-summary: Classes collection
+    get:
+      tags:
+      - "Class"
+      summary: Deletes a class
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to delete
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Class'
+    post:
+      tags:
+      - "Class"
+      summary: Edits a class
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to edit
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Class was successfully edited
+          schema:
+            $ref: '#/definitions/Class'
+    delete:
+      tags:
+      - "Class"
+      summary: Deletes a class
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to delete
+        required: true
+        type: integer
+      responses:
+        204:
+          description: Class was deleted successfully.
           
 definitions:
   Task:
