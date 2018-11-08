@@ -244,6 +244,10 @@ paths:
         description: ID of the exam to edit
         required: true
         type: integer
+      - name: body
+        in: body
+        schema:
+          $ref: '#/definitions/ClassRequest'
       responses:
         200:
           description: Class was successfully edited
