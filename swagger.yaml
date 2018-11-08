@@ -9,12 +9,14 @@ info:
 host: mvtestse.herokuapp.io
 basePath: "/"
 tags:
-- name: "Task"
-  description: "Find everything about your tasks" 
-- name: "Exam"
-  description: "Find everything about your exams"
-- name: "Class"
-  description: "Find everything about your classes"
+- name: Task
+  description: Find everything about your tasks
+- name: Exam
+  description: Find everything about your exams
+- name: Class
+  description: Find everything about your classes
+- name: Assignment
+  description: Find everything about your assignments
 schemes:
 - http
 consumes:
@@ -52,7 +54,7 @@ paths:
             $ref: '#/definitions/TaskRequest'
       responses:
         201:
-          description: 'Created'
+          description: Task was created successfully
           schema:
             $ref: '#/definitions/Task'
             
@@ -91,7 +93,7 @@ paths:
         type: integer
       responses:
         200:
-          description: Updated
+          description: Task was updated successfully
           schema:
             $ref: '#/definitions/Task'
     delete:
@@ -107,7 +109,7 @@ paths:
         type: integer
       responses:
         204:
-          description: Deleted
+          description: Task was deleted successfully
   
   /exams:
     x-summary: Exams Collection
@@ -143,7 +145,7 @@ paths:
     get:
       tags:
       - "Exam"
-      summary: Find exam by id
+      summary: Find exam by ID
       description: Returns a single exam
       produces:
         - application/json
@@ -158,6 +160,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Exam'
+    delete:
+      tags:
+      - "Exam"
+      summary: Deletes an exam
+      description: Deletes a given exam
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to delete
+        required: true
+        type: integer
+      responses:
+        204:
+          description: Deleted
     put:
       tags:
       - "Exam"
@@ -184,6 +200,26 @@ paths:
           description: 'Added'
           schema:
             $ref: '#/definitions/Exam'
+  /exams/{id}/{id-task}:
+    delete:
+      tags:
+      - "Exam"
+      summary: Deletes a specific task in an exam
+      description: Deletes a specific task in an exam
+      parameters:
+      - name: id
+        in: path
+        description: ID of the exam to return
+        required: true
+        type: integer
+      - name: id-task
+        in: path
+        required: true
+        description: ID of the task to delete
+        type: integer
+      responses:
+        204:
+          description: Deleted
 
   /classes:
     x-summary: Classes collection
@@ -222,11 +258,11 @@ paths:
     get:
       tags:
       - "Class"
-      summary: Deletes a class
+      summary: Find a class by ID
       parameters:
       - name: id
         in: path
-        description: ID of the exam to delete
+        description: ID of the class to retrieve
         required: true
         type: integer
       responses:
@@ -241,7 +277,7 @@ paths:
       parameters:
       - name: id
         in: path
-        description: ID of the exam to edit
+        description: ID of the class to edit
         required: true
         type: integer
       - name: body
@@ -260,13 +296,98 @@ paths:
       parameters:
       - name: id
         in: path
-        description: ID of the exam to delete
+        description: ID of the class to delete
         required: true
         type: integer
       responses:
         204:
           description: Class was deleted successfully.
           
+  /assignment:
+    x-summary: Assignment Collection
+    get:
+      tags: 
+      - Assignment
+      summary: Get all assignments you've done
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Assignment'
+    put: 
+      tags:
+      - "Assignment"
+      summary: Creates a new assignment
+      produces:
+      - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AssignmentRequest'
+      responses:
+        201:
+          description: The assignment was created successfully
+          schema:
+            $ref: '#/definitions/Assignment'
+  /assignment/{id}:
+    x-summary: Assignment
+    get:
+      tags:
+      - "Assignment"
+      summary: Find assignment by id
+      description: Returns a single assignment
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of the assignment to return
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Assignment'
+    post:
+      tags:
+      - "Assignment"
+      summary: Edits an assignment
+      description: Edits a given assignment
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of the assignment to edit
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Assignment was updated successfully
+          schema:
+            $ref: '#/definitions/Assignment'
+    delete:
+      tags:
+      - "Assignment"
+      summary: Deletes an assignment
+      parameters:
+      - name: id
+        in: path
+        description: ID of the assignment to delete
+        required: true
+        type: integer
+      responses:
+        204:
+          description: Assignment was deleted successfully
+
+
 definitions:
   Task:
     title: Task
@@ -402,3 +523,58 @@ definitions:
         - Second Answer
         - Third Answer
         - Fourth Answer
+
+  AssignmentRequest:
+    title: AssignmentRequest
+    type: object
+    properties: 
+      deadline:
+        type: string
+        format: date-time
+      review:
+        type: boolean
+      TA:
+        $ref: '#/definitions/User'
+      class:
+        $ref: '#/definitions/Class'
+    example:
+      deadline: 12-12-2018
+      review: true
+      TA: 
+        email: g.s@agg.it
+        name: Mario
+      class:
+        id: 0
+        name: Software Engeneering
+        users:
+        - email: student@mail.com
+          name: Good Student
+
+  Assignment:
+    title: Assignment
+    type: object
+    properties: 
+      id:
+        type: number
+      deadline:
+        type: string
+        format: date-time
+      review:
+        type: boolean
+      TA:
+        $ref: '#/definitions/User'
+      class:
+        $ref: '#/definitions/Class'
+    example:
+      id: 0
+      deadline: 12-12-2018
+      review: true
+      TA: 
+        email: g.s@agg.it
+        name: Mario
+      class:
+        id: 0
+        name: Software Engeneering
+        users:
+        - email: student@mail.com
+          name: Good Student
