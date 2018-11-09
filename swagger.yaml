@@ -17,6 +17,10 @@ tags:
   description: Find everything about your classes
 - name: Assignment
   description: Find everything about your assignments
+- name: Submission
+  description: Find everything about your submissions
+- name: Review
+  description: Find everything about your reviews  
 schemes:
 - http
 consumes:
@@ -398,6 +402,21 @@ paths:
         204:
           description: Assignment was deleted successfully
 
+  /submission:
+    x-summary: Submission Collection
+    get:
+      tags: 
+      - Submission
+      summary: Get all submission you've done
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Submission'
 
 definitions:
   Task:
@@ -593,3 +612,65 @@ definitions:
         users:
         - email: student@mail.com
           name: Good Student
+
+  Submission:
+    title: Submission
+    type: object
+    properties:
+      id:
+        type: number
+      answer:
+        type: string
+      time:
+        type: string
+        format: date-time
+      task-id: 
+        type: number #controls if it belongs to the one in the Assignment
+      Author: 
+        $ref: '#/definitions/User' #is the id enough?
+      assignment:
+        $ref: '#/definitions/Assignment'
+    example:
+      id: 0
+      answer: the correct answer is number 2
+      time: 12-12-2018
+      task-id: 3
+      Author:
+        email: g.s@agg.com
+        name: Giovanni Storti
+      assignment:
+        id: 0
+        deadline: 12-12-2018
+        review: true
+        TA: 
+          email: g.s@agg.it
+          name: Mario
+        class:
+        - id: 0
+          name: Software Engeneering
+          users:
+          - email: student@mail.com
+            name: Good Student
+
+  Review:
+    title: Review
+    type: object
+    properties:
+      id: 
+        type: number
+      submission-id:
+        type: number
+      author:
+        $ref: '#/definitions/User'
+      mark:
+        type: number
+      comment:
+        type: string
+    example:
+      id: 0
+      submission-id : 1 
+      author:
+        email: g.s@agg.com
+        name: Giovanni Storti
+      mark: 27
+      comment: good work, well done
