@@ -91,6 +91,11 @@ paths:
         description: ID of the task to edit
         required: true
         type: integer
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TaskRequest'
       responses:
         200:
           description: Task was updated successfully
@@ -282,6 +287,7 @@ paths:
         type: integer
       - name: body
         in: body
+        required: true
         schema:
           $ref: '#/definitions/ClassRequest'
       responses:
@@ -368,6 +374,11 @@ paths:
         description: ID of the assignment to edit
         required: true
         type: integer
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AssignmentRequest'
       responses:
         200:
           description: Assignment was updated successfully
@@ -536,7 +547,9 @@ definitions:
       TA:
         $ref: '#/definitions/User'
       class:
-        $ref: '#/definitions/Class'
+        type: array
+        items:
+          $ref: '#/definitions/Class'
     example:
       deadline: 12-12-2018
       review: true
@@ -544,7 +557,7 @@ definitions:
         email: g.s@agg.it
         name: Mario
       class:
-        id: 0
+      - id: 0
         name: Software Engeneering
         users:
         - email: student@mail.com
@@ -564,7 +577,9 @@ definitions:
       TA:
         $ref: '#/definitions/User'
       class:
-        $ref: '#/definitions/Class'
+        type: array
+        items:
+          $ref: '#/definitions/Class'
     example:
       id: 0
       deadline: 12-12-2018
@@ -573,7 +588,7 @@ definitions:
         email: g.s@agg.it
         name: Mario
       class:
-        id: 0
+      - id: 0
         name: Software Engeneering
         users:
         - email: student@mail.com
