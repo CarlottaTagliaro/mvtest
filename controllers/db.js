@@ -6,7 +6,10 @@ const connString = process.env.DATABASE_URL;
 
 function DB() {
 	var self = this;
-	self._piergiorgio = new Client(connString);
+	self._piergiorgio = new Client({
+		connectionString: connString,
+		ssl: true
+	});
 
 	self._piergiorgio.connect((err) => {
 		if (err) {
@@ -86,4 +89,7 @@ function DB() {
 	}
 }
 
-module.exports = DB;
+const instance = new DB();
+Object.freeze(instance);
+
+module.exports = instance;
