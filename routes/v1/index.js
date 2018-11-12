@@ -1,7 +1,8 @@
 var express = require('express'),
   router = express.Router();
-const piergiorgio = require('../controllers/db.js');
-const db = new piergiorgio();
+const db = require('../../controllers/db.js');
+
+router.use('/auth', require('./auth.js'));
 
 router.get('/tasks', db.getAllTasks, (req, res) => {
   res.status(200);
