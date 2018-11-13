@@ -29,7 +29,6 @@ produces:
 - application/json
 paths:
   /tasks:
-    x-summary: Tasks Collection
     get:
       tags:
       - "Task"
@@ -47,9 +46,7 @@ paths:
     put:
       tags:
       - "Task"
-      description:
-        You may create your own task using this action. 
-      summary: Adds a Task
+      summary: Create a Task
       parameters:
         - name: body
           in: body
@@ -63,12 +60,12 @@ paths:
             $ref: '#/definitions/Task'
             
   /tasks/{id}:
-    x-summary: Task
+    #x-summary: Task
     get:
       tags:
       - "Task"
       summary: Find task by id
-      description: Returns a single task
+      #description: Returns a single task
       produces:
         - application/json
       parameters:
@@ -86,7 +83,7 @@ paths:
       tags:
       - "Task"
       summary: Edits a task
-      description: Edits a given task
+      #description: Edits a given task
       produces:
         - application/json
       parameters:
@@ -109,7 +106,7 @@ paths:
       tags:
       - "Task"
       summary: Deletes a task
-      description: Deletes a given task
+      #description: Deletes a given task
       parameters:
       - name: id
         in: path
@@ -121,7 +118,7 @@ paths:
           description: Task was deleted successfully
   
   /exams:
-    x-summary: Exams Collection
+    #x-summary: Exams Collection
     get:
       tags:
       - "Exam"
@@ -155,7 +152,7 @@ paths:
       tags:
       - "Exam"
       summary: Find exam by ID
-      description: Returns a single exam
+      #description: Returns a single exam
       produces:
         - application/json
       parameters:
@@ -173,7 +170,7 @@ paths:
       tags:
       - "Exam"
       summary: Deletes an exam
-      description: Deletes a given exam
+      #description: Deletes a given exam
       parameters:
       - name: id
         in: path
@@ -186,7 +183,7 @@ paths:
     put:
       tags:
       - "Exam"
-      description: You may want to add a Task to an existing exam
+      #description: You may want to add a Task to an existing exam
       summary: Adds a Task to an Exam
       parameters:
       - name: id
@@ -214,7 +211,7 @@ paths:
       tags:
       - "Exam"
       summary: Deletes a specific task in an exam
-      description: Deletes a specific task in an exam
+      #description: Deletes a specific task in an exam
       parameters:
       - name: id
         in: path
@@ -231,7 +228,7 @@ paths:
           description: Deleted
 
   /classes:
-    x-summary: Classes collection
+    #x-summary: Classes collection
     get:
       tags:
       - "Class"
@@ -263,7 +260,7 @@ paths:
           schema:
             $ref: '#/definitions/Class'
   /classes/{id}:
-    x-summary: Classes collection
+    #x-summary: Classes collection
     get:
       tags:
       - "Class"
@@ -314,7 +311,7 @@ paths:
           description: Class was deleted successfully.
           
   /assignment:
-    x-summary: Assignment Collection
+    #x-summary: Assignment Collection
     get:
       tags: 
       - Assignment
@@ -346,12 +343,11 @@ paths:
           schema:
             $ref: '#/definitions/Assignment'
   /assignment/{id}:
-    x-summary: Assignment
+    #x-summary: Assignment
     get:
       tags:
       - "Assignment"
       summary: Find assignment by id
-      description: Returns a single assignment
       produces:
         - application/json
       parameters:
@@ -369,7 +365,7 @@ paths:
       tags:
       - "Assignment"
       summary: Edits an assignment
-      description: Edits a given assignment
+      #description: Edits a given assignment
       produces:
         - application/json
       parameters:
@@ -403,7 +399,7 @@ paths:
           description: Assignment was deleted successfully
 
   /submission:
-    x-summary: Submission Collection
+    #x-summary: Submission Collection
     get:
       tags: 
       - Submission
@@ -417,6 +413,107 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Submission'
+    post: #post cause we have to store all the submission, it is not possible to modify them
+      tags:
+      - Submission
+      summary: Create a new submission
+      produces: 
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/SubmissionRequest'
+      responses:
+        200:
+          description: Submission was created successfully
+          schema:
+            $ref: '#/definitions/Submission'
+  /submission/{assign-id}:
+    get:
+      tags:
+      - Submission
+      summary: Retrieves all submission for a certain assignment
+      produces:
+        - application/json
+      parameters:
+      - name: assign-id
+        in: path
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Submission'
+    delete:
+      tags:
+      - Submission
+      summary: deletes all submission for a certain assignment #retire
+      parameters:
+      - name: assign-id
+        in: path
+        required: true
+        type: integer
+      responses:
+        204:
+          description: submissions were deleted successfully
+
+  /review:
+    #x-summary: Review Collection
+    get:
+      tags:
+      - Review
+      summary: Get all reviews you've done
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Review'
+    put:
+      tags:
+      - Review
+      summary: Create a new review
+      produces:
+      - application/json
+      parameters:
+      - name: body
+        in: body
+        required: true  
+        schema:
+          $ref: '#/definitions/ReviewRequest'
+      responses:
+        201:
+          description: Review was created successfully
+          schema:
+            $ref: '#/definitions/Review'
+  /review/{id}:
+    post:
+      tags:
+      - Review
+      summary: Edit a specific review
+      produces: 
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: number
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ReviewRequest'
+      responses:
+        200:
+          description: Review was updated successfully
+          schema:
+            $ref: '#/definitions/Review'
 
 definitions:
   Task:
@@ -613,6 +710,30 @@ definitions:
         - email: student@mail.com
           name: Good Student
 
+  SubmissionRequest:
+    title: SubmissionRequest
+    type: object
+    properties:
+      answer:
+        type: string
+      time:
+        type: string
+        format: date-time
+      task-id: 
+        type: number
+      Author: 
+        $ref: '#/definitions/User' #is the id enough?
+      assignment-id:
+        type: number
+    example:
+      answer: the correct answer is number 2
+      time: 12-12-2018
+      task-id: 3
+      Author:
+        email: g.s@agg.com
+        name: Giovanni Storti
+      assignment-id: 4
+
   Submission:
     title: Submission
     type: object
@@ -625,11 +746,11 @@ definitions:
         type: string
         format: date-time
       task-id: 
-        type: number #controls if it belongs to the one in the Assignment
+        type: number
       Author: 
         $ref: '#/definitions/User' #is the id enough?
-      assignment:
-        $ref: '#/definitions/Assignment'
+      assignment-id:
+        type: number
     example:
       id: 0
       answer: the correct answer is number 2
@@ -638,19 +759,27 @@ definitions:
       Author:
         email: g.s@agg.com
         name: Giovanni Storti
-      assignment:
-        id: 0
-        deadline: 12-12-2018
-        review: true
-        TA: 
-          email: g.s@agg.it
-          name: Mario
-        class:
-        - id: 0
-          name: Software Engeneering
-          users:
-          - email: student@mail.com
-            name: Good Student
+      assignment-id: 4
+
+  ReviewRequest:
+    title: ReviewRequest
+    type: object
+    properties:
+      submission-id:
+        type: number
+      author:
+        $ref: '#/definitions/User'
+      mark:
+        type: number
+      comment:
+        type: string
+    example:
+      submission-id : 1 
+      author:
+        email: g.s@agg.com
+        name: Giovanni Storti
+      mark: 27
+      comment: good work, well done
 
   Review:
     title: Review
