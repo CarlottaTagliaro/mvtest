@@ -1,16 +1,16 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
-  version: '1.0'
+  version: "1.0"
   title: "mvtest"
-  description: mvtest is an API to manage exams.
+  description: "mvtest is an API to manage exams."
   license:
-    name: GPLv3
-    url: https://github.com/CarlottaTagliaro/mvtest/blob/master/LICENSE
-host: mvtest-develop.herokuapp.com
-basePath: "/api"
+    name: "GPLv3"
+    url: "https://github.com/CarlottaTagliaro/mvtest/blob/master/LICENSE"
+host: "mvtest-develop.herokuapp.com"
+basePath: "/v1"
 tags:
-- name: Task
-  description: Find everything about your tasks
+- name: "Task"
+  description: "Find everything about your tasks"
 - name: Exam
   description: Find everything about your exams
 - name: Class
