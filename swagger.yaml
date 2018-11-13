@@ -515,6 +515,46 @@ paths:
           schema:
             $ref: '#/definitions/Review'
 
+  /auth/session:
+    get:
+      tags:
+      - Session
+      summary: Returns the user in the session
+      produces:
+      - application/json
+      - text/plain
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: User not logged
+    put:
+      tags:
+      - Session
+      summary: Authenticates a user
+      produces:
+      - application/json
+      - text/plain
+      responses:
+        200:
+          description: User logged in
+          schema:
+            $ref: '#/definitions/User'
+        403:
+          description: Wrong credentials
+    delete:
+      tags:
+      - Session
+      summary: Logs a user out
+      responses:
+        204:
+          description: Logged out
+        403:
+          description: Not logged in
+
+
 definitions:
   Task:
     title: Task
@@ -562,6 +602,10 @@ definitions:
         format: email
       name:
         type: string
+    example:
+      email: user@mail.com
+      name: User Name
+
 
   ClassRequest:
     title: ClassRequest
