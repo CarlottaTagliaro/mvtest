@@ -6,8 +6,8 @@ info:
   license:
     name: GPLv3
     url: https://github.com/CarlottaTagliaro/mvtest/blob/master/LICENSE
-host: mvtestse.herokuapp.io
-basePath: "/"
+host: mvtest-develop.herokuapp.com
+basePath: "/api"
 tags:
 - name: Task
   description: Find everything about your tasks
@@ -17,10 +17,10 @@ tags:
   description: Find everything about your classes
 - name: Assignment
   description: Find everything about your assignments
-- name: Submission
-  description: Find everything about your submissions
 - name: Review
   description: Find everything about your reviews  
+- name: Session
+  description: Find everything about the current session
 schemes:
 - http
 consumes:
@@ -79,6 +79,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Task'
+        404:
+          description: Task not found
+        403:
+          description: User not logged
     post:
       tags:
       - "Task"
@@ -397,15 +401,22 @@ paths:
       responses:
         204:
           description: Assignment was deleted successfully
+  
 
-  /submission:
+  /assignment/{id}/submission:
     #x-summary: Submission Collection
     get:
       tags: 
-      - Submission
-      summary: Get all submission you've done
+      - Assignment
+      summary: Get all submission you've done for that assignment
       produces:
       - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the assignment
+          required: true
+          type: integer
       responses:
         200:
           description: OK
@@ -413,13 +424,18 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Submission'
-    post: #post cause we have to store all the submission, it is not possible to modify them
+    put: #post cause we have to store all the submission, it is not possible to modify them
       tags:
-      - Submission
+      - Assignment
       summary: Create a new submission
       produces: 
       - application/json
       parameters:
+      - name: id
+        in: path
+        description: ID of the assignment
+        required: true
+        type: integer
       - in: body
         name: body
         required: true
@@ -430,36 +446,19 @@ paths:
           description: Submission was created successfully
           schema:
             $ref: '#/definitions/Submission'
-  /submission/{assign-id}:
-    get:
-      tags:
-      - Submission
-      summary: Retrieves all submission for a certain assignment
-      produces:
-        - application/json
-      parameters:
-      - name: assign-id
-        in: path
-        required: true
-        type: integer
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Submission'
     delete:
       tags:
-      - Submission
-      summary: deletes all submission for a certain assignment #retire
+      - Assignment
+      summary: deletes all submission for an assignment #retire
       parameters:
-      - name: assign-id
+      - name: id
         in: path
         required: true
         type: integer
       responses:
         204:
           description: submissions were deleted successfully
-
+    
   /review:
     #x-summary: Review Collection
     get:
