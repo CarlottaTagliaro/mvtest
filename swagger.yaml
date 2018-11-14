@@ -41,7 +41,7 @@ paths:
           $ref: "#/responses/304"
         403:
           $ref: "#/responses/403"
-    put:
+    post:
       tags:
       - "Task"
       summary: "Create a task"
@@ -56,6 +56,7 @@ paths:
           $ref: "#/responses/201"
         403:
           $ref: "#/responses/403"
+
   /tasks/{idTask}:
     get:
       tags:
@@ -76,7 +77,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-    post:
+    put:
       tags:
       - "Task"
       summary: "Edits a task"
@@ -115,6 +116,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
+
   
   /exams:
     get:
@@ -128,8 +130,7 @@ paths:
           $ref: "#/responses/304"
         403:
           $ref: "#/responses/403"
-
-    put:
+    post:
       tags:
       - "Exam"
       summary: "Creates an exam"
@@ -144,6 +145,7 @@ paths:
           $ref: "#/responses/201"
         403:
           $ref: "#/responses/403"
+
   /exams/{idExam}:
     get:
       tags:
@@ -184,7 +186,7 @@ paths:
     put:
       tags:
       - "Exam"
-      summary: "Adds a Task to an Exam"
+      summary: "Edits an Exam"
       parameters:
       - name: "idExam"
         in: "path"
@@ -194,13 +196,17 @@ paths:
       - in: "body"
         name: "task id"
         schema: 
-          type: "array"
-          items:
-            type: "number"
+          type: "object"
+          properties:
+            tasks:
+              type: array
+              items:
+                type: number
           example:
-            - 1
-            - 2
-            - 3
+            tasks:
+              - 1
+              - 2
+              - 3
       responses:
         204:
           $ref: "#/responses/204"
@@ -208,29 +214,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-  /exams/{idExam}/{idTask}:
-    delete:
-      tags:
-      - "Exam"
-      summary: "Deletes a specific task in an exam"
-      parameters:
-      - name: "idExam"
-        in: "path"
-        description: "ID of the exam to return"
-        required: true
-        type: "integer"
-      - name: "idTask"
-        in: "path"
-        required: true
-        description: "ID of the task to delete"
-        type: "integer"
-      responses:
-        204:
-          $ref: "#/responses/204"
-        403:
-          $ref: "#/responses/403"
-        404:
-          $ref: "#/responses/404"
+
 
   /classes:
     get:
@@ -244,7 +228,7 @@ paths:
           $ref: "#/responses/304"
         403:
           $ref: "#/responses/403"
-    put:
+    post:
       tags:
       - "Class"
       summary: "Creates a new class"
@@ -280,7 +264,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-    post:
+    put:
       tags:
       - "Class"
       summary: "Edits a class"
@@ -319,6 +303,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
+
           
   /assignments:
     get:
@@ -332,7 +317,7 @@ paths:
           $ref: "#/responses/304"
         403:
           $ref: "#/responses/403"
-    put: 
+    post: 
       tags:
       - "Assignment"
       summary: "Creates a new assignment"
@@ -347,6 +332,7 @@ paths:
           $ref: "#/responses/201"
         403:
           $ref: "#/responses/403"
+
   /assignments/{idAssignment}:
     get:
       tags:
@@ -367,7 +353,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-    post:
+    put:
       tags:
       - "Assignment"
       summary: "Edits an assignment"
@@ -406,6 +392,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
+
   /assignments/{idAssignment}/submissions:
     get:
       tags: 
@@ -426,7 +413,7 @@ paths:
           $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-    put: #post cause we have to store all the submission, it is not possible to modify them
+    post: #post cause we have to store all the submission, it is not possible to modify them
       tags:
       - "Assignment"
       summary: "Create a new submission"
@@ -478,7 +465,7 @@ paths:
           $ref: "#/responses/304"
         403:
           $ref: "#/responses/403"
-    put:
+    post:
       tags:
       - "Review"
       summary: "Create a new review"
@@ -495,7 +482,7 @@ paths:
           $ref: "#/responses/403"
 
   /reviews/{idReview}:
-    post:
+    put:
       tags:
       - "Review"
       summary: "Edit a specific review"
@@ -564,6 +551,7 @@ paths:
           $ref: "#/responses/204"
         403:
           $ref: "#/responses/403"
+
 
 responses:
     200:
