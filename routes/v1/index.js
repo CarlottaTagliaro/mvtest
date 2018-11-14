@@ -10,8 +10,8 @@ router.get('/tasks', db.getAllTasks, (req, res) => {
 });
 
 router.get('/tasks/:id', db.getOneTask);
-router.put('/tasks', db.createTask);
-router.post('/tasks/:id', db.editTask);
+router.post('/tasks', db.createTask);
+router.put('/tasks/:id', db.editTask);
 router.delete('/tasks/:id', db.deleteTask);
 
 module.exports = router;
