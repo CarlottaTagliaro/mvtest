@@ -1,601 +1,755 @@
 swagger: "2.0"
 info:
-  version: "1.0"
   title: "mvtest"
   description: "mvtest is an API to manage exams."
+  version: "1.0.0"
   license:
     name: "GPLv3"
     url: "https://github.com/CarlottaTagliaro/mvtest/blob/master/LICENSE"
+schemes:
+- "https"
 host: "mvtest-develop.herokuapp.com"
 basePath: "/v1"
 tags:
-- name: "Task"
+- name: "task"
   description: "Find everything about your tasks"
-- name: Exam
-  description: Find everything about your exams
-- name: Class
-  description: Find everything about your classes
-- name: Assignment
-  description: Find everything about your assignments
-- name: Review
-  description: Find everything about your reviews  
-- name: Session
-  description: Find everything about the current session
-schemes:
-- http
+- name: "exam"
+  description: "Find everything about your exams"
+- name: "class"
+  description: "Find everything about your classes"
+- name: "assignment"
+  description: "Find everything about your assignments"
+- name: "review"
+  description: "Find everything about your reviews"
+- name: "session"
+  description: "Find everything about the current session"
 consumes:
-- application/json
+- "application/json"
 produces:
-- application/json
+- "application/json"
 paths:
-  /tasks:
+
+  /task:
     get:
       tags:
-      - "Task"
-      summary: List all tasks the user has access to
-      produces:
-        - application/json
+      - "task"
+      summary: "List all tasks the user has access to"
       responses:
         200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Task'
-          
+          $ref: "#/responses/200Task"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put:
       tags:
-      - "Task"
-      summary: Create a Task
+      - "task"
+      summary: "Create a task"
       parameters:
-        - name: body
-          in: body
+        - name: "body"
+          in: "body"
           required: true
           schema:
-            $ref: '#/definitions/TaskRequest'
+            $ref: "#/definitions/TaskRequest"
       responses:
         201:
-          description: Task was created successfully
-          schema:
-            $ref: '#/definitions/Task'
-            
-  /tasks/{id}:
-    #x-summary: Task
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /task/{taskId}:
     get:
       tags:
-      - "Task"
-      summary: Find task by id
-      #description: Returns a single task
-      produces:
-        - application/json
+      - "task"
+      summary: "Find task by id"
       parameters:
-      - name: id
-        in: path
-        description: ID of the task to return
+      - name: "taskId"
+        in: "path"
+        description: "ID of the task to return"
         required: true
-        type: integer
+        type: "integer"
       responses:
         200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Task'
+          $ref: "#/responses/200Task"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
         404:
-          description: Task not found
-        403:
-          description: User not logged
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     post:
       tags:
-      - "Task"
-      summary: Edits a task
-      #description: Edits a given task
-      produces:
-        - application/json
+      - "task"
+      summary: "Edits a task"
       parameters:
-      - name: id
-        in: path
-        description: ID of the task to edit
+      - name: "taskId"
+        in: "path"
+        description: "ID of the task to edit"
         required: true
-        type: integer
-      - name: body
-        in: body
+        type: "integer"
+      - name: "body"
+        in: "body"
         required: true
         schema:
-          $ref: '#/definitions/TaskRequest'
+          $ref: "#/definitions/TaskRequest"
       responses:
         200:
-          description: Task was updated successfully
-          schema:
-            $ref: '#/definitions/Task'
+          $ref: "#/responses/200"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     delete:
       tags:
-      - "Task"
-      summary: Deletes a task
-      #description: Deletes a given task
+      - "task"
+      summary: "Deletes a task"
       parameters:
-      - name: id
-        in: path
-        description: ID of the task to delete
+      - name: "taskId"
+        in: "path"
+        description: "ID of the task to delete"
         required: true
-        type: integer
-      responses:
-        204:
-          description: Task was deleted successfully
-  
-  /exams:
-    #x-summary: Exams Collection
-    get:
-      tags:
-      - "Exam"
-      summary: List all exams the user has access to
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Exam'
-    put:
-      tags:
-      - "Exam"
-      summary: Creates an exam
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Exam'
+        type: "integer"
       responses:
         201:
-          description: 'Created'
-          schema:
-            $ref: '#/definitions/Exam'
-  /exams/{id}:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  
+  /exam:
     get:
       tags:
-      - "Exam"
-      summary: Find exam by ID
-      #description: Returns a single exam
-      produces:
-        - application/json
-      parameters:
-      - name: id
-        in: path
-        description: ID of the exam to return
-        required: true
-        type: integer
+      - "exam"
+      summary: "List all exams the user has access to"
       responses:
         200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Exam'
-    delete:
-      tags:
-      - "Exam"
-      summary: Deletes an exam
-      #description: Deletes a given exam
-      parameters:
-      - name: id
-        in: path
-        description: ID of the exam to delete
-        required: true
-        type: integer
-      responses:
-        204:
-          description: Deleted
+          $ref: "#/responses/200Exam"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put:
       tags:
-      - "Exam"
-      #description: You may want to add a Task to an existing exam
-      summary: Adds a Task to an Exam
+      - "exam"
+      summary: "Creates an exam"
       parameters:
-      - name: id
-        in: path
-        description: ID of the exam to return
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Exam"
+      responses:
+        201:
+          $ref: "#/responses/201"
+          202:
+          $ref: "#/responses/202"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /exam/{examId}:
+    get:
+      tags:
+      - "exam"
+      summary: "Find exam by ID"
+      parameters:
+      - name: "examId"
+        in: "path"
+        description: "ID of the exam to return"
         required: true
-        type: integer
-      - in: body
-        name: task id
+        type: "integer"
+      responses:
+        200:
+          $ref: "#/responses/200Exam"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+    delete:
+      tags:
+      - "exam"
+      summary: "Deletes an exam"
+      parameters:
+      - name: "examId"
+        in: "path"
+        description: "ID of the exam to delete"
+        required: true
+        type: "integer"
+      responses:
+        201:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+    put:
+      tags:
+      - "exam"
+      summary: "Adds a Task to an Exam"
+      parameters:
+      - name: "examId"
+        in: "path"
+        description: "ID of the exam to return"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "task id"
         schema: 
-          type: array
+          type: "array"
           items:
-            type: number 
+            type: "number"
           example:
             - 1
             - 2
             - 3
       responses:
+        201:
+          $ref: "#/responses/201"
         202:
-          description: 'Added'
-          schema:
-            $ref: '#/definitions/Exam'
-  /exams/{id}/{id-task}:
+          $ref: "#/responses/202"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /exams/{examId}/{taskId}:
     delete:
       tags:
-      - "Exam"
-      summary: Deletes a specific task in an exam
-      #description: Deletes a specific task in an exam
+      - "exam"
+      summary: "Deletes a specific task in an exam"
       parameters:
-      - name: id
-        in: path
-        description: ID of the exam to return
+      - name: "examId"
+        in: "path"
+        description: "ID of the exam to return"
         required: true
-        type: integer
-      - name: id-task
-        in: path
+        type: "integer"
+      - name: "taskId"
+        in: "path"
         required: true
-        description: ID of the task to delete
-        type: integer
+        description: "ID of the task to delete"
+        type: "integer"
       responses:
-        204:
-          description: Deleted
+        201:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
 
-  /classes:
-    #x-summary: Classes collection
+  /class:
     get:
       tags:
-      - "Class"
-      summary: Lists all classes the user belongs to
-      produces:
-      - application/json
+      - "class"
+      summary: "Lists all classes the user belongs to"
       responses:
         200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Class'
+          $ref: "#/responses/200Class"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put:
       tags:
-      - "Class"
-      summary: Creates a new class
-      produces:
-      - application/json
+      - "class"
+      summary: "Creates a new class"
       parameters:
-        - name: body
-          in: body
+        - name: "body"
+          in: "body"
           required: true
           schema:
             $ref: '#/definitions/ClassRequest'
       responses:
         201:
-          description: Created
-          schema:
-            $ref: '#/definitions/Class'
-  /classes/{id}:
-    #x-summary: Classes collection
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /class/{classId}:
     get:
       tags:
-      - "Class"
-      summary: Find a class by ID
+      - "class"
+      summary: "Find a class by ID"
       parameters:
-      - name: id
-        in: path
-        description: ID of the class to retrieve
+      - name: "classId"
+        in: "path"
+        description: I"D of the class to retrieve"
         required: true
-        type: integer
+        type: "integer"
       responses:
         200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Class'
+          $ref: "#/responses/200Class"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     post:
       tags:
-      - "Class"
-      summary: Edits a class
+      - "class"
+      summary: "Edits a class"
       parameters:
-      - name: id
-        in: path
-        description: ID of the class to edit
+      - name: "classId"
+        in: "path"
+        description: "ID of the class to edit"
         required: true
-        type: integer
-      - name: body
-        in: body
+        type: "integer"
+      - name: "body"
+        in: "body"
         required: true
         schema:
           $ref: '#/definitions/ClassRequest'
       responses:
         200:
-          description: Class was successfully edited
-          schema:
-            $ref: '#/definitions/Class'
+          $ref: "#/responses/200"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     delete:
       tags:
-      - "Class"
-      summary: Deletes a class
+      - "class"
+      summary: "Deletes a class"
       parameters:
-      - name: id
-        in: path
-        description: ID of the class to delete
+      - name: "classId"
+        in: "path"
+        description: "ID of the class to delete"
         required: true
-        type: integer
+        type: "integer"
       responses:
-        204:
-          description: Class was deleted successfully.
+        201:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
           
   /assignment:
-    #x-summary: Assignment Collection
     get:
       tags: 
-      - Assignment
-      summary: Get all assignments you've done
-      produces:
-      - application/json
+      - "assignment"
+      summary: "Get all assignments you've done"
       responses:
         200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Assignment'
+          $ref: "#/responses/200Assignment"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put: 
       tags:
-      - "Assignment"
-      summary: Creates a new assignment
-      produces:
-      - application/json
+      - "assignment"
+      summary: "Creates a new assignment"
       parameters:
-        - name: body
-          in: body
+        - name: "body"
+          in: "body"
           required: true
           schema:
             $ref: '#/definitions/AssignmentRequest'
       responses:
         201:
-          description: The assignment was created successfully
-          schema:
-            $ref: '#/definitions/Assignment'
-  /assignment/{id}:
-    #x-summary: Assignment
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /assignment/{assignmentId}:
     get:
       tags:
-      - "Assignment"
-      summary: Find assignment by id
-      produces:
-        - application/json
+      - "assignment"
+      summary: "Find assignment by id"
       parameters:
-      - name: id
-        in: path
-        description: ID of the assignment to return
+      - name: "assignmentId"
+        in: "path"
+        description: "ID of the assignment to return"
         required: true
-        type: integer
+        type: "integer"
       responses:
         200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Assignment'
+          $ref: "#/responses/200Assignment"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     post:
       tags:
-      - "Assignment"
-      summary: Edits an assignment
-      #description: Edits a given assignment
-      produces:
-        - application/json
+      - "assignment"
+      summary: "Edits an assignment"
       parameters:
-      - name: id
-        in: path
-        description: ID of the assignment to edit
+      - name: "assignmentId"
+        in: "path"
+        description: "ID of the assignment to edit"
         required: true
-        type: integer
-      - name: body
-        in: body
+        type: "integer"
+      - name: "body"
+        in: "body"
         required: true
         schema:
           $ref: '#/definitions/AssignmentRequest'
       responses:
         200:
-          description: Assignment was updated successfully
-          schema:
-            $ref: '#/definitions/Assignment'
+          $ref: "#/responses/200"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     delete:
       tags:
-      - "Assignment"
-      summary: Deletes an assignment
+      - "assignment"
+      summary: "Deletes an assignment"
       parameters:
-      - name: id
-        in: path
-        description: ID of the assignment to delete
+      - name: "assignmentId"
+        in: "path"
+        description: "ID of the assignment to delete"
         required: true
-        type: integer
+        type: "integer"
       responses:
-        204:
-          description: Assignment was deleted successfully
-  
-
-  /assignment/{id}/submission:
-    #x-summary: Submission Collection
+        201:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /assignment/{assignmentId}/submission:
     get:
       tags: 
-      - Assignment
-      summary: Get all submission you've done for that assignment
-      produces:
-      - application/json
+      - "assignment"
+      summary: "Get all submission you've done for that assignment"
       parameters:
-        - name: id
-          in: path
-          description: ID of the assignment
+        - name: "assignmentId"
+          in: "path"
+          description: "ID of the assignment"
           required: true
-          type: integer
+          type: "integer"
       responses:
         200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Submission'
+          $ref: "#/responses/200AssignmentSubmission"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put: #post cause we have to store all the submission, it is not possible to modify them
       tags:
-      - Assignment
-      summary: Create a new submission
-      produces: 
-      - application/json
+      - "assignment"
+      summary: "Create a new submission"
       parameters:
-      - name: id
-        in: path
-        description: ID of the assignment
+      - name: "assignmentId"
+        in: "path"
+        description: "ID of the assignment"
         required: true
-        type: integer
-      - in: body
-        name: body
+        type: "integer"
+      - in: "body"
+        name: "body"
         required: true
         schema:
-          $ref: '#/definitions/SubmissionRequest'
+          $ref: "#/definitions/SubmissionRequest"
       responses:
-        200:
-          description: Submission was created successfully
-          schema:
-            $ref: '#/definitions/Submission'
+        201:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     delete:
       tags:
-      - Assignment
-      summary: deletes all submission for an assignment #retire
+      - "assignment"
+      summary: "deletes all submission for an assignment" #retire
       parameters:
-      - name: id
-        in: path
+      - name: "assignmentId"
+        in: "path"
         required: true
-        type: integer
+        type: "integer"
       responses:
-        204:
-          description: submissions were deleted successfully
+        201:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     
   /review:
-    #x-summary: Review Collection
     get:
       tags:
-      - Review
-      summary: Get all reviews you've done
-      produces:
-      - application/json
+      - "review"
+      summary: "Get all reviews you've done"
       responses:
         200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Review'
+          $ref: "#/responses/200AssignmentSubmission"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put:
       tags:
-      - Review
-      summary: Create a new review
-      produces:
-      - application/json
+      - "review"
+      summary: "Create a new review"
       parameters:
-      - name: body
-        in: body
+      - name: "body"
+        in: "body"
         required: true  
         schema:
           $ref: '#/definitions/ReviewRequest'
       responses:
         201:
-          description: Review was created successfully
-          schema:
-            $ref: '#/definitions/Review'
-  /review/{id}:
+          $ref: "#/responses/201"
+        202:
+          $ref: "#/responses/202"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
+  /review/{reviewId}:
     post:
       tags:
-      - Review
-      summary: Edit a specific review
-      produces: 
-      - application/json
+      - "review"
+      summary: "Edit a specific review"
       parameters:
-      - name: id
-        in: path
+      - name: "reviewId"
+        in: "path"
         required: true
-        type: number
-      - name: body
-        in: body
+        type: "number"
+      - name: "body"
+        in: "body"
         required: true
         schema:
           $ref: '#/definitions/ReviewRequest'
       responses:
         200:
-          description: Review was updated successfully
-          schema:
-            $ref: '#/definitions/Review'
+          $ref: "#/responses/200"
+        401:
+          $ref: "#/responses/401"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
 
   /auth/session:
     get:
       tags:
-      - Session
-      summary: Returns the user in the session
+      - "session"
+      summary: "Returns the user in the session"
       produces:
-      - application/json
-      - text/plain
+      - "text/plain"
       responses:
         200:
-          description: Ok
-          schema:
-            $ref: '#/definitions/User'
+          $ref: "#/responses/200Session"
+        304:
+          $ref: "#/responses/304"
+        401:
+          $ref: "#/responses/401"
         404:
-          description: User not logged
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     put:
       tags:
-      - Session
-      summary: Authenticates a user
+      - "session"
+      summary: "Authenticates a user"
       produces:
-      - application/json
-      - text/plain
+      - "text/plain"
       parameters:
-      - name: body
-        in: body
+      - name: "body"
+        in: "body"
         required: true
         schema:
           properties:
             username:
-              type: string
-              format: email
+              type: "string"
+              format: "email"
             password:
-              type: string
-              format: password
+              type: "string"
+              format: "password"
       responses:
         200:
-          description: User logged in
-          schema:
-            $ref: '#/definitions/User'
+          $ref: "#/responses/200Session"
         403:
-          description: Wrong credentials
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
     delete:
       tags:
-      - Session
-      summary: Logs a user out
+      - "session"
+      summary: "Logs a user out"
       responses:
         204:
-          description: Logged out
+          $ref: "#/responses/204"
         403:
-          description: Not logged in
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
+        500:
+          $ref: "#/responses/500"
 
-
+responses:
+    200:
+      description: "OK"
+    200Task:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/Task"
+    200Exam:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/Exam"
+    200Class:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/Class"
+    200Assignment:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/Assignment"
+    200AssignmentSubmission:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/Submission"
+    200Review:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/Review"
+    200Session:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/User"
+    201:
+      description: "Created"
+    202:
+      description: "Accepted"
+    204:
+      description: "No Content"
+    304:
+      description: "Not Modified"
+    401:
+      description: "Unauthorized"
+    403:
+      description: "Forbidden"
+    404:
+      description: "Not Found"
+    500:
+      description: "Internal Server Error"
+      
 definitions:
   Task:
-    title: Task
-    type: object
+    title: "Task"
+    type: "object"
     properties:
       id:
-        type: number
+        type: "number"
       question:
-        type: string
+        type: "string"
       choices:
-        type: array
+        type: "array"
         items:
-          type: string
+          type: "string"
       users:
-        type: array
+        type: "array"
         items:
-          $ref: '#/definitions/UserPerms'
+          $ref: "#/definitions/UserPerms"
     required:
-      - id
-      - question
-      - choices
+      - "id"
+      - "question"
+      - "choices"
     example:
       id:  0
-      question: Example question
+      question: "Example question"
       type: 1
       choices:
-        - First Answer
-        - Second Answer
-        - Third Answer
-        - Fourth Answer
+        - "First Answer"
+        - "Second Answer"
+        - "Third Answer"
+        - "Fourth Answer"
       users:
         - email: "owner@mail.com"
           owner: true
@@ -603,258 +757,245 @@ definitions:
         - email: "user@mail.com"
           owner: false
           canwrite: false
- 
   User:
-    title: User
-    type: object
+    title: "User"
+    type: "object"
     properties:
       email:
-        type: string
-        format: email
+        type: "string"
+        format: "email"
       name:
-        type: string
+        type: "string"
     example:
-      email: user@mail.com
-      name: User Name
-
-
+      email: "user@mail.com"
+      name: "User Name"
   ClassRequest:
-    title: ClassRequest
-    type: object
+    title: "ClassRequest"
+    type: "object"
     properties:
       name:
-        type: string
+        type: "string"
       users:
-        type: array
+        type: "array"
         items:
-          $ref: '#/definitions/User'
+          $ref: "#/definitions/User"
     example:
-      name: Software Engeneering
+      name: "Software Engeneering"
       users:
-      - email: student@mail.com
-        name: Good Student
-
+      - email: "student@mail.com"
+        name: "Good Student"
   Class:
-    title: Class
-    type: object
+    title: "Class"
+    type: "object"
     properties:
       id:
-        type: integer
+        type: "integer"
       name:
-        type: string
+        type: "string"
       users:
-        type: array
+        type: "array"
         items:
-          $ref: '#/definitions/User'
+          $ref: "#/definitions/User"
     example:
       id: 0
-      name: Software Engeneering
+      name: "Software Engeneering"
       users:
-      - email: student@mail.com
-        name: Good Student
-
+      - email: "student@mail.com"
+        name: "Good Student"
   Exam:
-    title: Exam
-    type: object
+    title: "Exam"
+    type: "object"
     properties: 
       id:
-        type: number
+        type: "number"
       owner:
-          $ref: '#/definitions/User'
+          $ref: "#/definitions/User"
       tasks:
-        type: array
+        type: "array"
         items:
-          type: number
+          type: "number"
     example:
       id: 0
       owner:
-        email: g.s@agg.it
-        name: Mario
+        email: "g.s@agg.it"
+        name: "Mario"
       tasks:
         - 0
         - 1
-      
   UserPerms:
-    title: User Perms
-    type: object
+    title: "User Perms"
+    type: "object"
     properties:
       email:
-        type: string
+        type: "string"
       owner:
-        type: boolean
+        type: "boolean"
       canWrite:
-        type: boolean
-  
+        type: "boolean"
   TaskRequest:
-    title: Task Request
-    type: object
+    title: "Task Request"
+    type: "object"
     properties:
       question:
-        type: string
+        type: "string"
       choices:
-        type: array
+        type: "array"
         items:
-          type: string
+          type: "string"
     required:
-      - question
-      - choices
+      - "question"
+      - "choices"
     example:
-      question: Example Question
+      question: "Example Question"
       choices:
-        - First Answer
-        - Second Answer
-        - Third Answer
-        - Fourth Answer
-
+        - "First Answer"
+        - "Second Answer"
+        - "Third Answer"
+        - "Fourth Answer"
   AssignmentRequest:
-    title: AssignmentRequest
-    type: object
+    title: "AssignmentRequest"
+    type: "object"
     properties: 
       deadline:
-        type: string
-        format: date-time
+        type: "string"
+        format: "date-time"
       review:
-        type: boolean
+        type: "boolean"
       TA:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       class:
-        type: array
+        type: "array"
         items:
-          $ref: '#/definitions/Class'
+          $ref: "#/definitions/Class"
     example:
-      deadline: 12-12-2018
+      deadline: "12-12-2018"
       review: true
       TA: 
-        email: g.s@agg.it
-        name: Mario
+        email: "g.s@agg.it"
+        name: "Mario"
       class:
       - id: 0
-        name: Software Engeneering
+        name: "Software Engeneering"
         users:
-        - email: student@mail.com
-          name: Good Student
-
+        - email: "student@mail.com"
+          name: "Good Student"
   Assignment:
-    title: Assignment
-    type: object
+    title: "Assignment"
+    type: "object"
     properties: 
       id:
-        type: number
+        type: "number"
       deadline:
-        type: string
-        format: date-time
+        type: "string"
+        format: "date-time"
       review:
-        type: boolean
+        type: "boolean"
       TA:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       class:
-        type: array
+        type: "array"
         items:
-          $ref: '#/definitions/Class'
+          $ref: "#/definitions/Class"
     example:
       id: 0
-      deadline: 12-12-2018
+      deadline: "12-12-2018"
       review: true
       TA: 
-        email: g.s@agg.it
-        name: Mario
+        email: "g.s@agg.it"
+        name: "Mario"
       class:
       - id: 0
-        name: Software Engeneering
+        name: "Software Engeneering"
         users:
-        - email: student@mail.com
-          name: Good Student
-
+        - email: "student@mail.com"
+          name: "Good Student"
   SubmissionRequest:
-    title: SubmissionRequest
-    type: object
+    title: "SubmissionRequest"
+    type: "object"
     properties:
       answer:
-        type: string
+        type: "string"
       time:
-        type: string
-        format: date-time
+        type: "string"
+        format: "date-time"
       task-id: 
-        type: number
+        type: "number"
       Author: 
-        $ref: '#/definitions/User' #is the id enough?
+        $ref: "#/definitions/User" #is the id enough?
       assignment-id:
-        type: number
+        type: "number"
     example:
-      answer: the correct answer is number 2
-      time: 12-12-2018
+      answer: "the correct answer is number 2"
+      time: "12-12-2018"
       task-id: 3
       Author:
-        email: g.s@agg.com
-        name: Giovanni Storti
+        email: "g.s@agg.com"
+        name: "Giovanni Storti"
       assignment-id: 4
-
   Submission:
-    title: Submission
-    type: object
+    title: "Submission"
+    type: "object"
     properties:
       id:
-        type: number
+        type: "number"
       answer:
-        type: string
+        type: "string"
       time:
-        type: string
-        format: date-time
+        type: "string"
+        format: "date-time"
       task-id: 
-        type: number
+        type: "number"
       Author: 
-        $ref: '#/definitions/User' #is the id enough?
+        $ref: "#/definitions/User" #is the id enough?
       assignment-id:
-        type: number
+        type: "number"
     example:
       id: 0
-      answer: the correct answer is number 2
-      time: 12-12-2018
+      answer: "the correct answer is number 2"
+      time: "12-12-2018"
       task-id: 3
       Author:
-        email: g.s@agg.com
-        name: Giovanni Storti
+        email: "g.s@agg.com"
+        name: "Giovanni Storti"
       assignment-id: 4
-
   ReviewRequest:
-    title: ReviewRequest
-    type: object
+    title: "ReviewRequest"
+    type: "object"
     properties:
       submission-id:
-        type: number
+        type: "number"
       author:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       mark:
-        type: number
+        type: "number"
       comment:
-        type: string
+        type: "string"
     example:
       submission-id : 1 
       author:
-        email: g.s@agg.com
-        name: Giovanni Storti
+        email: "g.s@agg.com"
+        name: "Giovanni Storti"
       mark: 27
-      comment: good work, well done
-
+      comment: "good work, well done"
   Review:
-    title: Review
-    type: object
+    title: "Review"
+    type: "object"
     properties:
       id: 
-        type: number
+        type: "number"
       submission-id:
-        type: number
+        type: "number"
       author:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       mark:
-        type: number
+        type: "number"
       comment:
-        type: string
+        type: "string"
     example:
       id: 0
       submission-id : 1 
       author:
-        email: g.s@agg.com
-        name: Giovanni Storti
+        email: "g.s@agg.com"
+        name: "Giovanni Storti"
       mark: 27
-      comment: good work, well done
+      comment: "good work, well done"
