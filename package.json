@@ -2,8 +2,8 @@
   "name": "mvtest",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "jest"
   },
   "repository": {
@@ -21,6 +21,7 @@
     "connect-pg-simple": "^5.0.0",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "http-errors": "^1.7.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^7.5.0",
