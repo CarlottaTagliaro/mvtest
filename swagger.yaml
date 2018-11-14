@@ -9,19 +9,19 @@ info:
 schemes:
 - "https"
 host: "mvtest-develop.herokuapp.com"
-basePath: "/v1"
+basePath: "/api"
 tags:
-- name: "task"
+- name: "Task"
   description: "Find everything about your tasks"
-- name: "exam"
+- name: "Exam"
   description: "Find everything about your exams"
-- name: "class"
+- name: "Class"
   description: "Find everything about your classes"
-- name: "assignment"
+- name: "Assignment"
   description: "Find everything about your assignments"
-- name: "review"
+- name: "Review"
   description: "Find everything about your reviews"
-- name: "session"
+- name: "Session"
   description: "Find everything about the current session"
 consumes:
 - "application/json"
@@ -29,10 +29,10 @@ produces:
 - "application/json"
 paths:
 
-  /task:
+  /tasks:
     get:
       tags:
-      - "task"
+      - "Task"
       summary: "List all tasks the user has access to"
       responses:
         200:
@@ -47,7 +47,7 @@ paths:
           $ref: "#/responses/500"
     put:
       tags:
-      - "task"
+      - "Task"
       summary: "Create a task"
       parameters:
         - name: "body"
@@ -66,13 +66,13 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /task/{taskId}:
+  /tasks/{id}:
     get:
       tags:
-      - "task"
+      - "Task"
       summary: "Find task by id"
       parameters:
-      - name: "taskId"
+      - name: "id"
         in: "path"
         description: "ID of the task to return"
         required: true
@@ -90,10 +90,10 @@ paths:
           $ref: "#/responses/500"
     post:
       tags:
-      - "task"
+      - "Task"
       summary: "Edits a task"
       parameters:
-      - name: "taskId"
+      - name: "id"
         in: "path"
         description: "ID of the task to edit"
         required: true
@@ -114,10 +114,10 @@ paths:
           $ref: "#/responses/500"
     delete:
       tags:
-      - "task"
+      - "Task"
       summary: "Deletes a task"
       parameters:
-      - name: "taskId"
+      - name: "id"
         in: "path"
         description: "ID of the task to delete"
         required: true
@@ -134,10 +134,10 @@ paths:
         500:
           $ref: "#/responses/500"
   
-  /exam:
+  /exams:
     get:
       tags:
-      - "exam"
+      - "Exam"
       summary: "List all exams the user has access to"
       responses:
         200:
@@ -152,7 +152,7 @@ paths:
           $ref: "#/responses/500"
     put:
       tags:
-      - "exam"
+      - "Exam"
       summary: "Creates an exam"
       parameters:
         - name: "body"
@@ -163,19 +163,19 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-          202:
+        202:
           $ref: "#/responses/202"
         404:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /exam/{examId}:
+  /exams/{id}:
     get:
       tags:
-      - "exam"
+      - "Exam"
       summary: "Find exam by ID"
       parameters:
-      - name: "examId"
+      - name: "id"
         in: "path"
         description: "ID of the exam to return"
         required: true
@@ -193,10 +193,10 @@ paths:
           $ref: "#/responses/500"
     delete:
       tags:
-      - "exam"
+      - "Exam"
       summary: "Deletes an exam"
       parameters:
-      - name: "examId"
+      - name: "id"
         in: "path"
         description: "ID of the exam to delete"
         required: true
@@ -214,10 +214,10 @@ paths:
           $ref: "#/responses/500"
     put:
       tags:
-      - "exam"
+      - "Exam"
       summary: "Adds a Task to an Exam"
       parameters:
-      - name: "examId"
+      - name: "id"
         in: "path"
         description: "ID of the exam to return"
         required: true
@@ -241,13 +241,13 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /exams/{examId}/{taskId}:
+  /exams/{id}/{taskId}:
     delete:
       tags:
-      - "exam"
+      - "Exam"
       summary: "Deletes a specific task in an exam"
       parameters:
-      - name: "examId"
+      - name: "id"
         in: "path"
         description: "ID of the exam to return"
         required: true
@@ -269,10 +269,10 @@ paths:
         500:
           $ref: "#/responses/500"
 
-  /class:
+  /classes:
     get:
       tags:
-      - "class"
+      - "Class"
       summary: "Lists all classes the user belongs to"
       responses:
         200:
@@ -287,7 +287,7 @@ paths:
           $ref: "#/responses/500"
     put:
       tags:
-      - "class"
+      - "Class"
       summary: "Creates a new class"
       parameters:
         - name: "body"
@@ -304,15 +304,15 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /class/{classId}:
+  /classes/{id}:
     get:
       tags:
-      - "class"
+      - "Class"
       summary: "Find a class by ID"
       parameters:
-      - name: "classId"
+      - name: "id"
         in: "path"
-        description: I"D of the class to retrieve"
+        description: "ID of the class to retrieve"
         required: true
         type: "integer"
       responses:
@@ -328,10 +328,10 @@ paths:
           $ref: "#/responses/500"
     post:
       tags:
-      - "class"
+      - "Class"
       summary: "Edits a class"
       parameters:
-      - name: "classId"
+      - name: "id"
         in: "path"
         description: "ID of the class to edit"
         required: true
@@ -352,10 +352,10 @@ paths:
           $ref: "#/responses/500"
     delete:
       tags:
-      - "class"
+      - "Class"
       summary: "Deletes a class"
       parameters:
-      - name: "classId"
+      - name: "id"
         in: "path"
         description: "ID of the class to delete"
         required: true
@@ -372,10 +372,10 @@ paths:
         500:
           $ref: "#/responses/500"
           
-  /assignment:
+  /assignments:
     get:
       tags: 
-      - "assignment"
+      - "Assignment"
       summary: "Get all assignments you've done"
       responses:
         200:
@@ -390,7 +390,7 @@ paths:
           $ref: "#/responses/500"
     put: 
       tags:
-      - "assignment"
+      - "Assignment"
       summary: "Creates a new assignment"
       parameters:
         - name: "body"
@@ -407,13 +407,13 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /assignment/{assignmentId}:
+  /assignmenta/{id}:
     get:
       tags:
-      - "assignment"
+      - "Assignment"
       summary: "Find assignment by id"
       parameters:
-      - name: "assignmentId"
+      - name: "id"
         in: "path"
         description: "ID of the assignment to return"
         required: true
@@ -431,10 +431,10 @@ paths:
           $ref: "#/responses/500"
     post:
       tags:
-      - "assignment"
+      - "Assignment"
       summary: "Edits an assignment"
       parameters:
-      - name: "assignmentId"
+      - name: "id"
         in: "path"
         description: "ID of the assignment to edit"
         required: true
@@ -455,10 +455,10 @@ paths:
           $ref: "#/responses/500"
     delete:
       tags:
-      - "assignment"
+      - "Assignment"
       summary: "Deletes an assignment"
       parameters:
-      - name: "assignmentId"
+      - name: "id"
         in: "path"
         description: "ID of the assignment to delete"
         required: true
@@ -474,13 +474,13 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /assignment/{assignmentId}/submission:
+  /assignments/{id}/submissions:
     get:
       tags: 
-      - "assignment"
+      - "Assignment"
       summary: "Get all submission you've done for that assignment"
       parameters:
-        - name: "assignmentId"
+        - name: "id"
           in: "path"
           description: "ID of the assignment"
           required: true
@@ -498,10 +498,10 @@ paths:
           $ref: "#/responses/500"
     put: #post cause we have to store all the submission, it is not possible to modify them
       tags:
-      - "assignment"
+      - "Assignment"
       summary: "Create a new submission"
       parameters:
-      - name: "assignmentId"
+      - name: "id"
         in: "path"
         description: "ID of the assignment"
         required: true
@@ -522,10 +522,10 @@ paths:
           $ref: "#/responses/500"
     delete:
       tags:
-      - "assignment"
+      - "Assignment"
       summary: "deletes all submission for an assignment" #retire
       parameters:
-      - name: "assignmentId"
+      - name: "id"
         in: "path"
         required: true
         type: "integer"
@@ -541,10 +541,10 @@ paths:
         500:
           $ref: "#/responses/500"
     
-  /review:
+  /reviews:
     get:
       tags:
-      - "review"
+      - "Review"
       summary: "Get all reviews you've done"
       responses:
         200:
@@ -559,7 +559,7 @@ paths:
           $ref: "#/responses/500"
     put:
       tags:
-      - "review"
+      - "Review"
       summary: "Create a new review"
       parameters:
       - name: "body"
@@ -576,13 +576,13 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /review/{reviewId}:
+  /reviews/{id}:
     post:
       tags:
       - "review"
       summary: "Edit a specific review"
       parameters:
-      - name: "reviewId"
+      - name: "id"
         in: "path"
         required: true
         type: "number"
@@ -604,7 +604,7 @@ paths:
   /auth/session:
     get:
       tags:
-      - "session"
+      - "Session"
       summary: "Returns the user in the session"
       produces:
       - "text/plain"
@@ -621,7 +621,7 @@ paths:
           $ref: "#/responses/500"
     put:
       tags:
-      - "session"
+      - "Session"
       summary: "Authenticates a user"
       produces:
       - "text/plain"
@@ -648,7 +648,7 @@ paths:
           $ref: "#/responses/500"
     delete:
       tags:
-      - "session"
+      - "Session"
       summary: "Logs a user out"
       responses:
         204:
