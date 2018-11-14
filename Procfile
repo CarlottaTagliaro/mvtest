@@ -1,2 +1,1 @@
-web: node controllers/index.js
-
+web: npm start
