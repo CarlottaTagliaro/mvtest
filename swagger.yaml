@@ -39,12 +39,8 @@ paths:
           $ref: "#/responses/200Task"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+        403:
+          $ref: "#/responses/403"
     put:
       tags:
       - "Task"
@@ -58,21 +54,15 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /tasks/{id}:
+        403:
+          $ref: "#/responses/403"
+  /tasks/{idTask}:
     get:
       tags:
       - "Task"
       summary: "Find task by id"
       parameters:
-      - name: "id"
+      - name: "idTask"
         in: "path"
         description: "ID of the task to return"
         required: true
@@ -82,18 +72,16 @@ paths:
           $ref: "#/responses/200Task"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     post:
       tags:
       - "Task"
       summary: "Edits a task"
       parameters:
-      - name: "id"
+      - name: "idTask"
         in: "path"
         description: "ID of the task to edit"
         required: true
@@ -104,35 +92,29 @@ paths:
         schema:
           $ref: "#/definitions/TaskRequest"
       responses:
-        200:
-          $ref: "#/responses/200"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     delete:
       tags:
       - "Task"
       summary: "Deletes a task"
       parameters:
-      - name: "id"
+      - name: "idTask"
         in: "path"
         description: "ID of the task to delete"
         required: true
         type: "integer"
       responses:
         201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
   
   /exams:
     get:
@@ -144,12 +126,9 @@ paths:
           $ref: "#/responses/200Exam"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+        403:
+          $ref: "#/responses/403"
+
     put:
       tags:
       - "Exam"
@@ -163,19 +142,15 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /exams/{id}:
+        403:
+          $ref: "#/responses/403"
+  /exams/{idExam}:
     get:
       tags:
       - "Exam"
       summary: "Find exam by ID"
       parameters:
-      - name: "id"
+      - name: "idExam"
         in: "path"
         description: "ID of the exam to return"
         required: true
@@ -185,39 +160,33 @@ paths:
           $ref: "#/responses/200Exam"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     delete:
       tags:
       - "Exam"
       summary: "Deletes an exam"
       parameters:
-      - name: "id"
+      - name: "idExam"
         in: "path"
         description: "ID of the exam to delete"
         required: true
         type: "integer"
       responses:
-        201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     put:
       tags:
       - "Exam"
       summary: "Adds a Task to an Exam"
       parameters:
-      - name: "id"
+      - name: "idExam"
         in: "path"
         description: "ID of the exam to return"
         required: true
@@ -233,41 +202,35 @@ paths:
             - 2
             - 3
       responses:
-        201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /exams/{id}/{taskId}:
+  /exams/{idExam}/{idTask}:
     delete:
       tags:
       - "Exam"
       summary: "Deletes a specific task in an exam"
       parameters:
-      - name: "id"
+      - name: "idExam"
         in: "path"
         description: "ID of the exam to return"
         required: true
         type: "integer"
-      - name: "taskId"
+      - name: "idTask"
         in: "path"
         required: true
         description: "ID of the task to delete"
         type: "integer"
       responses:
-        201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
 
   /classes:
     get:
@@ -279,12 +242,8 @@ paths:
           $ref: "#/responses/200Class"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+        403:
+          $ref: "#/responses/403"
     put:
       tags:
       - "Class"
@@ -298,19 +257,16 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /classes/{id}:
+        403:
+          $ref: "#/responses/403"
+
+  /classes/{idClass}:
     get:
       tags:
       - "Class"
       summary: "Find a class by ID"
       parameters:
-      - name: "id"
+      - name: "idClass"
         in: "path"
         description: "ID of the class to retrieve"
         required: true
@@ -320,18 +276,16 @@ paths:
           $ref: "#/responses/200Class"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     post:
       tags:
       - "Class"
       summary: "Edits a class"
       parameters:
-      - name: "id"
+      - name: "idClass"
         in: "path"
         description: "ID of the class to edit"
         required: true
@@ -343,34 +297,28 @@ paths:
           $ref: '#/definitions/ClassRequest'
       responses:
         200:
-          $ref: "#/responses/200"
-        401:
-          $ref: "#/responses/401"
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     delete:
       tags:
       - "Class"
       summary: "Deletes a class"
       parameters:
-      - name: "id"
+      - name: "idClass"
         in: "path"
         description: "ID of the class to delete"
         required: true
         type: "integer"
       responses:
-        201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
           
   /assignments:
     get:
@@ -382,12 +330,8 @@ paths:
           $ref: "#/responses/200Assignment"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+        403:
+          $ref: "#/responses/403"
     put: 
       tags:
       - "Assignment"
@@ -401,19 +345,15 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /assignmenta/{id}:
+        403:
+          $ref: "#/responses/403"
+  /assignments/{idAssignment}:
     get:
       tags:
       - "Assignment"
       summary: "Find assignment by id"
       parameters:
-      - name: "id"
+      - name: "idAssignment"
         in: "path"
         description: "ID of the assignment to return"
         required: true
@@ -423,18 +363,16 @@ paths:
           $ref: "#/responses/200Assignment"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     post:
       tags:
       - "Assignment"
       summary: "Edits an assignment"
       parameters:
-      - name: "id"
+      - name: "idAssignment"
         in: "path"
         description: "ID of the assignment to edit"
         required: true
@@ -445,42 +383,36 @@ paths:
         schema:
           $ref: '#/definitions/AssignmentRequest'
       responses:
-        200:
-          $ref: "#/responses/200"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     delete:
       tags:
       - "Assignment"
       summary: "Deletes an assignment"
       parameters:
-      - name: "id"
+      - name: "idAssignment"
         in: "path"
         description: "ID of the assignment to delete"
         required: true
         type: "integer"
       responses:
-        201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /assignments/{id}/submissions:
+  /assignments/{idAssignment}/submissions:
     get:
       tags: 
       - "Assignment"
       summary: "Get all submission you've done for that assignment"
       parameters:
-        - name: "id"
+        - name: "idAssignment"
           in: "path"
           description: "ID of the assignment"
           required: true
@@ -490,18 +422,16 @@ paths:
           $ref: "#/responses/200AssignmentSubmission"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     put: #post cause we have to store all the submission, it is not possible to modify them
       tags:
       - "Assignment"
       summary: "Create a new submission"
       parameters:
-      - name: "id"
+      - name: "idAssignment"
         in: "path"
         description: "ID of the assignment"
         required: true
@@ -514,32 +444,27 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     delete:
       tags:
       - "Assignment"
       summary: "deletes all submission for an assignment" #retire
       parameters:
-      - name: "id"
+      - name: "idAssignment"
         in: "path"
         required: true
         type: "integer"
       responses:
-        201:
-          $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+
     
   /reviews:
     get:
@@ -551,12 +476,8 @@ paths:
           $ref: "#/responses/200AssignmentSubmission"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+        403:
+          $ref: "#/responses/403"
     put:
       tags:
       - "Review"
@@ -570,19 +491,16 @@ paths:
       responses:
         201:
           $ref: "#/responses/201"
-        202:
-          $ref: "#/responses/202"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
-  /reviews/{id}:
+        403:
+          $ref: "#/responses/403"
+
+  /reviews/{idReview}:
     post:
       tags:
-      - "review"
+      - "Review"
       summary: "Edit a specific review"
       parameters:
-      - name: "id"
+      - name: "idReview"
         in: "path"
         required: true
         type: "number"
@@ -592,16 +510,15 @@ paths:
         schema:
           $ref: '#/definitions/ReviewRequest'
       responses:
-        200:
-          $ref: "#/responses/200"
-        401:
-          $ref: "#/responses/401"
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
         404:
           $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
 
-  /auth/session:
+
+  /session:
     get:
       tags:
       - "Session"
@@ -611,14 +528,10 @@ paths:
       responses:
         200:
           $ref: "#/responses/200Session"
+        204:
+          $ref: "#/responses/204"
         304:
           $ref: "#/responses/304"
-        401:
-          $ref: "#/responses/401"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
     put:
       tags:
       - "Session"
@@ -640,12 +553,8 @@ paths:
       responses:
         200:
           $ref: "#/responses/200Session"
-        403:
-          $ref: "#/responses/403"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
+        401:
+          $ref: "#/responses/401"
     delete:
       tags:
       - "Session"
@@ -655,10 +564,6 @@ paths:
           $ref: "#/responses/204"
         403:
           $ref: "#/responses/403"
-        404:
-          $ref: "#/responses/404"
-        500:
-          $ref: "#/responses/500"
 
 responses:
     200:
@@ -705,6 +610,11 @@ responses:
             $ref: "#/definitions/User"
     201:
       description: "Created"
+      schema:
+        type: object
+        properties:
+          id:
+            type: integer
     202:
       description: "Accepted"
     204:
