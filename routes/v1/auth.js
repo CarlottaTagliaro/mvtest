@@ -46,7 +46,6 @@ passport.use(new Strategy((username, password, cb) => {
 }));
 
 router.get('/session', (req, res) => {
-	console.log('kek')
 	if (req.user) {
 		res.status(200);
 		res.send(req.user);

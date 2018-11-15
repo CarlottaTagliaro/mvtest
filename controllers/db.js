@@ -9,8 +9,12 @@ const connString = process.env.DATABASE_URL;
 function DB() {
 	const GET_ALL_TASK_QUERY = "SELECT * FROM Task;";
 	const GET_SINGLE_TASK_QUERY = "SELECT * FROM Task WHERE id=$1;"
-	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(id_type, text) VALUES(${id_type}, ${text});"
+	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text) VALUES(${id_type}, ${text}) RETURNING Id;"
 	const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
+	const GET_ALL_EXAMS_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam;"
+	const GET_SINGLE_EXAM_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam AND Exam.Id=$1;"
+	const DELETE_EXAM_QUERY = "DELETE FROM Exam WHERE Id=$1; DELETE FROM ExamTask WHERE Id_Exam=$1;"
+
 	var self = this;
 	self._piergiorgio = new Client({
 		connectionString: connString,
@@ -30,9 +34,24 @@ function DB() {
 	})
 
 	self.getAllTasks = (req, res, next) => {
-		self._piergiorgio.query(GET_ALL_TASK_QUERY)
+		self._piergiorgio.query(GET_ALL_TASK_QUERY, function (err, rows) {
+				let tasks = {};
+				let key = 'Task';
+				tasks[key] = [];
+				for (var i = 0; i < rows.length; i++) {
+					var details = {
+						"taskId": rows[i].Id,
+						"text": rows[i].Text
+					};
+					tasks[key + i].push(details);
+				}
+			})
 			.then((data) => {
-				res.locals.data = data;
+				res.status(200).json({
+					status: 'success',
+					data: tasks
+				})
+				//res.locals.data = data;
 				next();
 			})
 			.catch((err) => {
@@ -42,12 +61,11 @@ function DB() {
 
 	self.getOneTask = (req, res, next) => {
 		let taskID = req.params.id;
-
 		self._piergiorgio.query(GET_SINGLE_TASK_QUERY, taskID).then((data) => {
 			res.status(200).json({
 				status: 'success',
 				data: data,
-				messgage: 'got one of \'em'
+				message: 'got one of them'
 			});
 
 		}).catch((err) => {
@@ -56,11 +74,15 @@ function DB() {
 	}
 
 	self.createTask = (req, res, next) => {
-		db.query(CREATE_SINGLE_TASK_QUERY, req.body).then(() => {
+		db.query(CREATE_SINGLE_TASK_QUERY, req.body, function (err, result) {
+				if (err) throw err;
+				let id = result.row[0].Id;
+			}).then(() => {
 				res.status(201)
 					.json({
-						status: 'success',
-						message: 'Inserted one task'
+						status: 'Created',
+						message: 'Inserted one task',
+						idTask: id
 					});
 			})
 			.catch((err) => {
@@ -69,7 +91,7 @@ function DB() {
 	}
 
 	self.deleteTask = (req, res, next) => {
-		db.query(DELETE_TASK_QUERY, req.body.id).then(() => {
+		db.query(DELETE_TASK_QUERY, req.params.id).then(() => {
 				res.status(200)
 					.json({
 						status: 'success',
