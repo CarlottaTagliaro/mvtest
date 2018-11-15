@@ -2,9 +2,15 @@ const {
 	Client
 } = require('pg');
 
+
+
 const connString = process.env.DATABASE_URL;
 
 function DB() {
+	const GET_ALL_TASK_QUERY = "SELECT * FROM Task;";
+	const GET_SINGLE_TASK_QUERY = "SELECT * FROM Task WHERE id=$1;"
+	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(id_type, text) VALUES(${id_type}, ${text});"
+	const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
 	var self = this;
 	self._piergiorgio = new Client({
 		connectionString: connString,
@@ -24,7 +30,7 @@ function DB() {
 	})
 
 	self.getAllTasks = (req, res, next) => {
-		self._piergiorgio.query('SELECT * FROM Task')
+		self._piergiorgio.query(GET_ALL_TASK_QUERY)
 			.then((data) => {
 				res.locals.data = data;
 				next();
@@ -37,7 +43,7 @@ function DB() {
 	self.getOneTask = (req, res, next) => {
 		let taskID = req.params.id;
 
-		self._piergiorgio.query('SELECT * FROM Task WHERE id=$1', taskID).then((data) => {
+		self._piergiorgio.query(GET_SINGLE_TASK_QUERY, taskID).then((data) => {
 			res.status(200).json({
 				status: 'success',
 				data: data,
@@ -50,10 +56,7 @@ function DB() {
 	}
 
 	self.createTask = (req, res, next) => {
-		db.query('INSERT INTO Task(id_type, text)' +
-				'VALUES(${id_type}, ${text})',
-				req.body)
-			.then(() => {
+		db.query(CREATE_SINGLE_TASK_QUERY, req.body).then(() => {
 				res.status(201)
 					.json({
 						status: 'success',
@@ -66,8 +69,7 @@ function DB() {
 	}
 
 	self.deleteTask = (req, res, next) => {
-		db.query('DELETE FROM Task WHERE id=$1', req.body.id)
-			.then(() => {
+		db.query(DELETE_TASK_QUERY, req.body.id).then(() => {
 				res.status(200)
 					.json({
 						status: 'success',
