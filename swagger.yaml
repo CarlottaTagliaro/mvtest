@@ -453,11 +453,16 @@ paths:
           $ref: "#/responses/404"
 
     
-  /reviews:
+  /submissions/{idSubmission}/reviews:
     get:
       tags:
       - "Review"
-      summary: "Get all reviews you've done"
+      summary: "Get all reviews you've done"      
+      parameters:
+      - name: "idSubmission"
+        in: "path"
+        required: true
+        type: "integer"
       responses:
         200:
           $ref: "#/responses/200AssignmentSubmission"
@@ -470,6 +475,10 @@ paths:
       - "Review"
       summary: "Create a new review"
       parameters:
+      - name: "idSubmission"
+        in: "path"
+        required: true
+        type: integer
       - name: "body"
         in: "body"
         required: true  
@@ -481,12 +490,16 @@ paths:
         403:
           $ref: "#/responses/403"
 
-  /reviews/{idReview}:
+  /submissions/{idSubmission}/reviews/{idReview}:
     put:
       tags:
       - "Review"
       summary: "Edit a specific review"
       parameters:
+      - name: "idSubmission"
+        in: "path"
+        required: true
+        type: integer
       - name: "idReview"
         in: "path"
         required: true
