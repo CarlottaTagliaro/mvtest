@@ -4,7 +4,31 @@ html
     include ../includes/libs.pug
     block head
   body
-    block nav
+    nav.navbar.navbar-expand-md.navbar-light.bg-light.shadow
+      a.navbar-brand(href="/") mvtest
+      button.navbar-toggler(data-toggle="collapse" data-target="#navMenu")
+        span.navbar-toggler-icon
+      #navMenu.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item
+            a.nav-link(href="/tasks",class={'active':page=='tasks'}) Tasks
+          li.nav-item
+            a.nav-link(href="/exams",class={'active':page=='exams'}) Exams
+          li.nav-item
+            a.nav-link(href="/assignments",class={'active':page=='assignments'}) Assignments
+          li.nav-item
+            a.nav-link(href="/classes",class={'active':page=='classes'}) Classes
+          li.nav-item
+            a.nav-link(href="/reviews",class={'active':page=='reviews'}) Reviews
+        ul.navbar-nav
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle(href="#" id="usrDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") User Name
+            .dropdown-menu(aria-labelledby="usrDropdown")
+              a.dropdown-item(href="#") Profile Info
+              .dropdown-divider
+              a.dropdown-item(href="#") Log out
     main.container.mt-3
+      h1=title
       block body
+
     block foot

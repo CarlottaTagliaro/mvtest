@@ -1,0 +1,11 @@
+extends ./templates/home.pug
+
+block head
+  title mvtest
+
+block body
+    h3=task.question
+      small.text-muted=' by '+task.users[0].email
+    ol
+      each choice in task.choices
+        li=choice
