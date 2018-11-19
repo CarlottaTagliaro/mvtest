@@ -564,11 +564,87 @@ paths:
           $ref: "#/responses/204"
         403:
           $ref: "#/responses/403"
-
+  /users:
+    get:
+      tags:
+      - "Users"
+      summary: "Returns the list of users"
+      produces:
+      - "text/plain"
+      responses:
+        200:
+          $ref: "#/responses/200User"
+        304:
+          $ref: "#/responses/304"
+        403:
+          $ref: "#responses/403"
+    post:
+      tags:
+      - "Users"
+      summary: "Creates a new user"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: '#/definitions/UserRequest'
+      responses:
+        201:
+          $ref: "#/responses/201"
+        403:
+          $ref: "#responses/403"
+  /users/{idUser}:
+    put:
+      tags:
+      - "Users"
+      summary: "Edits a user"
+      parameters:
+      - name: "idUser"
+        in: "path"
+        description: "ID of the user to edit"
+        required: true
+        type: "integer"
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: '#/definitions/UserRequest'
+      responses:
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
+    delete:
+      tags:
+      - "Users"
+      summary: "Deletes a user"
+      parameters:
+      - name: "idUser"
+        in: "path"
+        description: "ID of the user to delete"
+        required: true
+        type: "integer"
+      responses:
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
 
 responses:
     200:
       description: "OK"
+    200User:
+      description: "OK"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
     200Task:
       description: "OK"
       schema:
@@ -668,8 +744,8 @@ definitions:
         - email: "user@mail.com"
           owner: false
           canwrite: false
-  User:
-    title: "User"
+  UserRequest:
+    title: "UserRequest"
     type: "object"
     properties:
       email:
@@ -677,9 +753,31 @@ definitions:
         format: "email"
       name:
         type: "string"
+      admin:
+        type: "boolean"
     example:
       email: "user@mail.com"
       name: "User Name"
+      admin: false
+  User:
+    title: "User"
+    type: "object"
+    properties:
+      id:
+        type: "number"
+        format: "integer"
+      email:
+        type: "string"
+        format: "email"
+      name:
+        type: "string"
+      admin:
+        type: "boolean"
+    example:
+      id: 3
+      email: "user@mail.com"
+      name: "User Name"
+      admin: false
   ClassRequest:
     title: "ClassRequest"
     type: "object"
