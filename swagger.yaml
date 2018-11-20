@@ -36,7 +36,7 @@ paths:
       summary: "List all tasks the user has access to"
       responses:
         200:
-          $ref: "#/responses/200Task"
+          $ref: "#/responses/200Tasks"
         304:
           $ref: "#/responses/304"
         403:
@@ -125,7 +125,7 @@ paths:
       summary: "List all exams the user has access to"
       responses:
         200:
-          $ref: "#/responses/200Exam"
+          $ref: "#/responses/200Exams"
         304:
           $ref: "#/responses/304"
         403:
@@ -139,7 +139,7 @@ paths:
           in: "body"
           required: true
           schema:
-            $ref: "#/definitions/Exam"
+            $ref: "#/definitions/ExamRequest"
       responses:
         201:
           $ref: "#/responses/201"
@@ -223,7 +223,7 @@ paths:
       summary: "Lists all classes the user belongs to"
       responses:
         200:
-          $ref: "#/responses/200Class"
+          $ref: "#/responses/200Classes"
         304:
           $ref: "#/responses/304"
         403:
@@ -312,7 +312,7 @@ paths:
       summary: "Get all assignments you've done"
       responses:
         200:
-          $ref: "#/responses/200Assignment"
+          $ref: "#/responses/200Assignments"
         304:
           $ref: "#/responses/304"
         403:
@@ -465,7 +465,7 @@ paths:
         type: "integer"
       responses:
         200:
-          $ref: "#/responses/200AssignmentSubmission"
+          $ref: "#/responses/200Reviews"
         304:
           $ref: "#/responses/304"
         403:
@@ -532,7 +532,7 @@ paths:
           $ref: "#/responses/204"
         304:
           $ref: "#/responses/304"
-    put:
+    post:
       tags:
       - "Session"
       summary: "Authenticates a user"
@@ -573,7 +573,7 @@ paths:
       - "text/plain"
       responses:
         200:
-          $ref: "#/responses/200User"
+          $ref: "#/responses/200Users"
         304:
           $ref: "#/responses/304"
         403:
@@ -642,28 +642,52 @@ responses:
     200User:
       description: "OK"
       schema:
+        $ref: "#/definitions/User"
+    200Users:
+      description: "OK"
+      schema:
         type: "array"
         items:
           $ref: "#/definitions/User"
+
     200Task:
+      description: "OK"
+      schema:
+        $ref: "#/definitions/Task"
+    200Tasks:
       description: "OK"
       schema:
         type: "array"
         items:
           $ref: "#/definitions/Task"
+
     200Exam:
+      description: "OK"
+      schema:
+        $ref: "#/definitions/Exam"
+    200Exams:
       description: "OK"
       schema:
         type: "array"
         items:
           $ref: "#/definitions/Exam"
+
     200Class:
+      description: "OK"
+      schema:
+        $ref: "#/definitions/Class"
+    200Classes:
       description: "OK"
       schema:
         type: "array"
         items:
           $ref: "#/definitions/Class"
+
     200Assignment:
+      description: "OK"
+      schema:
+        $ref: "#/definitions/Assignment"
+    200Assignments:
       description: "OK"
       schema:
         type: "array"
@@ -675,16 +699,22 @@ responses:
         type: "array"
         items:
           $ref: "#/definitions/Submission"
+
     200Review:
+      description: "OK"
+      schema:
+        $ref: "#/definitions/Review"
+    200Reviews:
       description: "OK"
       schema:
         type: "array"
         items:
           $ref: "#/definitions/Review"
+
     200Session:
-          description: "Ok"
-          schema:
-            $ref: "#/definitions/User"
+      description: "Ok"
+      schema:
+        $ref: "#/definitions/User"
     201:
       description: "Created"
       schema:
@@ -716,6 +746,9 @@ definitions:
         type: "number"
       question:
         type: "string"
+      points:
+        type: "number"
+        format: "integer"
       choices:
         type: "array"
         items:
@@ -732,6 +765,7 @@ definitions:
       id:  0
       question: "Example question"
       type: 1
+      points: 10
       choices:
         - "First Answer"
         - "Second Answer"
@@ -819,6 +853,9 @@ definitions:
         type: "number"
       owner:
           $ref: "#/definitions/User"
+      totalPoints:
+        type: "number"
+        format: "integer"
       tasks:
         type: "array"
         items:
@@ -828,9 +865,29 @@ definitions:
       owner:
         email: "g.s@agg.it"
         name: "Mario"
+      totalPoints: 60
       tasks:
         - 0
         - 1
+  ExamRequest:
+    title: "ExamRequest"
+    type: "object"
+    properties:
+      owner:
+          $ref: "#/definitions/User"
+      tasks:
+        type: "array"
+        items:
+          type: "number"
+    example:
+      owner:
+        email: "g.s@agg.it"
+        name: "Mario"
+      tasks:
+        - 0
+        - 1
+
+
   UserPerms:
     title: "User Perms"
     type: "object"
@@ -847,6 +904,9 @@ definitions:
     properties:
       question:
         type: "string"
+      points:
+        type: "number"
+        format: "integer"
       choices:
         type: "array"
         items:
@@ -856,6 +916,7 @@ definitions:
       - "choices"
     example:
       question: "Example Question"
+      points: 10
       choices:
         - "First Answer"
         - "Second Answer"
@@ -954,6 +1015,11 @@ definitions:
         format: "date-time"
       task-id: 
         type: "number"
+      mark:
+        type: "number"
+        format: "integer"
+      needsRevision:
+        type: "boolean"
       Author: 
         $ref: "#/definitions/User" #is the id enough?
       assignment-id:
@@ -963,6 +1029,8 @@ definitions:
       answer: "the correct answer is number 2"
       time: "12-12-2018"
       task-id: 3
+      mark: 8
+      needsRevision: false
       Author:
         email: "g.s@agg.com"
         name: "Giovanni Storti"
