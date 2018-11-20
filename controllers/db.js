@@ -7,7 +7,7 @@ const {
 const connString = process.env.DATABASE_URL;
 
 function DB() {
-	const GET_ALL_TASK_QUERY = "SELECT * FROM Task;";
+	const GET_ALL_TASK_QUERY = "SELECT * FROM Task,Type WHERE Task.Id_Type = Type.Id;";
 	const GET_SINGLE_TASK_QUERY = "SELECT * FROM Task WHERE id=$1;"
 	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text) VALUES(${id_type}, ${text}) RETURNING Id;"
 	const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
