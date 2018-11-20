@@ -34,24 +34,13 @@ function DB() {
 	})
 
 	self.getAllTasks = (req, res, next) => {
-		self._piergiorgio.query(GET_ALL_TASK_QUERY, function (err, rows) {
-				let tasks = {};
-				let key = 'Task';
-				tasks[key] = [];
-				for (var i = 0; i < rows.length; i++) {
-					var details = {
-						"taskId": rows[i].Id,
-						"text": rows[i].Text
-					};
-					tasks[key + i].push(details);
-				}
-			})
+		self._piergiorgio.query(GET_ALL_TASK_QUERY)
 			.then((data) => {
-				res.status(200).json({
+				/*res.status(200).json({
 					status: 'success',
 					data: tasks
-				})
-				//res.locals.data = data;
+				})*/
+				res.locals.data = data;
 				next();
 			})
 			.catch((err) => {
