@@ -1,5 +1,6 @@
 var express = require('express'),
 	router = express.Router();
+const db = require(__basedir + '/controllers/db.js');
 
 router.get('/', (req, res) => {
 	res.render('index', {
@@ -25,33 +26,43 @@ router.get('/', (req, res) => {
 });
 
 router.get('/tasks', (req, res) => {
-	res.render('index', {
-		page: 'tasks',
-		title: 'Your Tasks',
-		objects: [{
-			url: '/tasks/1',
-			name: 'First Task',
-			desc: 'This is the question of the task'
-		}]
+	db.getAllTasks().then(data => {
+		let tasks = [];
+		for (let task of data) {
+			tasks.push({
+				url: '/tasks/' + task.id,
+				name: task.text,
+				small: task.type
+			});
+		}
+
+		res.render('index', {
+			page: 'tasks',
+			title: 'Your Tasks',
+			objects: tasks
+		});
 	});
 });
 
 router.get('/tasks/:id', (req, res) => {
-	res.render('task', {
-		page: 'tasks',
-		task: {
-			id: 2,
-			question: 'Task Question',
-			type: 1,
-			choices: ['First answer', 'Second answer', 'Third answer'],
-			users: [{
-				id: 1,
-				email: 'owner@email.com',
-				owner: true,
-				canWrite: true
-			}]
-		}
-	})
+	db.getOneTask(req.params.id).then(data => {
+		data.users = [];
+		data.users[0] = {};
+		data.users[0].email = 'kekke';
+
+		data.choices = [];
+		data.choices[0] = 'First'
+
+		res.render('task', {
+			page: 'tasks',
+			title: 'Task ' + data.id,
+			task: data
+		});
+	}).catch(err => {
+		res.render('error', {
+			error: err
+		})
+	});
 });
 
 router.get('/exams', (req, res) => {

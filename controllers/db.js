@@ -2,13 +2,11 @@ const {
 	Client
 } = require('pg');
 
-
-
 const connString = process.env.DATABASE_URL;
 
 function DB() {
-	const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name FROM Task, Type WHERE Task.Id_Type = Type.Id; ";
-	const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;"
+	const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id_Type = Type.Id; ";
+	const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;"
 	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text) VALUES(${id_type}, ${text}) RETURNING Id;"
 	const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
 	const GET_ALL_EXAMS_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam;"

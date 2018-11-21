@@ -6,6 +6,8 @@ const path = require('path');
 
 const apiV1 = require('./routes/v1');
 
+global.__basedir = __dirname;
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
