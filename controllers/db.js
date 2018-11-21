@@ -33,19 +33,16 @@ function DB() {
 		console.error('DB error: ', err.stack);
 	})
 
-	self.getAllTasks = (req, res, next) => {
-		self._piergiorgio.query(GET_ALL_TASK_QUERY)
-			.then((data) => {
-				/*res.status(200).json({
-					status: 'success',
-					data: tasks
-				})*/
-				res.locals.data = data;
-				next();
-			})
-			.catch((err) => {
-				return next(err);
-			});
+	self.getAllTasks = () => {
+		return new Promise((accept, reject) => {
+			self._piergiorgio.query(GET_ALL_TASK_QUERY)
+				.then((data) => {
+					accept(data.rows);
+				})
+				.catch((err) => {
+					reject(err);
+				});
+		});
 	}
 
 	self.getOneTask = (req, res, next) => {
