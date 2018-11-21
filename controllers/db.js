@@ -7,8 +7,8 @@ const {
 const connString = process.env.DATABASE_URL;
 
 function DB() {
-	const GET_ALL_TASK_QUERY = "SELECT * FROM Task,Type WHERE Task.Id_Type = Type.Id;";
-	const GET_SINGLE_TASK_QUERY = "SELECT * FROM Task WHERE id=$1;"
+	const GET_ALL_TASK_QUERY = "SELECT (Task.Id, Task.Text, Task.Points, Type.Name) FROM Task,Type WHERE Task.Id_Type = Type.Id;";
+	const GET_SINGLE_TASK_QUERY = "SELECT (Task.Id, Task.Text, Task.Points, Type.Name) FROM Task, Type WHERE id=$1 AND Task.Id_Type = Type.Id;"
 	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text) VALUES(${id_type}, ${text}) RETURNING Id;"
 	const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
 	const GET_ALL_EXAMS_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam;"
@@ -34,10 +34,10 @@ function DB() {
 	})
 
 	self.getAllTasks = () => {
-		return new Promise((accept, reject) => {
+		return new Promise((resolve, reject) => {
 			self._piergiorgio.query(GET_ALL_TASK_QUERY)
 				.then((data) => {
-					accept(data.rows);
+					resolve(data.rows);
 				})
 				.catch((err) => {
 					reject(err);
@@ -45,17 +45,21 @@ function DB() {
 		});
 	}
 
-	self.getOneTask = (req, res, next) => {
-		let taskID = req.params.id;
-		self._piergiorgio.query(GET_SINGLE_TASK_QUERY, taskID).then((data) => {
-			res.status(200).json({
-				status: 'success',
-				data: data,
-				message: 'got one of them'
-			});
-
-		}).catch((err) => {
-			return next(err);
+	self.getOneTask = (id) => {
+		return new Promise((resolve, reject) => {
+			self._piergiorgio.query(GET_SINGLE_TASK_QUERY, id)
+				.then((data) => {
+					if(data.rows.length == 0){
+						let error = new Error("Task not found");
+						error.errno = 404;
+						reject(error);
+					} else {
+						resolve(data.rows[0]);
+					}
+				})
+				.catch((err) => {
+					reject(err);
+				});
 		});
 	}
 
