@@ -1,4 +1,4 @@
-#create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+#create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='Create Task', aria-hidden='true')
   .modal-dialog(role='document')
     .modal-content
       .modal-header
@@ -36,3 +36,18 @@
         .modal-footer
           button.btn.btn-secondary(type='button', data-dismiss='modal') Close
           button.btn.btn-primary(type='submit') Submit
+
+#delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='Delete Task', aria-hidden='true')
+  .modal-dialog.modal-dialog-centered(role='document')
+    .modal-content
+      .modal-header
+        h5.modal-title Delete Task
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+      .modal-body Are you sure you want to delete "Task
+        span#taskId
+      .modal-footer
+        button.btn.btn-secondary(type='button', data-dismiss='modal') No
+        button#deleteBtn.btn.btn-danger(type='submit') Yes
+
+

@@ -41,7 +41,6 @@ module.exports = class Task {
 	}
 
 	create(task) {
-		console.log(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points]);
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
 				.then((res) => {
@@ -56,19 +55,13 @@ module.exports = class Task {
 
 	delete(id) {
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(DELETE_TASK_QUERY, id)
+			this._piergiorgio.query(DELETE_TASK_QUERY, [id])
 				.then((res) => {
-					resolve();
+					resolve(res);
 				})
 				.catch((err) => {
 					reject(err);
 				});
 		});
-	}
-
-	edit(id) {
-		this._piergiorgio.query('')
-			.then(() => {})
-			.catch((err) => {});
 	}
 }

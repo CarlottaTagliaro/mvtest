@@ -61,7 +61,17 @@ router.post('/tasks', (req, res) => {
   });
 });
 
+router.delete('/tasks/:id', (req, res) => {
+  db.task.delete(req.params.id).then(data => {
+    res.status(204);
+    res.send();
+  }).catch(err => {
+    res.status(500);
+    res.send(err.message);
+  });
+});
+
+
 //router.put('/tasks/:id', db.editTask);
-//router.delete('/tasks/:id', db.deleteTask);
 
 module.exports = router;

@@ -46,8 +46,6 @@ router.get('/tasks', (req, res) => {
 
 router.get('/tasks/:id', (req, res) => {
 	db.task.getOne(req.params.id).then(data => {
-		console.log(data);
-
 		// Temporary fix
 		data.users = [{
 			email: 'kekke'
