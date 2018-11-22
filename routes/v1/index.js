@@ -1,11 +1,11 @@
 var express = require('express'),
   router = express.Router();
-const db = require('../../controllers/db.js');
+const db = require('../../controllers/db');
 
 router.use('/auth', require('./auth.js'));
 
 router.get('/tasks', (req, res) => {
-  db.getAllTasks().then((data) => {
+  db.task.getAll().then((data) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
@@ -15,7 +15,7 @@ router.get('/tasks', (req, res) => {
 });
 
 router.get('/tasks/:id', (req, res) => {
-  db.getOneTask(req.params.id).then((data) => {
+  db.task.getOne(req.params.id).then((data) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
@@ -52,7 +52,7 @@ router.post('/tasks', (req, res) => {
 
   console.log(task)
 
-  db.createTask(task).then(data => {
+  db.task.create(task).then(data => {
     res.status(201);
     res.send(data);
   }).catch(err => {

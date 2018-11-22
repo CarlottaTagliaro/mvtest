@@ -1,7 +1,7 @@
 var express = require('express'),
 	router = express.Router();
 
-const db = require('../../controllers/db.js');
+const db = require('../../controllers/db/index.js');
 
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;

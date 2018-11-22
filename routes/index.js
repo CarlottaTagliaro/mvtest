@@ -1,6 +1,6 @@
 var express = require('express'),
 	router = express.Router();
-const db = require(__basedir + '/controllers/db.js');
+const db = require(__basedir + '/controllers/db');
 
 router.get('/', (req, res) => {
 	res.render('index', {
@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/tasks', (req, res) => {
-	db.getAllTasks().then(data => {
+	db.task.getAll().then(data => {
 		let tasks = [];
 		for (let task of data) {
 			tasks.push({
@@ -45,7 +45,7 @@ router.get('/tasks', (req, res) => {
 });
 
 router.get('/tasks/:id', (req, res) => {
-	db.getOneTask(req.params.id).then(data => {
+	db.task.getOne(req.params.id).then(data => {
 		console.log(data);
 
 		// Temporary fix
