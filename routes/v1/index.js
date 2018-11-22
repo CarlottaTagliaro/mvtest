@@ -31,35 +31,37 @@ router.get('/tasks/:id', (req, res) => {
 });
 
 router.post('/tasks', (req, res) => {
+
   let text = {
     question: req.body.question
   };
   let task = {
     points: req.body.points,
-    id_type: 0
+    id_type: 1
   }
 
-  if (req.body.answer1 || req.body.answer || req.body.answer3 || req.body.answer4) {
+  if (req.body.answer1 || req.body.answer2 || req.body.answer3 || req.body.answer4) {
     text.choices = [req.body.answer1, req.body.answer2, req.body.answer3, req.body.answer4];
 
     if (req.body.multipleChoice == 'on')
-      task.id_type = 1;
+      task.id_type = 3;
     else
       task.id_type = 2;
-
   }
   task.text = text
+
+  console.log(task)
 
   db.createTask(task).then(data => {
     res.status(201);
     res.send(data);
   }).catch(err => {
     res.status(500);
-    res.send(err.message);
+    res.send(err);
   });
 });
 
-router.put('/tasks/:id', db.editTask);
-router.delete('/tasks/:id', db.deleteTask);
+//router.put('/tasks/:id', db.editTask);
+//router.delete('/tasks/:id', db.deleteTask);
 
 module.exports = router;

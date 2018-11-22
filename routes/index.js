@@ -31,7 +31,7 @@ router.get('/tasks', (req, res) => {
 		for (let task of data) {
 			tasks.push({
 				url: '/tasks/' + task.id,
-				name: task.text,
+				name: JSON.parse(task.text).question,
 				small: task.type
 			});
 		}
@@ -46,12 +46,15 @@ router.get('/tasks', (req, res) => {
 
 router.get('/tasks/:id', (req, res) => {
 	db.getOneTask(req.params.id).then(data => {
+		console.log(data);
 
 		// Temporary fix
 		data.users = [{
 			email: 'kekke'
 		}];
-		data.choices = ['First'];
+
+		data.choices = JSON.parse(data.text).choices
+		data.text = JSON.parse(data.text).question
 
 		res.render('task', {
 			page: 'tasks',

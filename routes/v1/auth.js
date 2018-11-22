@@ -14,7 +14,8 @@ router.use(session({
 	resave: false,
 	cookie: {
 		maxAge: 30 * 24 * 60 * 60 * 1000
-	} // 30 days
+	}, // 30 days
+	saveUninitialized: false,
 }));
 
 passport.serializeUser((user, cb) => {

@@ -28,6 +28,7 @@ function DB() {
 	});
 
 	self._piergiorgio.on('error', (err) => {
+		console.log("Mistake in db.js line 31")
 		console.error('DB error: ', err.stack);
 	})
 
@@ -64,11 +65,11 @@ function DB() {
 	}
 
 	self.createTask = (task) => {
+		console.log(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points]);
 		return new Promise((resolve, reject) => {
 			self._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
 				.then((res) => {
-					console.log(res);
-					resolve(res);
+					resolve(res.rows[0]);
 				})
 				.catch((err) => {
 					console.error(err);
