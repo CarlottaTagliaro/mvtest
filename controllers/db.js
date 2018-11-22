@@ -7,7 +7,7 @@ const connString = process.env.DATABASE_URL;
 function DB() {
 	const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id_Type = Type.Id; ";
 	const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;"
-	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text) VALUES(${id_type}, ${text}) RETURNING Id;"
+	const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text, Points) VALUES($1, $2, $3) RETURNING Id;"
 	const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
 	const GET_ALL_EXAMS_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam;"
 	const GET_SINGLE_EXAM_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam AND Exam.Id=$1;"
@@ -31,6 +31,7 @@ function DB() {
 		console.error('DB error: ', err.stack);
 	})
 
+	// TODO: parse text for answers (if not open question)
 	self.getAllTasks = () => {
 		return new Promise((resolve, reject) => {
 			self._piergiorgio.query(GET_ALL_TASK_QUERY)
@@ -62,21 +63,18 @@ function DB() {
 		});
 	}
 
-	self.createTask = (req, res, next) => {
-		db.query(CREATE_SINGLE_TASK_QUERY, req.body, function (err, result) {
-				if (err) throw err;
-				let id = result.row[0].Id;
-			}).then(() => {
-				res.status(201)
-					.json({
-						status: 'Created',
-						message: 'Inserted one task',
-						idTask: id
-					});
-			})
-			.catch((err) => {
-				return next(err);
-			});
+	self.createTask = (task) => {
+		return new Promise((resolve, reject) => {
+			self._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
+				.then((res) => {
+					console.log(res);
+					resolve(res);
+				})
+				.catch((err) => {
+					console.error(err);
+					reject(err);
+				});
+		});
 	}
 
 	self.deleteTask = (req, res, next) => {

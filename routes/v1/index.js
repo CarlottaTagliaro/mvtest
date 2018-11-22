@@ -10,7 +10,7 @@ router.get('/tasks', (req, res) => {
     res.json(data);
   }).catch((err) => {
     res.status(500);
-    res.send(err);
+    res.send(err.message);
   });
 });
 
@@ -26,11 +26,39 @@ router.get('/tasks/:id', (req, res) => {
         break;
     }
     res.status(500);
-    res.send(err);
+    res.send(err.message);
   });
 });
 
-router.post('/tasks', db.createTask);
+router.post('/tasks', (req, res) => {
+  let text = {
+    question: req.body.question
+  };
+  let task = {
+    points: req.body.points,
+    id_type: 0
+  }
+
+  if (req.body.answer1 || req.body.answer || req.body.answer3 || req.body.answer4) {
+    text.choices = [req.body.answer1, req.body.answer2, req.body.answer3, req.body.answer4];
+
+    if (req.body.multipleChoice == 'on')
+      task.id_type = 1;
+    else
+      task.id_type = 2;
+
+  }
+  task.text = text
+
+  db.createTask(task).then(data => {
+    res.status(201);
+    res.send(data);
+  }).catch(err => {
+    res.status(500);
+    res.send(err.message);
+  });
+});
+
 router.put('/tasks/:id', db.editTask);
 router.delete('/tasks/:id', db.deleteTask);
 

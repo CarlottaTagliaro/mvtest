@@ -6,8 +6,9 @@ INSERT INTO Users VALUES(1,'Topolino@gmail.com', 'Topolino');
 INSERT INTO Users VALUES(2,'Paperino@gmail.com', 'Paperino');
 INSERT INTO Users VALUES(3,'PaperPaperogaino@gmail.com', 'Paperoga');
 --Type
-INSERT INTO Type VALUES(0, 'Open question');
-INSERT INTO Type VALUES(1, '3 answer question');
+INSERT INTO Type VALUES(0, 'Open answer');
+INSERT INTO Type VALUES(1, 'Single choice answer');
+INSERT INTO Type VALUES(2, 'Multiple choice answer');
 --Task
 INSERT INTO Task VALUES(0,'Domanda aperta generica1', 10, 0);
 INSERT INTO Task VALUES(1,'Domanda aperta generica2', 5, 0);

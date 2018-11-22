@@ -4,6 +4,9 @@ block head
   title mvtest
 
 block body
+  h1=title
+    if page!='home'
+      button.btn.btn-primary(data-toggle="modal" data-target="#create") New
   .list-group
     each item in objects
       a(href=item.url).list-group-item.list-group-item-action.flex-column.align-items-start
@@ -13,3 +16,10 @@ block body
           p.mb-1=item.desc
         if(item.small)
           small=item.small
+
+block foot
+  case page
+    when 'tasks'
+      include includes/taskManage.pug
+    when 'exams'
+      //include includes/examManage.pug

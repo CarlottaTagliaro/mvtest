@@ -1,0 +1,38 @@
+#create.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header
+        h5.modal-title Create Task
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+      form(action='/api/tasks' method='post')
+        .modal-body
+          .form-group
+            label(for='question') Question
+            textarea#question.form-control(name='question')
+          .form-group
+            label.sr-only(for='points') Points
+            input.form-control#points(type='number' name='points' placeholder='Points')
+            small.form-text.text-muted The maximum value of the task in points
+
+          label.mb-0 Answers
+          small.form-text.text-muted.mb-1.mt-0 Fill the fields below only if you want single/multiple choice type of answer
+          .form-group
+            label.sr-only(for='answer1') First answer
+            input.form-control#answer1(type='text' name='answer1' placeholder='First Answer')
+          .form-group
+            label.sr-only(for='answer2') Second answer
+            input.form-control#answer2(type='text' name='answer2' placeholder='Second Answer')
+          .form-group
+            label.sr-only(for='answer3') Third answer
+            input.form-control#answer3(type='text' name='answer3' placeholder='Third Answer')
+          .form-group
+            label.sr-only(for='answer4') Fourth answer
+            input.form-control#answer4(type='text' name='answer4' placeholder='Fouth Answer')
+          .form-check
+            input#multipleChoice.form-check-input(type='checkbox', name='multipleChoice')
+            label.form-check-label(for='multipleChoice') Multiple choice
+
+        .modal-footer
+          button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+          button.btn.btn-primary(type='submit') Submit

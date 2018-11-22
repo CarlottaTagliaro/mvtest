@@ -46,12 +46,12 @@ router.get('/tasks', (req, res) => {
 
 router.get('/tasks/:id', (req, res) => {
 	db.getOneTask(req.params.id).then(data => {
-		data.users = [];
-		data.users[0] = {};
-		data.users[0].email = 'kekke';
 
-		data.choices = [];
-		data.choices[0] = 'First'
+		// Temporary fix
+		data.users = [{
+			email: 'kekke'
+		}];
+		data.choices = ['First'];
 
 		res.render('task', {
 			page: 'tasks',
