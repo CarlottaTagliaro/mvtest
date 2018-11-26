@@ -5,6 +5,7 @@ const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
 
 module.exports = class Task {
 	constructor(db) {
+		this._typeCheck(db, {});
 		this._piergiorgio = db;
 	}
 
@@ -15,16 +16,18 @@ module.exports = class Task {
 				.then(res => {
 					resolve(res.rows);
 				})
-				.catch((err) => {
+				.catch(err => {
 					reject(err);
 				});
 		});
 	}
 
 	getOne(id) {
+		this._typeCheck(id, 0);
+
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(GET_SINGLE_TASK_QUERY, [id])
-				.then((res) => {
+				.then(res => {
 					if (res.rows.length == 0) {
 						let error = new Error("Task not found");
 						error.errno = 404;
@@ -33,14 +36,16 @@ module.exports = class Task {
 						resolve(res.rows[0]);
 					}
 				})
-				.catch((err) => {
-					console.log(err);
+				.catch(err => {
+					console.error(err);
 					reject(err);
 				});
 		});
 	}
 
 	create(task) {
+		this._typeCheck(task, {});
+
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
 				.then((res) => {
@@ -53,15 +58,41 @@ module.exports = class Task {
 		});
 	}
 
+	edit(task, newTask) {
+		this._typeCheck(task, 0);
+		this._typeCheck(newTask, {});
+
+		return new Promise((resolve, reject) => {
+			this._piergiorgio.query(EDIT_TASK_QUERY, [newTask])
+				.then(res => {
+					resolve(res);
+				}).catch(err => {
+					reject(err);
+				})
+		});
+	}
+
 	delete(id) {
+		this._typeCheck(id, 0);
+
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(DELETE_TASK_QUERY, [id])
 				.then((res) => {
-					resolve(res);
+					resolve();
 				})
 				.catch((err) => {
 					reject(err);
 				});
 		});
+	}
+
+	//returns true when a has the same value of a_std_value
+	//throws Error on assertion failed and returns false
+	_typeCheck(a, a_std_value) {
+		if ((typeof a) === typeof (a_std_value)) {
+			return true;
+		}
+		throw new Error("Type assertion failed");
+		return false; //consistency in returns, not of real value;
 	}
 }
