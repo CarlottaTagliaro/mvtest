@@ -18,6 +18,7 @@ module.exports = class Task {
 					resolve(res.rows);
 				})
 				.catch(err => {
+					console.error(err);
 					reject(err);
 				});
 		});
@@ -47,6 +48,10 @@ module.exports = class Task {
 	create(task) {
 		this._typeCheck(task, {});
 
+		this._typeCheck(task.id_type, 0);
+		this._typeCheck(task.text, '');
+		this._typeCheck(task.points, 0);
+
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
 				.then(res => {
@@ -63,14 +68,23 @@ module.exports = class Task {
 		this._typeCheck(id, 0);
 		this._typeCheck(task, {});
 
+		this._typeCheck(task.id_type, 0);
+		this._typeCheck(task.text, '');
+		this._typeCheck(task.points, 0);
+
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(UPDATE_TASK_QUERY, [task.id_type, task.text, task.points, id])
-				.then(res => {
-					resolve(res.rows[0]);
-				})
-				.catch(err => {
-					reject(err);
-				});
+			this.getOne(id).then(() => {
+				this._piergiorgio.query(UPDATE_TASK_QUERY, [task.id_type, task.text, task.points, id])
+					.then(res => {
+						resolve(res.rows[0]);
+					})
+					.catch(err => {
+						reject(err);
+					});
+			}).catch(err => {
+				console.error(err);
+				reject(err)
+			});
 		});
 	}
 
@@ -78,13 +92,18 @@ module.exports = class Task {
 		this._typeCheck(id, 0);
 
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(DELETE_TASK_QUERY, [id])
-				.then(res => {
-					resolve();
-				})
-				.catch(err => {
-					reject(err);
-				});
+			this.getOne(id).then(() => {
+				this._piergiorgio.query(DELETE_TASK_QUERY, [id])
+					.then(res => {
+						resolve();
+					})
+					.catch(err => {
+						reject(err);
+					});
+			}).catch(err => {
+				console.error(err);
+				reject(err);
+			});
 		});
 	}
 

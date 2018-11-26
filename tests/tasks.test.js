@@ -1,5 +1,6 @@
 const db = require('../controllers/db');
 
+const functions = ['getAll', 'getOne', 'create', 'edit', 'delete'];
 const expectedTask = {
 	id: expect.any(Number),
 	text: expect.any(String),
@@ -9,8 +10,6 @@ const expectedTask = {
 var taskId = null;
 
 test('Function Definition', () => {
-	let functions = ['getAll', 'getOne', 'create', 'edit', 'delete'];
-
 	for (method of functions) {
 		expect(db.task[method]).toBeDefined();
 	}
@@ -36,8 +35,23 @@ test('getAll should return an array of tasks', () => {
 	return expect(db.task.getAll()).resolves.toEqual(expect.arrayContaining([expectedTask]));
 });
 
+test('getOne with wrong id should reject error', () => {
+	return expect(db.task.getOne(-1)).rejects.toThrow();
+});
+
 test('getOne should return a task', () => {
 	return expect(db.task.getOne(taskId)).resolves.toMatchObject(expectedTask);
+});
+
+
+test('edit with wrong id should reject an error', () => {
+	let task = {
+		id_type: 1,
+		text: "{ \"question\": \"not the same sample question\" }",
+		points: 15
+	}
+
+	expect(db.task.edit(-15, task)).rejects.toBeInstanceOf(Error);
 });
 
 test('edit should edit and return a task', () => {
@@ -54,6 +68,10 @@ test('delete should delete a task', () => {
 	return expect(db.task.delete(taskId)).resolves.toBeUndefined();
 });
 
+test('delete with wrong id should reject an error', () => {
+	return expect(db.task.delete(taskId)).rejects.toBeInstanceOf(Error);
+});
+
 afterAll(() => {
 	db.close();
-})
+});
