@@ -1,11 +1,12 @@
-var db = require('../controllers/db');
-var expectedTask = {
+const db = require('../controllers/db');
+
+const expectedTask = {
 	id: expect.any(Number),
 	text: expect.any(String),
 	points: expect.any(Number),
 	type: expect.any(String)
 };
-var taskId = ''
+var taskId = null;
 
 test('Function Definition', () => {
 	let functions = ['getAll', 'getOne', 'create', 'edit', 'delete'];
