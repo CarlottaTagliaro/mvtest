@@ -1,6 +1,7 @@
-const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id_Type = Type.Id; ";
+const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id_Type = Type.Id;";
 const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;"
 const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text, Points) VALUES($1, $2, $3) RETURNING Id;"
+const UPDATE_TASK_QUERY = "UPDATE Task SET Id_Type=$1, Text=$2, Points=$3 WHERE Id=$4 RETURNING *;"
 const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
 
 module.exports = class Task {
@@ -48,27 +49,28 @@ module.exports = class Task {
 
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
-				.then((res) => {
+				.then(res => {
 					resolve(res.rows[0]);
 				})
-				.catch((err) => {
+				.catch(err => {
 					console.error(err);
 					reject(err);
 				});
 		});
 	}
 
-	edit(task, newTask) {
-		this._typeCheck(task, 0);
-		this._typeCheck(newTask, {});
+	edit(id, task) {
+		this._typeCheck(id, 0);
+		this._typeCheck(task, {});
 
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(EDIT_TASK_QUERY, [newTask])
+			this._piergiorgio.query(UPDATE_TASK_QUERY, [task.id_type, task.text, task.points, id])
 				.then(res => {
-					resolve(res);
-				}).catch(err => {
-					reject(err);
+					resolve(res.rows[0]);
 				})
+				.catch(err => {
+					reject(err);
+				});
 		});
 	}
 
@@ -77,10 +79,10 @@ module.exports = class Task {
 
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(DELETE_TASK_QUERY, [id])
-				.then((res) => {
+				.then(res => {
 					resolve();
 				})
-				.catch((err) => {
+				.catch(err => {
 					reject(err);
 				});
 		});
