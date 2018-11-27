@@ -51,7 +51,7 @@ test('edit with wrong id should reject an error', () => {
 		points: 15
 	}
 
-	expect(db.task.edit(-15, task)).rejects.toBeInstanceOf(Error);
+	return expect(db.task.edit(-15, task)).rejects.toBeInstanceOf(Error);
 });
 
 test('edit should edit and return a task', () => {
