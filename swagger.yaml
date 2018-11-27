@@ -137,6 +137,7 @@ paths:
       parameters:
         - name: "body"
           in: "body"
+          description: "Properties of the exam to be added"
           required: true
           schema:
             $ref: "#/definitions/ExamRequest"
@@ -738,39 +739,63 @@ responses:
       description: "Internal Server Error"
       
 definitions:
+  TaskType:
+    title: "TaskType"
+    type: "object"
+    properties:
+      id:
+        type: "number"
+        description: "unique ID of the task type (1 - open question,2 - single choice ,3 - multiplechoice)"
+      choices:
+        type: "array"
+        description: "possible answers if needed"
+        items:
+          type: "string"
+    required:
+    - id
+    example:
+      id: 2
+      choices:
+        - "First Answer"
+        - "Second Answer"
+        - "Third Answer"
+        - "Fourth Answer"   
   Task:
     title: "Task"
     type: "object"
     properties:
       id:
         type: "number"
+        description: "unique ID of the task"
       question:
         type: "string"
+        description: "text of the asked question"
       points:
         type: "number"
         format: "integer"
-      choices:
-        type: "array"
-        items:
-          type: "string"
+        description: "value of the task in points"
+      type:
+        description: "type of the task"
+        $ref: "#/definitions/TaskType"
       users:
         type: "array"
+        description: "users who have access to the task"
         items:
           $ref: "#/definitions/UserPerms"
     required:
       - "id"
       - "question"
-      - "choices"
     example:
       id:  0
       question: "Example question"
-      type: 1
       points: 10
-      choices:
-        - "First Answer"
-        - "Second Answer"
-        - "Third Answer"
-        - "Fourth Answer"
+      type:
+        id: 2
+        choices:
+          - "First Answer"
+          - "Second Answer"
+          - "Third Answer"
+          - "Fourth Answer"   
       users:
         - email: "owner@mail.com"
           owner: true
@@ -783,11 +808,14 @@ definitions:
     type: "object"
     properties:
       email:
+        description: "email of the user"
         type: "string"
         format: "email"
       name:
+        description: "username of the user"
         type: "string"
       admin:
+        description: "isAdmin flag"
         type: "boolean"
     example:
       email: "user@mail.com"
@@ -798,14 +826,18 @@ definitions:
     type: "object"
     properties:
       id:
+        description: "unique ID of the user"
         type: "number"
         format: "integer"
       email:
+        description: "email of the user"
         type: "string"
         format: "email"
       name:
+        description: "username of the user"
         type: "string"
       admin:
+        description: "isAdmin flag"
         type: "boolean"
     example:
       id: 3
@@ -817,8 +849,10 @@ definitions:
     type: "object"
     properties:
       name:
+        description: "name of the class"
         type: "string"
       users:
+        description: "users who belong to the class"
         type: "array"
         items:
           $ref: "#/definitions/User"
@@ -832,10 +866,13 @@ definitions:
     type: "object"
     properties:
       id:
+        description: "unique ID of the class"
         type: "integer"
       name:
+        description: "name of the class"
         type: "string"
       users:
+        description: "users who belong to the class"
         type: "array"
         items:
           $ref: "#/definitions/User"
@@ -850,13 +887,17 @@ definitions:
     type: "object"
     properties: 
       id:
+        description: "unique ID of the exam"
         type: "number"
       owner:
-          $ref: "#/definitions/User"
+        description: "user who created the exam"
+        $ref: "#/definitions/User"
       totalPoints:
+        description: "total points of the exam"
         type: "number"
         format: "integer"
       tasks:
+        description: "questions contained in the exam"
         type: "array"
         items:
           type: "number"
@@ -874,8 +915,14 @@ definitions:
     type: "object"
     properties:
       owner:
-          $ref: "#/definitions/User"
+        description: "user who created the exam"
+        $ref: "#/definitions/User"
+      totalPoints:
+        description: "total points of the exam"
+        type: "number"
+        format: "integer"
       tasks:
+        description: "questions contained in the exam"
         type: "array"
         items:
           type: "number"
@@ -883,64 +930,84 @@ definitions:
       owner:
         email: "g.s@agg.it"
         name: "Mario"
+      totalPoints: 60
       tasks:
         - 0
         - 1
-
-
   UserPerms:
     title: "User Perms"
     type: "object"
     properties:
-      email:
-        type: "string"
+      id:
+        description: "unique ID of the user"
+        type: "number"
       owner:
+        description: "isOwner flag"
         type: "boolean"
       canWrite:
+        description: "canWrite flag"
         type: "boolean"
   TaskRequest:
-    title: "Task Request"
+    title: "TaskRequest"
     type: "object"
     properties:
       question:
         type: "string"
+        description: "text of the asked question"
       points:
         type: "number"
         format: "integer"
-      choices:
+        description: "value of the task in points"
+      type:
+        description: "type of the task"
+        $ref: "#/definitions/TaskType"
+      users:
         type: "array"
+        description: "users who have access to the task"
         items:
-          type: "string"
+          $ref: "#/definitions/UserPerms"
     required:
       - "question"
-      - "choices"
     example:
-      question: "Example Question"
+      question: "Example question"
       points: 10
-      choices:
-        - "First Answer"
-        - "Second Answer"
-        - "Third Answer"
-        - "Fourth Answer"
+      type:
+        id: 2
+        choices:
+          - "First Answer"
+          - "Second Answer"
+          - "Third Answer"
+          - "Fourth Answer"   
+      users:
+        - email: "owner@mail.com"
+          owner: true
+          canWrite: true
+        - email: "user@mail.com"
+          owner: false
+          canwrite: false
   AssignmentRequest:
     title: "AssignmentRequest"
     type: "object"
     properties: 
       deadline:
+        description: "deadline before which you must have submitted"
         type: "string"
         format: "date-time"
       review:
+        description: "flag is setted if classmates will be able to review submissions"
         type: "boolean"
       TA:
+        description: "TA who assigned the exam"
         $ref: "#/definitions/User"
       class:
+        description: "class to which the exam is assigned"
         type: "array"
         items:
           $ref: "#/definitions/Class"
     example:
       deadline: "12-12-2018"
       review: true
-      TA: 
+      TA:
         email: "g.s@agg.it"
         name: "Mario"
       class:
@@ -954,15 +1021,20 @@ definitions:
     type: "object"
     properties: 
       id:
+        description: "unique ID of the assignment"
         type: "number"
       deadline:
+        description: "deadline before which you must have submitted"
         type: "string"
         format: "date-time"
       review:
+        description: "flag is setted if classmates will be able to review submissions"
         type: "boolean"
       TA:
+        description: "TA who assigned the exam"
         $ref: "#/definitions/User"
       class:
+        description: "class to which the exam is assigned"
         type: "array"
         items:
           $ref: "#/definitions/Class"
@@ -984,15 +1056,20 @@ definitions:
     type: "object"
     properties:
       answer:
+        description: "answer provided by the student"
         type: "string"
       time:
+        description: "time of submission"
         type: "string"
         format: "date-time"
       task-id: 
+        description: "unique ID of the task whose submission is being done"
         type: "number"
       Author: 
+        description: "student who did the submission"
         $ref: "#/definitions/User" #is the id enough?
       assignment-id:
+        description: "unique ID of the assignment"
         type: "number"
     example:
       answer: "the correct answer is number 2"
@@ -1007,22 +1084,30 @@ definitions:
     type: "object"
     properties:
       id:
+        description: "unique ID of the submission"
         type: "number"
       answer:
+        description: "answer provided by the student"
         type: "string"
       time:
+        description: "time of submission"
         type: "string"
         format: "date-time"
       task-id: 
+        description: "unique ID of the task whose submission is being done"
         type: "number"
-      mark:
+      mark: # ???????
+        description: "mark that will be assigned by TA"
         type: "number"
         format: "integer"
       needsRevision:
+        description: "flag setted if the revision is done by students"
         type: "boolean"
       Author: 
+        description: "student who did the submission"
         $ref: "#/definitions/User" #is the id enough?
       assignment-id:
+        description: "unique ID of the assignment"
         type: "number"
     example:
       id: 0
@@ -1040,12 +1125,16 @@ definitions:
     type: "object"
     properties:
       submission-id:
+        description: "unique ID of the submission that is being rewieved"
         type: "number"
       author:
+        description: "author of the review"
         $ref: "#/definitions/User"
       mark:
+        description: "mark assigned to a specific submission"
         type: "number"
       comment:
+        description: "provides corrections, possible answer or other comments"
         type: "string"
     example:
       submission-id : 1 
@@ -1059,14 +1148,19 @@ definitions:
     type: "object"
     properties:
       id: 
+        description: "unique ID of the review"
         type: "number"
       submission-id:
+        description: "unique ID of the submission that is being rewieved"
         type: "number"
       author:
+        description: "author of the review"
         $ref: "#/definitions/User"
       mark:
+        description: "mark assigned to a specific submission"
         type: "number"
       comment:
+        description: "provides corrections, possible answer or other comments"
         type: "string"
     example:
       id: 0
