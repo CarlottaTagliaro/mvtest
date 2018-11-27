@@ -1,6 +1,6 @@
-if(_debug == undefined){
+if(this._debug == undefined){
   const _debug = true;
-}else if(_debug){
+}else if(this._debug){
   log = console.log
 }else{
   log = function(_){};
@@ -20,6 +20,7 @@ function typecheck(a, a_std_value){
 //working with the classes
 //the proposed functions are get, edit, and delete
 function class_v(_db){
+  typecheck((_db ? _db : {})["query"], function(){});
   const GET_ALL_CLASSES_QUERY = "SELECT id, name FROM class;";
   const GET_CLASS_BY_ID_QUERY = "SELECT id, name FROM class WHERE id = $1;";
   const CREATE_CLASS_QUERY ="INSERT INTO class VALUE(id, name);";
@@ -38,10 +39,10 @@ function class_v(_db){
       });
     });
   };
-  self.getById = _id => {
-    typecheck(_id, 0);
+  self.getById = _c => {
+    typecheck(_c["id"], 0);
     return new Promise((res, rej)=>{
-      self.db.query(GET_CLASS_BY_ID_QUERY, [_id] )
+      self.db.query(GET_CLASS_BY_ID_QUERY, [_c.id] )
       .then( _r =>{
         res(_r.rows[0]);
       }).catch( _e =>{
@@ -50,10 +51,10 @@ function class_v(_db){
       });
     });
   };
-  self.create = _name => {
-    typecheck(_name, "");
+  self.create = c => {
+    typecheck(c["name"], "");
     return new Promise((res, rej)=>{
-      self.db.query(CREATE_CLASS_QUERY, [_name])
+      self.db.query(CREATE_CLASS_QUERY, [_c.name])
       .then( _res =>{
         res(_res);
       }).catch( _err => {
@@ -62,11 +63,11 @@ function class_v(_db){
       });
     })
   };
-  self.edit = (_id, _name, _new_name) => {
-    typecheck(_id, 0); 
-    typecheck(name, "");
+  self.edit = (_c) => {
+    typecheck(_c["id"], 0); 
+    typecheck(_c["name"], "");
     return new Promise((res, rej)=>{
-      self.db.query(EDIT_CLASS_QUERY, [_id, _new_name])
+      self.db.query(EDIT_CLASS_QUERY, [_c.id, _c.name])
       .then( _res => {
         res(_res);
       }).catch( _err => {
@@ -75,10 +76,10 @@ function class_v(_db){
       });
     });
   };
-  self.delete = _id => {
-    typecheck(_id, 0);
+  self.delete = _c => {
+    typecheck(_c["id"], 0);
     return new Promise((res, rej)=>{
-      self.db.query(DELETE_CLASS_QUERY, [_id])
+      self.db.query(DELETE_CLASS_QUERY, [_c.id])
       .then( _res => {
         res(_res);
       }).catch( _err => {
@@ -88,3 +89,5 @@ function class_v(_db){
     });
   }
 }
+
+module.exports = class_v;
