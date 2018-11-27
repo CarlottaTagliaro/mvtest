@@ -64,4 +64,30 @@ router.post('/tasks', (req, res) => {
 //router.put('/tasks/:id', db.editTask);
 //router.delete('/tasks/:id', db.deleteTask);
 
+router.get('/exams', (req, res) => {
+  db.exam.getAll().then((data) => {
+    res.status(200);
+    res.json(data);
+  }).catch((err) => {
+    res.status(500);
+    res.send(err.message);
+  });
+});
+
+router.get('/exams/:id', (req, res) => {
+  db.exam.getOne(req.params.id).then((data) => {
+    res.status(200);
+    res.json(data);
+  }).catch((err) => {
+    switch (err.errno) {
+      case 404:
+        res.status(404);
+        res.send(err.message);
+        break;
+    }
+    res.status(500);
+    res.send(err.message);
+  });
+});
+
 module.exports = router;
