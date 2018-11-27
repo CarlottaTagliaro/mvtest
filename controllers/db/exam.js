@@ -25,7 +25,7 @@ module.exports = class Exam {
     }
 
     getOne(id) {
-        this._typeCheck(id,1);
+        //this._typeCheck(id,1); -> is it necessary or the tests are enough?
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [id])
 				.then(res => {
@@ -44,15 +44,15 @@ module.exports = class Exam {
     }
 
     create(exam) {
-        this._typeCheck(exam, {});
-        this._typeCheck(exam.id_creator,1);
-        this._typeCheck(exam.tasks, []);
+        //this._typeCheck(exam, {});
+        //this._typeCheck(exam.id_creator,1);
+        //this._typeCheck(exam.tasks, []);
         return new Promise((resolve,reject) => {
             this._piergiorgio.query(CREATE_EXAM_QUERY, [exam.id_creator])
                 .then(res => {
                     let id = res.rows[0];
                     for (id_task of exam.tasks) {
-                        this._typeCheck(id_task,1);
+                        //this._typeCheck(id_task,1);
                         this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
                     };
                     resolve(res.rows[0]);
@@ -64,7 +64,7 @@ module.exports = class Exam {
     }
 
     delete(id) {
-        this._typeCheck(id,1);
+        //this._typeCheck(id,1);
         return new Promise((resolve, reject) => {
             this._piergiorgio.query(DELETE_EXAM_QUERY, [id])
                 .then(res =>{
