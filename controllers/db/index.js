@@ -4,13 +4,9 @@ const {
 
 const connString = process.env.DATABASE_URL;
 const Task = require('./task.js');
+const Exam = require('./exam.js');
 
 function DB() {
-
-	const GET_ALL_EXAMS_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam;"
-	const GET_SINGLE_EXAM_QUERY = "SELECT * FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam AND Exam.Id=$1;"
-	const DELETE_EXAM_QUERY = "DELETE FROM Exam WHERE Id=$1; DELETE FROM ExamTask WHERE Id_Exam=$1;"
-
 	var self = this;
 	self._piergiorgio = new Client({
 		connectionString: connString,
@@ -30,6 +26,7 @@ function DB() {
 	});
 
 	self.task = new Task(self._piergiorgio);
+	self.exam = new Exam(self._piergiorgio);
 }
 
 const instance = new DB();
