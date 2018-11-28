@@ -4,9 +4,11 @@ block head
   title mvtest
 
 block body
-  h1=title
+  div.d-flex.justify-content-between.align-items-center.mb-1
+    h1.mb-0=title
     if page!='home'
-      button.btn.btn-primary(data-toggle="modal" data-target="#create") New
+      div
+        button.btn.btn-primary(data-toggle="modal" data-target="#create") New
   .list-group
     each item in objects
       a(href=item.url).list-group-item.list-group-item-action.flex-column.align-items-start
