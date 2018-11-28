@@ -1,4 +1,4 @@
-class_v = require('../controllers/class_view.js');
+class_v = require('../controllers/db/class_view.js');
 
 test('as_defined_in_spec', ()=>{
   let spec = ['getAll', 'getById', 'create', 'edit', 'delete'];
