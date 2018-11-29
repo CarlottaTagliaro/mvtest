@@ -11,10 +11,15 @@ module.exports = class Task {
 	}
 
 	getAll() {
-		// TODO: parse text for answers (if not open question)
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(GET_ALL_TASK_QUERY)
 				.then(res => {
+					for (let i in res.rows) {
+						let text = JSON.parse(res.rows[i].text);
+						if (text.choices)
+							res.rows[i].choices = text.choices;
+						res.rows[i].text = text.question;
+					}
 					resolve(res.rows);
 				})
 				.catch(err => {
@@ -25,7 +30,7 @@ module.exports = class Task {
 	}
 
 	getOne(id) {
-		this._typeCheck(id, 0);
+		this._typeCheck(id, 1);
 
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(GET_SINGLE_TASK_QUERY, [id])
@@ -83,7 +88,7 @@ module.exports = class Task {
 					});
 			}).catch(err => {
 				console.error(err);
-				reject(err)
+				reject(err);
 			});
 		});
 	}
@@ -110,10 +115,15 @@ module.exports = class Task {
 	//returns true when a has the same value of a_std_value
 	//throws Error on assertion failed and returns false
 	_typeCheck(a, a_std_value) {
-		if ((typeof a) === typeof (a_std_value)) {
+		if ((this.getType(a)) == this.getType((a_std_value))) {
 			return true;
 		}
 		throw new Error("Type assertion failed");
 		return false; //consistency in returns, not of real value;
 	}
+
+	getType(value) {
+		return Object.prototype.toString.call(value)
+			.replace(/^\[object |\]$/g, '').toLowerCase();
+	};
 }
