@@ -69,7 +69,7 @@ module.exports = class Task {
 		});
 	}
 
-	edit(id, task) {
+	update(id, task) {
 		this._typeCheck(id, 0);
 		this._typeCheck(task, {});
 

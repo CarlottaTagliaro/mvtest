@@ -1,6 +1,6 @@
 const db = require('../controllers/db');
 
-const functions = ['getAll', 'getOne', 'create', 'edit', 'delete'];
+const functions = ['getAll', 'getOne', 'create', 'update', 'delete'];
 const expectedTask = {
 	id: expect.any(Number),
 	text: expect.any(String),
@@ -44,24 +44,24 @@ test('getOne should return a task', () => {
 });
 
 
-test('edit with wrong id should reject an error', () => {
+test('update with wrong id should reject an error', () => {
 	let task = {
 		id_type: 1,
 		text: "{ \"question\": \"not the same sample question\" }",
 		points: 15
 	}
 
-	return expect(db.task.edit(-15, task)).rejects.toBeInstanceOf(Error);
+	return expect(db.task.update(-15, task)).rejects.toBeInstanceOf(Error);
 });
 
-test('edit should edit and return a task', () => {
+test('update should update and return a task', () => {
 	let task = {
 		id_type: 1,
 		text: "{ \"question\": \"not the same sample question\" }",
 		points: 15
 	}
 
-	return expect(db.task.edit(taskId, task)).resolves.toMatchObject(task);
+	return expect(db.task.update(taskId, task)).resolves.toMatchObject(task);
 });
 
 test('delete should delete a task', () => {
