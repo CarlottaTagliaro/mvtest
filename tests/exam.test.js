@@ -30,43 +30,43 @@ test('GET /api/exams/:id - get exam item by id', () => {
 });
 
 test('GET /api/exams/:id - error if parameter is a string', () => {
-    return expect(db.exam.getOne('string')).rejects.toBeInstanceOf(Error);
+    return expect(() => {return db.exam.getOne('string')}).toThrowError();
 });
 
 test('GET /api/exams/:id - error if parameter is 0', () => {
-    return expect(db.exam.getOne(0)).rejects.toBeInstanceOf(Error);
+    return expect(() => {return db.exam.getOne(0)}).toThrowError();
 });
 
 test('GET /api/exams/:id - error if parameter is null', () => {
-    return expect(db.exam.getOne(null)).rejects.toBeInstanceOf(Error);
+    return expect(() => { return db.exam.getOne(null)}).toThrowError();
 });
 
 test('GET /api/exams/:id - error if parameter is negative', () => {
-    return expect(db.exam.getOne(-1)).rejects.toBeInstanceOf(Error);
+    return expect(() => { return db.exam.getOne(-1)}).toThrowError();
 });
 
 test('POST /api/exams - creates an exam and return its id', () => {
 	let exam = {
-        id_creator: expect.any(Number),
-        tasks : [expect.any(Number)]
+        id_creator: 2,
+        tasks : [1,2,3]
 		},
 		expected = {
 			id: expect.any(Number)
 		};
 
 	expect(db.exam.create(exam).then((res) => {
-		examId = parseInt(res.id);
+		examId = parseInt(res);
+		console.log(examId);
 		expect(res).toMatchObject(expected);
 	}));
 });
 
 test('POST /api/exams - error if there is no creator', () => {
 	let exam = {
-		id_creator: undefined,
         tasks : [expect.any(Number)]
 		};
 
-	return expect(db.exam.create(exam)).rejects.toBeInstanceOf(Error);
+		return expect(() => { return db.exam.create(exam)}).toThrowError();
 });
 
 test('POST /api/exams - error if creator is a string', () => {
@@ -75,7 +75,7 @@ test('POST /api/exams - error if creator is a string', () => {
         tasks : [expect.any(Number)]
 		};
 
-	expect(db.exam.create(exam)).rejects.toBeInstanceOf(Error);
+		return expect(() => { return db.exam.create(exam)}).toThrowError();
 });
 
 test('POST /api/exams - error if there is no task list', () => {
@@ -83,33 +83,66 @@ test('POST /api/exams - error if there is no task list', () => {
         id_creator: expect.any(Number)
 	};
 
-	return expect(db.exam.create(exam)).rejects.toBeInstanceOf(Error);
+	return expect(() => { return db.exam.create(exam)}).toThrowError();
 });
 
-test('DELETE /api/exams/:id - deletes a specific exam', () => {
-	return expect(db.exam.delete(examId)).resolves.toBeUndefined();
+test('POST /api/exams - error if task list is not an array of positive numbers', () => {
+	let exam = {
+		id_creator: expect.any(Number),
+		tasks : ['aaa',1,2]
+	};
+
+	return expect(() => { return db.exam.create(exam)}).toThrowError();
 });
+
+/*test('DELETE /api/exams/:id - deletes a specific exam', () => {
+	return expect(db.exam.delete(examId)).resolves.toBeUndefined();
+});*/
 
 test('DELETE /api/exams/:id - error if parameter is a string', () => {
-    return expect(db.exam.delete('string')).rejects.toBeInstanceOf(Error);
+    return expect(() => {return db.exam.getOne('string')}).toThrowError();
 });
 
 test('DELETE /api/exams/:id - error if parameter is 0', () => {
-    return expect(db.exam.delete(0)).rejects.toBeInstanceOf(Error);
+    return expect(() => {return db.exam.getOne(0)}).toThrowError();
 });
 
 test('DELETE /api/exams/:id - error if parameter is null', () => {
-    return expect(db.exam.delete(null)).rejects.toBeInstanceOf(Error);
+    return expect(() => {return db.exam.getOne(null)}).toThrowError();
 });
 
 test('DELETE /api/exams/:id - error if parameter is negative', () => {
-    return expect(db.exam.delete(-1)).rejects.toBeInstanceOf(Error);
+    return expect(() => {return db.exam.getOne(-1)}).toThrowError();
 });
 
-/*test('PUT /api/exams/:id - edit with negative id', () => {
+test('PUT /api/exams/:id - edit with negative id', () => {
     let exam = {
         id_creator: 2,
         tasks : [2,3,4,5]
 	}
-	expect(db.exam.edit(-15, exam)).rejects.toBeInstanceOf(Error);
-});*/
+	return expect(() => { return db.exam.edit(-15, exam)}).toThrowError();
+});
+
+test('PUT /api/exams/:id - edit with 0', () => {
+    let exam = {
+        id_creator: 2,
+        tasks : [2,3,4,5]
+	}
+	return expect(() => { return db.exam.edit(0, exam)}).toThrowError();
+});
+
+test('PUT /api/exams/:id - edit with id_creator string', () => {
+    let exam = {
+        id_creator: 'nome',
+        tasks : [2,3,4,5]
+	}
+	return expect(() => { return db.exam.edit(1, exam)}).toThrowError();
+});
+
+test('PUT /api/exams/:id - edit with task not of positive int', () => {
+    let exam = {
+        id_creator: 2,
+        tasks : [2,-4,4,5]
+	}
+	return expect(() => { return db.exam.edit(1, exam)}).toThrowError();
+});
