@@ -3,7 +3,7 @@ const GET_SINGLE_EXAM_QUERY = "SELECT Exam.Id,Exam.Id_Creator,ExamTask.Id_Task F
 const DELETE_EXAM_QUERY = "DELETE FROM Exam WHERE Id=$1;"
 const DELETE_TASKEXAM_QUERY = " DELETE FROM ExamTask WHERE Id_Exam=$1;";
 const CREATE_EXAM_QUERY = "INSERT INTO Exam(Id_Creator) VALUES ($1) RETURNING Id";
-const INSERT_TASK_IN_EXAM = "INSERT INTO Exam(Id_Exam,Id_Task) VALUES ($1,$2)";
+const INSERT_TASK_IN_EXAM = "INSERT INTO ExamTask(Id_Exam,Id_Task) VALUES ($1,$2)";
 
 module.exports = class Exam {
 
