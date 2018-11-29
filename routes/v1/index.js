@@ -90,4 +90,31 @@ router.get('/exams/:id', (req, res) => {
   });
 });
 
+router.post('/exams', (req, res) => {
+
+  let exam = {
+    id_creator: req.body.id_creator,
+    tasks: req.body.tasks
+  };
+
+  db.exam.create(exam).then(data => {
+    res.status(201);
+    res.send(data);
+  }).catch(err => {
+    res.status(500);
+    res.send(err);
+  });
+});
+
+
+router.delete('/exams/:id', (req, res) => {
+  db.exam.delete(req.params.id).then(data => {
+    res.status(204);
+    res.send();
+  }).catch(err => {
+    res.status(500);
+    res.send(err.message);
+  });
+});
+
 module.exports = router;

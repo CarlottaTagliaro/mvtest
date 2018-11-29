@@ -4,7 +4,6 @@ const DELETE_EXAM_QUERY = "DELETE FROM Exam WHERE Id=$1;"
 const DELETE_TASKEXAM_QUERY = " DELETE FROM ExamTask WHERE Id_Exam=$1;";
 const CREATE_EXAM_QUERY = "INSERT INTO Exam(Id_Creator) VALUES ($1) RETURNING Id";
 const INSERT_TASK_IN_EXAM = "INSERT INTO Exam(Id_Exam,Id_Task) VALUES ($1,$2)";
-const UPDATE_EXAM_QUERY = "DELETE FROM ExamTask WHERE Id_Exam=$1;"
 
 module.exports = class Exam {
 
@@ -26,7 +25,8 @@ module.exports = class Exam {
     }
 
     getOne(id) {
-        //this._typeCheck(id,1); -> is it necessary or the tests are enough?
+        this._typeCheck(id, 1);
+        this._positiveId(id);
         return new Promise((resolve, reject) => {
             this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [id])
                 .then(res => {
@@ -40,8 +40,8 @@ module.exports = class Exam {
                             tasks.push(res.rows[i].id_task);
                         }
                         var exam = {
-                            id : res.rows[0].id,
-                            id_creator : res.rows[0].id_creator,
+                            id: res.rows[0].id,
+                            id_creator: res.rows[0].id_creator,
                             tasks: tasks
                         }
                         resolve(exam);
@@ -54,18 +54,22 @@ module.exports = class Exam {
     }
 
     create(exam) {
-        //this._typeCheck(exam, {});
-        //this._typeCheck(exam.id_creator,1);
-        //this._typeCheck(exam.tasks, []);
+        this._typeCheck(exam, {});
+        this._typeCheck(exam.id_creator, 1);
+        this._positiveId(exam.id_creator);
+        this._typeCheck(exam.tasks, []);
+        this._positiveArray(exam.tasks);
         return new Promise((resolve, reject) => {
             this._piergiorgio.query(CREATE_EXAM_QUERY, [exam.id_creator])
                 .then(res => {
                     let id = res.rows[0];
-                    for (id_task of exam.tasks) {
-                        //this._typeCheck(id_task,1);
+                    console.log("aaaaaaaaaaaaa" + id);
+                    for (var id_task of exam.tasks) {
+                        this._typeCheck(id_task, 1);
+                        this._positiveId(id_task);
                         this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
                     };
-                    resolve(res.rows[0]);
+                    resolve(id);
                 })
                 .catch(err => {
                     reject(err);
@@ -74,14 +78,16 @@ module.exports = class Exam {
     }
 
     delete(id) {
+        this._typeCheck(id, 1);
+        this._positiveId(id);
         return new Promise((resolve, reject) => {
             this.getOne(id).then(() => {
                 this._piergiorgio.query(DELETE_EXAM_QUERY, [id])
                     .then(res => {
                         this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id])
-                        .then (res => {
-                            resolve();
-                        })
+                            .then(res => {
+                                resolve();
+                            })
                     })
                     .catch(err => {
                         reject(err);
@@ -92,16 +98,74 @@ module.exports = class Exam {
         });
     }
 
-    _typeCheck(a, a_std_value) {
-        if ((typeof a) === typeof (a_std_value)) {
+    edit(id, exam) {
+        this._typeCheck(id, 1);
+        this._positiveId(id);
+        this._typeCheck(exam, {});
+        this._typeCheck(exam.id_creator, 1);
+        this._positiveId(exam.id_creator);
+        this._typeCheck(exam.tasks, []);
+        this._positiveArray(exam.tasks);
+
+        return new Promise((resolve, reject) => {
+            this.getOne(id).then(() => {
+                this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id])
+                    .then(res => {
+                        for (var id_task of exam.tasks) {
+                            this._typeCheck(id_task, 1);
+                            this._positiveId(id_task);
+                            this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
+                        };
+                        resolve(res.rows);
+
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            }).catch(err => {
+                reject(err)
+            });
+        });
+    }
+
+    _positiveArray(a) {
+        if (a.every(Number.isInteger) && this._positivity(a)) {
             return true;
         }
+
+        throw new Error("Negative ID");
+        return false;
+    }
+
+    _positivity (a) {
+        for (var item of a) {
+            if (item <= 0)
+                return false;
+        }
+        return true;
+    }
+
+    _positiveId(a) {
+        if (a > 0) {
+            return true;
+        }
+
+        throw new Error("Negative ID");
+        return false;
+    }
+
+    _typeCheck(a, a_std_value) {
+        if ((this.getType(a)) == this.getType((a_std_value))) {
+            return true;
+        }
+
         throw new Error("Type assertion failed");
         return false; //consistency in returns, not of real value;
     }
 
-    edit(id, exam) {
-
-    }
+    getType(value) {
+        return Object.prototype.toString.call(value)
+            .replace(/^\[object |\]$/g, '').toLowerCase();
+    };
 
 }
