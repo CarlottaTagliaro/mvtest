@@ -4,6 +4,7 @@ const {
 
 const connString = process.env.DATABASE_URL;
 const Task = require('./task.js');
+const User = require('./user.js');
 
 function DB() {
 
@@ -29,7 +30,13 @@ function DB() {
 		console.error('DB error: ', err.stack);
 	});
 
+	self.close = () => {
+		self._piergiorgio.end();
+	};
+
 	self.task = new Task(self._piergiorgio);
+	self.user = new User(self._piergiorgio);
+
 }
 
 const instance = new DB();
