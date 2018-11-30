@@ -75,7 +75,7 @@ router.get('/exams', (req, res) => {
 });
 
 router.get('/exams/:id', (req, res) => {
-  db.exam.getOne(req.params.id).then((data) => {
+  db.exam.getOne(parseInt(req.params.id)).then((data) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
@@ -108,7 +108,7 @@ router.post('/exams', (req, res) => {
 
 
 router.delete('/exams/:id', (req, res) => {
-  db.exam.delete(req.params.id).then(data => {
+  db.exam.delete(parseInt(req.params.id)).then(data => {
     res.status(204);
     res.send();
   }).catch(err => {
