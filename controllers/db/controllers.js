@@ -102,3 +102,17 @@ function EvaluationC(arr){
     self.Id_Submission = parseInt(arr[3]);
     self.Time_Submission = Date.parse(arr[4]);
 }
+
+module.export = {
+    UserC,
+    TypeC,
+    TaskC,
+    RightsC,
+    ExamC,
+    ExamTaskC,
+    ClassC,
+    ClassUserC,
+    AssignC,
+    SubmissionC,
+    EvaluationC   
+};
