@@ -3,6 +3,7 @@ const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name
 const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text, Points) VALUES($1, $2, $3) RETURNING Id;"
 const UPDATE_TASK_QUERY = "UPDATE Task SET Id_Type=$1, Text=$2, Points=$3 WHERE Id=$4 RETURNING *;"
 const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
+const GET_USER_RIGHTS_FOR_TASK = "SELECT Id_User, Id_Task FROM Rights WHERE Id_User = $1;";
 
 module.exports = class Task {
 	constructor(db) {
@@ -11,10 +12,15 @@ module.exports = class Task {
 	}
 
 	getAll() {
-		// TODO: parse text for answers (if not open question)
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(GET_ALL_TASK_QUERY)
 				.then(res => {
+					for (let i in res.rows) {
+						let text = JSON.parse(res.rows[i].text);
+						if (text.choices)
+							res.rows[i].choices = text.choices;
+						res.rows[i].text = text.question;
+					}
 					resolve(res.rows);
 				})
 				.catch(err => {
@@ -25,7 +31,7 @@ module.exports = class Task {
 	}
 
 	getOne(id) {
-		this._typeCheck(id, 0);
+		this._typeCheck(id, 1);
 
 		return new Promise((resolve, reject) => {
 			this._piergiorgio.query(GET_SINGLE_TASK_QUERY, [id])
@@ -64,7 +70,7 @@ module.exports = class Task {
 		});
 	}
 
-	edit(id, task) {
+	update(id, task) {
 		this._typeCheck(id, 0);
 		this._typeCheck(task, {});
 
@@ -83,7 +89,7 @@ module.exports = class Task {
 					});
 			}).catch(err => {
 				console.error(err);
-				reject(err)
+				reject(err);
 			});
 		});
 	}
@@ -110,10 +116,15 @@ module.exports = class Task {
 	//returns true when a has the same value of a_std_value
 	//throws Error on assertion failed and returns false
 	_typeCheck(a, a_std_value) {
-		if ((typeof a) === typeof (a_std_value)) {
+		if ((this.getType(a)) == this.getType((a_std_value))) {
 			return true;
 		}
 		throw new Error("Type assertion failed");
 		return false; //consistency in returns, not of real value;
 	}
+
+	getType(value) {
+		return Object.prototype.toString.call(value)
+			.replace(/^\[object |\]$/g, '').toLowerCase();
+	};
 }
