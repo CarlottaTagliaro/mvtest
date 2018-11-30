@@ -3,6 +3,7 @@ const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name
 const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text, Points) VALUES($1, $2, $3) RETURNING Id;"
 const UPDATE_TASK_QUERY = "UPDATE Task SET Id_Type=$1, Text=$2, Points=$3 WHERE Id=$4 RETURNING *;"
 const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;"
+const GET_USER_RIGHTS_FOR_TASK = "SELECT Id_User, Id_Task FROM Rights WHERE Id_User = $1;";
 
 module.exports = class Task {
 	constructor(db) {
