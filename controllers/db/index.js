@@ -25,6 +25,10 @@ function DB() {
 		console.error('DB error: ', err.stack);
 	});
 
+	self.close = () => {
+		self._piergiorgio.end();
+	};
+
 	self.task = new Task(self._piergiorgio);
 	self.exam = new Exam(self._piergiorgio);
 }
