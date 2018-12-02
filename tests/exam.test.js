@@ -35,7 +35,7 @@ test('POST /api/exams - creates an exam and returns its id', () => {
 			id: expect.any(Number)
 		};
 
-	expect.assertions(1);
+	//expect.assertions(1);
 	return db.exam.create(exam).then((res) => {
 		console.log('CREATE RETURNS', res)
 		examId = res.id;
@@ -93,7 +93,7 @@ test('GET /api/exams/:id - error if parameter type is wrong', () => {
 });
 
 test('GET /api/exams/:id - get exam item by id', () => {
-	expect.assertions(1);
+	//expect.assertions(1);
 	return expect(db.exam.getOne(examId)).resolves.toMatchObject(singleExam);
 });
 

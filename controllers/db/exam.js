@@ -28,10 +28,9 @@ module.exports = class Exam {
         this._typeCheck(id, 0);
         this._positiveId(id);
 
-        console.warn('getting', id);
-
+        var Id = parseInt(id);
         return new Promise((resolve, reject) => {
-            this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [id])
+            this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [Id])
                 .then(res => {
                     console.warn('succ')
                     if (res.rows.length == 0) {
@@ -67,15 +66,20 @@ module.exports = class Exam {
         this._positiveArray(exam.tasks);
 
         return new Promise((resolve, reject) => {
+            let id;
+            let Id;
             this._piergiorgio.query(CREATE_EXAM_QUERY, [exam.id_creator])
                 .then(res => {
-                    let id = res.rows[0];
+                    id = res.rows[0].id;
+                    Id = res.rows[0];
+                    //console.warn(id);
                     for (var id_task of exam.tasks) {
                         this._typeCheck(id_task, 1);
                         this._positiveId(id_task);
                         this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
                     };
-                    resolve(id);
+                }).then(res => {
+                    resolve(Id);
                 })
                 .catch(err => {
                     reject(err);
