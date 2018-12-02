@@ -29,6 +29,7 @@ module.exports = class Exam {
         this._positiveId(id);
 
         var Id = parseInt(id);
+        var exam;
         return new Promise((resolve, reject) => {
             this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [Id])
                 .then(res => {
@@ -42,14 +43,16 @@ module.exports = class Exam {
                         for (let row of res.rows) {
                             tasks.push(row.id_task);
                         }
-                        var exam = {
+                        exam = {
                             id: res.rows[0].id,
                             id_creator: res.rows[0].id_creator,
                             tasks: tasks
                         }
                         console.log('resolving', exam)
-                        resolve(exam);
                     }
+                })
+                .then(() => {
+                    resolve(exam);
                 })
                 .catch(err => {
                     console.warn('rejecting', err)
@@ -96,9 +99,9 @@ module.exports = class Exam {
                 this._piergiorgio.query(DELETE_EXAM_QUERY, [id])
                     .then(res => {
                         this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id])
-                            .then(res => {
-                                resolve();
-                            })
+                    })
+                    .then(res => {
+                        resolve();
                     })
                     .catch(err => {
                         reject(err);
@@ -127,8 +130,11 @@ module.exports = class Exam {
                             this._positiveId(id_task);
                             this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
                         };
-                        resolve(res.rows);
+                        //resolve(res.rows);
 
+                    })
+                    .then(() => {
+                        resolve(exam);
                     })
                     .catch(err => {
                         reject(err);
