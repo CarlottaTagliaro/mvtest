@@ -27,6 +27,8 @@ test('GET /api/exams - get all exams', () => {
 });
 
 test('POST /api/exams - creates an exam and returns its id', () => {
+	expect.assertions(1);
+
 	let exam = {
 			id_creator: 2,
 			tasks: [1, 2, 3]
@@ -44,10 +46,12 @@ test('POST /api/exams - creates an exam and returns its id', () => {
 });
 
 test('POST /api/exams - error if creator type is wrong', () => {
+
 	let exam = {
 		tasks: [1, 2, 3]
 	};
 	let badValues = ['string', 0, null, -1];
+	expect.assertions(badValues.length + 1);
 
 	expect(() => {
 		return db.exam.create(exam)
@@ -62,6 +66,8 @@ test('POST /api/exams - error if creator type is wrong', () => {
 });
 
 test('POST /api/exams - error if there is no task list', () => {
+	expect.assertions(1);
+
 	let exam = {
 		id_creator: expect.any(Number)
 	};
@@ -72,6 +78,8 @@ test('POST /api/exams - error if there is no task list', () => {
 });
 
 test('POST /api/exams - error if task list is not an array of positive numbers', () => {
+	expect.assertions(1);
+
 	let exam = {
 		id_creator: expect.any(Number),
 		tasks: ['aaa', 1, 2]
@@ -83,7 +91,9 @@ test('POST /api/exams - error if task list is not an array of positive numbers',
 });
 
 test('GET /api/exams/:id - error if parameter type is wrong', () => {
+
 	let badValues = ['string', 0, null, -1];
+	expect.assertions(badValues.length);
 
 	for (let value of badValues) {
 		expect(() => {
@@ -93,11 +103,13 @@ test('GET /api/exams/:id - error if parameter type is wrong', () => {
 });
 
 test('GET /api/exams/:id - get exam item by id', () => {
-	//expect.assertions(1);
+	expect.assertions(1);
 	return expect(db.exam.getOne(examId)).resolves.toMatchObject(singleExam);
 });
 
 test('DELETE /api/exams/:id - deletes a specific exam', () => {
+	expect.assertions(1);
+
 	return db.exam.delete(examId).then((data) => {
 		expect(data).toBeUndefined();
 		console.warn(data);
@@ -107,30 +119,40 @@ test('DELETE /api/exams/:id - deletes a specific exam', () => {
 });
 
 test('DELETE /api/exams/:id - error if parameter is a string', () => {
+	expect.assertions(1);
+
 	expect(() => {
 		return db.exam.getOne('string')
 	}).toThrowError();
 });
 
 test('DELETE /api/exams/:id - error if parameter is 0', () => {
+	expect.assertions(1);
+
 	expect(() => {
 		return db.exam.getOne(0)
 	}).toThrowError();
 });
 
 test('DELETE /api/exams/:id - error if parameter is null', () => {
+	expect.assertions(1);
+
 	expect(() => {
 		return db.exam.getOne(null)
 	}).toThrowError();
 });
 
 test('DELETE /api/exams/:id - error if parameter is negative', () => {
+	expect.assertions(1);
+
 	expect(() => {
 		return db.exam.getOne(-1)
 	}).toThrowError();
 });
 
 test('PUT /api/exams/:id - edit with negative id', () => {
+	expect.assertions(1);
+
 	let exam = {
 		id_creator: 2,
 		tasks: [2, 3, 4, 5]
@@ -141,6 +163,8 @@ test('PUT /api/exams/:id - edit with negative id', () => {
 });
 
 test('PUT /api/exams/:id - edit with 0', () => {
+	expect.assertions(1);
+
 	let exam = {
 		id_creator: 2,
 		tasks: [2, 3, 4, 5]
@@ -151,6 +175,8 @@ test('PUT /api/exams/:id - edit with 0', () => {
 });
 
 test('PUT /api/exams/:id - edit with id_creator string', () => {
+	expect.assertions(1);
+
 	let exam = {
 		id_creator: 'nome',
 		tasks: [2, 3, 4, 5]
@@ -161,6 +187,8 @@ test('PUT /api/exams/:id - edit with id_creator string', () => {
 });
 
 test('PUT /api/exams/:id - edit with task not of positive int', () => {
+	expect.assertions(1);
+
 	let exam = {
 		id_creator: 2,
 		tasks: [2, -4, 4, 5]
