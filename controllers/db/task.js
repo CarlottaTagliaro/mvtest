@@ -89,10 +89,10 @@ module.exports = class Task {
 
 					for (let right of rights) {
 						let args = [id, right.id_user, right.owner, right.modifier];
+
 						await this._piergiorgio.query(SET_USER_RIGHTS_FOR_TASK, args)
-							.then(res => {
-								results.push(res.rows[0]);
-							}).catch(err => reject(err));
+							.then(res => results.push(res.rows[0]))
+							.catch(err => reject(err));
 					}
 					return results;
 				})().then(res => resolve(res));
@@ -109,11 +109,8 @@ module.exports = class Task {
 				this.getOne(id).then(() => {
 
 					this._piergiorgio.query(DELETE_RIGHTS_FOR_TASK, [id])
-						.then(res => {
-							resolve();
-						}).catch(err => {
-							reject(err);
-						});
+						.then(() => resolve())
+						.catch(err => reject(err));
 
 				}).catch(err => reject(err));
 			} else {
@@ -132,11 +129,10 @@ module.exports = class Task {
 
 				this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
 					.then(res => {
-						this.addRights(res.rows[0].id, task.users).then(rights => {
-							resolve(res.rows[0]);
-						}).catch(err => {
-							reject(err);
-						});
+						this.addRights(res.rows[0].id, task.users)
+							.then(rights => resolve(res.rows[0]))
+							.catch(err => reject(err));
+
 					}).catch(err => reject(err));
 			} else {
 				reject(Error('Type Assertion Failed'));
@@ -185,9 +181,8 @@ module.exports = class Task {
 				this.getOne(id).then(() => {
 
 					this._piergiorgio.query(DELETE_TASK_QUERY, [id])
-						.then(res => {
-							resolve();
-						}).catch(err => reject(err));
+						.then(res => resolve())
+						.catch(err => reject(err));
 
 				}).catch(err => reject(err));
 			} else {
