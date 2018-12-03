@@ -14,6 +14,14 @@ test('Function Definition', () => {
   }
 });
 
+test('create with wrong structure should reject an error', () => {
+  let user = {
+    name: "Testing User"
+  };
+
+  return expect(db.user.create(user)).rejects.toThrow();
+});
+
 test('create should return the new user\'s id', () => {
   let user = {
       email: "user@testing.com",
@@ -37,10 +45,13 @@ test('getOne with wrong id should reject error', () => {
   return expect(db.user.getOne(-1)).rejects.toThrow();
 });
 
+test('getOne with wrong id type should reject error', () => {
+  return expect(db.user.getOne('not a number')).rejects.toThrow();
+});
+
 test('getOne should return a user', () => {
   return expect(db.user.getOne(userId)).resolves.toMatchObject(expectedUser);
 });
-
 
 test('update with wrong id should reject an error', () => {
   let user = {
@@ -48,7 +59,15 @@ test('update with wrong id should reject an error', () => {
     name: "Testing User"
   }
 
-  return expect(db.user.update(-15, user)).rejects.toBeInstanceOf(Error);
+  return expect(db.user.update(-15, user)).rejects.toThrow();
+});
+
+test('update with wrong data should reject an error', () => {
+  let user = {
+    email: "user@testing.com"
+  }
+
+  return expect(db.user.update(userId, user)).rejects.toThrow();
 });
 
 test('update should update and return a user', () => {
@@ -60,12 +79,16 @@ test('update should update and return a user', () => {
   return expect(db.user.update(userId, user)).resolves.toMatchObject(user);
 });
 
+test('delete with wrong id type should reject an error', () => {
+  return expect(db.user.delete('not a number')).rejects.toThrow();
+});
+
 test('delete should delete a user', () => {
   return expect(db.user.delete(userId)).resolves.toBeUndefined();
 });
 
 test('delete with wrong id should reject an error', () => {
-  return expect(db.user.delete(userId)).rejects.toBeInstanceOf(Error);
+  return expect(db.user.delete(userId)).rejects.toThrow();
 });
 
 afterAll(() => {
