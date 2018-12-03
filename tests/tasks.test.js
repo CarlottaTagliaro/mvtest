@@ -107,6 +107,32 @@ test('update should update and return a task', () => {
 	return expect(db.task.update(taskId, task)).resolves.toMatchObject(task);
 });
 
+test('getRights should return all rights for a task', () => {
+	return expect(db.task.getRights(taskId)).resolves.toEqual(expect.arrayContaining([RIGHTS]));
+});
+
+test('deleteRights should delete all rights', () => {
+	return expect(db.task.deleteRights(taskId)).resolves.toBeUndefined();
+});
+
+test('addRights should add new rights', () => {
+	let rights = [{
+		id_user: 4,
+		owner: true,
+		modifier: true
+	}, {
+		id_user: 2,
+		owner: false,
+		modifier: false
+	}]
+
+	let expectedRights = rights;
+	expectedRights[0].id_task = taskId;
+	expectedRights[1].id_task = taskId;
+
+	return expect(db.task.addRights(taskId, rights)).resolves.toEqual(expectedRights);
+});
+
 test('delete should delete a task', () => {
 	return expect(db.task.delete(taskId)).resolves.toBeUndefined();
 });
