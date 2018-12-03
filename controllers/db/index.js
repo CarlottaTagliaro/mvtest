@@ -5,6 +5,7 @@ const {
 const connString = process.env.DATABASE_URL;
 const Task = require('./task.js');
 const Exam = require('./exam.js');
+const Assignment = require('./assignment.js');
 
 function DB() {
 	var self = this;
@@ -31,6 +32,7 @@ function DB() {
 
 	self.task = new Task(self._piergiorgio);
 	self.exam = new Exam(self._piergiorgio);
+	self.assignment = new Assignment(self._piergiorgio);
 }
 
 const instance = new DB();
