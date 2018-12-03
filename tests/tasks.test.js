@@ -107,12 +107,52 @@ test('update should update and return a task', () => {
 	return expect(db.task.update(taskId, task)).resolves.toMatchObject(task);
 });
 
+test('getRights with wrong id should reject an error', () => {
+	return expect(db.task.getRights(-1)).rejects.toBeInstanceOf(Error);
+});
+
+test('getRights with wrong id type should reject an error', () => {
+	return expect(db.task.getRights('not a number')).rejects.toBeInstanceOf(Error);
+});
+
 test('getRights should return all rights for a task', () => {
 	return expect(db.task.getRights(taskId)).resolves.toEqual(expect.arrayContaining([RIGHTS]));
 });
 
+test('deleteRights with wrong id should reject an error', () => {
+	return expect(db.task.deleteRights(-1)).rejects.toBeInstanceOf(Error);
+});
+
+test('deleteRights with wrong id type should reject an error', () => {
+	return expect(db.task.deleteRights('not a number')).rejects.toBeInstanceOf(Error);
+});
+
 test('deleteRights should delete all rights', () => {
 	return expect(db.task.deleteRights(taskId)).resolves.toBeUndefined();
+});
+
+test('addRights with wrong id_task should reject an error', () => {
+	let rights = [{
+		id_user: 4,
+		owner: true,
+		modifier: true
+	}, {
+		id_user: 2,
+		owner: false,
+		modifier: false
+	}];
+
+	return expect(db.task.addRights(-1, rights)).rejects.toBeInstanceOf(Error);
+});
+
+test('addRights with wrong structure should reject an error', () => {
+	let rights = {
+		id_user: 4,
+		owner: true,
+		modifier: true
+	}
+
+	return expect(db.task.addRights(taskId, rights)).rejects.toBeInstanceOf(Error);
 });
 
 test('addRights should add new rights', () => {
@@ -124,7 +164,7 @@ test('addRights should add new rights', () => {
 		id_user: 2,
 		owner: false,
 		modifier: false
-	}]
+	}];
 
 	let expectedRights = rights;
 	expectedRights[0].id_task = taskId;

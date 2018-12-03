@@ -30,68 +30,75 @@ module.exports = class Task {
 	}
 
 	getOne(id) {
-		this._typeCheck(id, 0);
-
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(GET_SINGLE_TASK_QUERY, [id])
-				.then(res => {
-					if (res.rows.length == 0) {
-						let error = new Error('Task ' + id + ' not found');
-						error.errno = 404;
-						reject(error);
-					} else {
-						this.getRights(id).then(rights => {
-							res.rows[0].users = [];
-							for (let right of rights) {
-								res.rows[0].users.push({
-									id_user: right.id_user,
-									owner: right.owner,
-									modifier: right.modifier
-								});
-							}
+			if (this._typeCheck(id, 0)) {
+				this._piergiorgio.query(GET_SINGLE_TASK_QUERY, [id])
+					.then(res => {
+						if (res.rows.length == 0) {
+							let error = new Error('Task ' + id + ' not found');
+							error.errno = 404;
+							reject(error);
+						} else {
+							this.getRights(id).then(rights => {
+								res.rows[0].users = [];
+								for (let right of rights) {
+									res.rows[0].users.push({
+										id_user: right.id_user,
+										owner: right.owner,
+										modifier: right.modifier
+									});
+								}
 
-							resolve(res.rows[0]);
-						}).catch(err => reject(err));
-					}
-				})
-				.catch(err => reject(err));
+								resolve(res.rows[0]);
+							}).catch(err => reject(err));
+						}
+					})
+					.catch(err => reject(err));
+			} else {
+				reject(Error('Type Assertion Failed'));
+			}
 		});
 	}
 
 	getRights(id) {
-		this._typeCheck(id, 0);
-
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(GET_USER_RIGHTS_FOR_TASK, [id])
-				.then(res => {
-					if (res.rows.length > 0) {
-						resolve(res.rows);
-					} else {
-						let err = new Error('Rights not found for task ' + id)
-						reject(err);
-					}
-				}).catch(err => reject(err));
-		})
+			if (this._typeCheck(id, 0)) {
+				this._piergiorgio.query(GET_USER_RIGHTS_FOR_TASK, [id])
+					.then(res => {
+						if (res.rows.length > 0) {
+							resolve(res.rows);
+						} else {
+							let err = new Error('Rights not found for task ' + id)
+							reject(err);
+						}
+					}).catch(err => reject(err));
+			} else {
+				reject(Error('Type Assertion Failed'));
+			}
+		});
 	}
 
 	addRights(id, rights) {
-		this._typeCheck(id, 0);
-		this._typeCheck(rights, []);
-
 		return new Promise((resolve, reject) => {
+			if (this._typeCheck(id, 0) &&
+				this._typeCheck(rights, []) &&
+				this._typeCheck(rights[0], {})) {
 
-			(async () => {
-				let results = [];
+				(async () => {
+					let results = [];
 
-				for (let right of rights) {
-					let args = [id, right.id_user, right.owner, right.modifier];
-					await this._piergiorgio.query(SET_USER_RIGHTS_FOR_TASK, args)
-						.then(res => {
-							results.push(res.rows[0]);
-						}).catch(err => reject(err));
-				}
-				return results;
-			})().then(res => resolve(res));
+					for (let right of rights) {
+						let args = [id, right.id_user, right.owner, right.modifier];
+						await this._piergiorgio.query(SET_USER_RIGHTS_FOR_TASK, args)
+							.then(res => {
+								results.push(res.rows[0]);
+							}).catch(err => reject(err));
+					}
+					return results;
+				})().then(res => resolve(res));
+			} else {
+				reject(Error('Type Assertion Failed'));
+			}
 		});
 	}
 
@@ -115,30 +122,36 @@ module.exports = class Task {
 		});
 	}
 
-
 	create(task) {
-		this._typeCheck(task, {});
-
-		this._typeCheck(task.id_type, 0);
-		this._typeCheck(task.text, '');
-		this._typeCheck(task.points, 0);
-		this._typeCheck(task.users, []);
-
 		return new Promise((resolve, reject) => {
-			this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
-				.then(res => {
-					this.addRights(res.rows[0].id, task.users).then(rights => {
-						resolve(res.rows[0]);
-					}).catch(err => {
-						reject(err);
-					});
-				}).catch(err => reject(err));
+			if (this._typeCheck(task, {}) &&
+				this._typeCheck(task.id_type, 0) &&
+				this._typeCheck(task.text, '') &&
+				this._typeCheck(task.points, 0) &&
+				this._typeCheck(task.users, [])) {
+
+				this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
+					.then(res => {
+						this.addRights(res.rows[0].id, task.users).then(rights => {
+							resolve(res.rows[0]);
+						}).catch(err => {
+							reject(err);
+						});
+					}).catch(err => reject(err));
+			} else {
+				reject(Error('Type Assertion Failed'));
+			}
 		});
 	}
 
 	update(id, task) {
 		return new Promise((resolve, reject) => {
-			if (this._typeCheck(id, 0) && this._typeCheck(task, {}) && this._typeCheck(task.users, []) && this._typeCheck(task.id_type, 0) && this._typeCheck(task.text, '') && this._typeCheck(task.points, 0)) {
+			if (this._typeCheck(id, 0) &&
+				this._typeCheck(task, {}) &&
+				this._typeCheck(task.users, []) &&
+				this._typeCheck(task.id_type, 0) &&
+				this._typeCheck(task.text, '') &&
+				this._typeCheck(task.points, 0)) {
 
 				this.getOne(id).then(() => {
 
@@ -166,20 +179,20 @@ module.exports = class Task {
 	}
 
 	delete(id) {
-		this._typeCheck(id, 0);
-
 		return new Promise((resolve, reject) => {
-			this.getOne(id).then(() => {
-				this._piergiorgio.query(DELETE_TASK_QUERY, [id])
-					.then(res => {
-						resolve();
-					})
-					.catch(err => {
-						reject(err);
-					});
-			}).catch(err => {
-				reject(err);
-			});
+			if (this._typeCheck(id, 0)) {
+
+				this.getOne(id).then(() => {
+
+					this._piergiorgio.query(DELETE_TASK_QUERY, [id])
+						.then(res => {
+							resolve();
+						}).catch(err => reject(err));
+
+				}).catch(err => reject(err));
+			} else {
+				reject(Error('Type Assertion Failed'));
+			}
 		});
 	}
 
