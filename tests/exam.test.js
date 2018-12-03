@@ -48,21 +48,13 @@ test('POST /api/exams - creates an exam and returns its id', () => {
 test('POST /api/exams - error if creator type is wrong', () => {
 
 	let exam = {
+		id_creator: -1,
 		tasks: [1, 2, 3]
 	};
-	let badValues = ['string', 0, null, -1];
-	expect.assertions(badValues.length + 1);
 
-	expect(() => {
-		return db.exam.create(exam)
-	}).toThrowError();
+	expect.assertions(1);
 
-	for (let value of badValues) {
-		expect(() => {
-			exam.creator = value;
-			return db.exam.create(exam);
-		}).toThrowError();
-	}
+	return expect(db.exam.create(exam)).rejects.toBeInstanceOf(Error);
 });
 
 test('POST /api/exams - error if there is no task list', () => {
@@ -72,9 +64,7 @@ test('POST /api/exams - error if there is no task list', () => {
 		id_creator: expect.any(Number)
 	};
 
-	return expect(() => {
-		return db.exam.create(exam);
-	}).toThrowError();
+	return expect(db.exam.create(exam)).rejects.toBeInstanceOf(Error);
 });
 
 test('POST /api/exams - error if task list is not an array of positive numbers', () => {
@@ -85,21 +75,13 @@ test('POST /api/exams - error if task list is not an array of positive numbers',
 		tasks: ['aaa', 1, 2]
 	};
 
-	return expect(() => {
-		return db.exam.create(exam);
-	}).toThrowError();
+	return expect(db.exam.create(exam)).rejects.toBeInstanceOf(Error);
 });
 
 test('GET /api/exams/:id - error if parameter type is wrong', () => {
+	expect.assertions(1);
 
-	let badValues = ['string', 0, null, -1];
-	expect.assertions(badValues.length);
-
-	for (let value of badValues) {
-		expect(() => {
-			return db.exam.getOne(value);
-		}).toThrowError();
-	}
+	return expect(db.exam.getOne('wrong parameter type')).rejects.toBeInstanceOf(Error);
 });
 
 test('GET /api/exams/:id - get exam item by id', () => {
@@ -110,44 +92,31 @@ test('GET /api/exams/:id - get exam item by id', () => {
 test('DELETE /api/exams/:id - deletes a specific exam', () => {
 	expect.assertions(1);
 
-	return db.exam.delete(examId).then((data) => {
-		expect(data).toBeUndefined();
-		console.warn(data);
-	}).catch((err) => {
-		console.error(examId, err);
-	});
+	return expect(db.exam.delete(examId)).resolves.toBeUndefined();
 });
 
 test('DELETE /api/exams/:id - error if parameter is a string', () => {
 	expect.assertions(1);
 
-	expect(() => {
-		return db.exam.getOne('string')
-	}).toThrowError();
+	return expect(db.exam.delete('string')).rejects.toBeInstanceOf(Error);
 });
 
 test('DELETE /api/exams/:id - error if parameter is 0', () => {
 	expect.assertions(1);
 
-	expect(() => {
-		return db.exam.getOne(0)
-	}).toThrowError();
+	return expect(db.exam.delete(0)).rejects.toBeInstanceOf(Error);
 });
 
 test('DELETE /api/exams/:id - error if parameter is null', () => {
 	expect.assertions(1);
 
-	expect(() => {
-		return db.exam.getOne(null)
-	}).toThrowError();
+	return expect(db.exam.delete(null)).rejects.toBeInstanceOf(Error);
 });
 
 test('DELETE /api/exams/:id - error if parameter is negative', () => {
 	expect.assertions(1);
 
-	expect(() => {
-		return db.exam.getOne(-1)
-	}).toThrowError();
+	return expect(db.exam.delete(-1)).rejects.toBeInstanceOf(Error);
 });
 
 test('PUT /api/exams/:id - edit with negative id', () => {
@@ -157,9 +126,7 @@ test('PUT /api/exams/:id - edit with negative id', () => {
 		id_creator: 2,
 		tasks: [2, 3, 4, 5]
 	}
-	expect(() => {
-		return db.exam.edit(-15, exam)
-	}).toThrowError();
+	return expect(db.exam.edit(-15, exam)).rejects.toBeInstanceOf(Error);
 });
 
 test('PUT /api/exams/:id - edit with 0', () => {
@@ -169,9 +136,8 @@ test('PUT /api/exams/:id - edit with 0', () => {
 		id_creator: 2,
 		tasks: [2, 3, 4, 5]
 	}
-	expect(() => {
-		return db.exam.edit(0, exam)
-	}).toThrowError();
+
+	return expect(db.exam.edit(0, exam)).rejects.toBeInstanceOf(Error);
 });
 
 test('PUT /api/exams/:id - edit with id_creator string', () => {
@@ -181,9 +147,9 @@ test('PUT /api/exams/:id - edit with id_creator string', () => {
 		id_creator: 'nome',
 		tasks: [2, 3, 4, 5]
 	}
-	expect(() => {
-		return db.exam.edit(1, exam)
-	}).toThrowError();
+
+	return expect(db.exam.edit(1, exam)).rejects.toBeInstanceOf(Error);
+
 });
 
 test('PUT /api/exams/:id - edit with task not of positive int', () => {
@@ -193,7 +159,6 @@ test('PUT /api/exams/:id - edit with task not of positive int', () => {
 		id_creator: 2,
 		tasks: [2, -4, 4, 5]
 	}
-	expect(() => {
-		return db.exam.edit(1, exam)
-	}).toThrowError();
+
+	return expect(db.exam.edit(1, exam)).rejects.toBeInstanceOf(Error);
 });
