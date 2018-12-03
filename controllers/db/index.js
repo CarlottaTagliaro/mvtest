@@ -26,7 +26,9 @@ function DB() {
 	});
 
 	self.close = () => {
+
 		self._piergiorgio.end();
+		//self._piergiorgio.on('drain', self._piergiorgio.end.bind(self._piergiorgio));
 	};
 
 	self.task = new Task(self._piergiorgio);

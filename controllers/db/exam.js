@@ -3,7 +3,7 @@ const GET_SINGLE_EXAM_QUERY = "SELECT Exam.Id_Creator, ExamTask.Id_Task FROM Exa
 const DELETE_EXAM_QUERY = "DELETE FROM Exam WHERE Id=$1;"
 const DELETE_TASKEXAM_QUERY = "DELETE FROM ExamTask WHERE Id_Exam=$1;";
 const CREATE_EXAM_QUERY = "INSERT INTO Exam(Id_Creator) VALUES($1) RETURNING Id;";
-const INSERT_TASK_IN_EXAM = "INSERT INTO ExamTask(Id_Exam, Id_Task) VALUES($1,$2)";
+const INSERT_TASK_IN_EXAM = "INSERT INTO ExamTask(Id_Exam, Id_Task) VALUES($1,$2);";
 
 module.exports = class Exam {
 
@@ -44,7 +44,6 @@ module.exports = class Exam {
                             });
 
                             exam = {
-                                id: id,
                                 id_creator: res.rows[0].id_creator,
                                 tasks: tasks
                             };
@@ -80,6 +79,8 @@ module.exports = class Exam {
                             this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
                         };
 
+                    })
+                    .then(() => {
                         resolve(Id);
                     })
                     .catch(err => {
@@ -99,8 +100,6 @@ module.exports = class Exam {
                 this.getOne(id).then(() => {
                     this._piergiorgio.query(DELETE_EXAM_QUERY, [id])
                         .then(res => {
-                            // **cascade** this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id]);
-
                             resolve();
                         })
                         .catch(err => {
@@ -124,24 +123,16 @@ module.exports = class Exam {
                 this._positiveId(exam.id_creator) &&
                 this._typeCheck(exam.tasks, []) &&
                 this._positiveArray(exam.tasks)) {
-
-                this.getOne(id).then(() => {
-                    this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id])
-                        .then(res => {
-                            for (var id_task of exam.tasks) {
-                                this._typeCheck(id_task, 1);
-                                this._positiveId(id_task);
-                                this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
-                            };
-                            resolve(res.rows);
-
-                        })
-                        .catch(err => {
-                            reject(err);
+                this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id])
+                    .then(() => {
+                        var queries = [];
+                        for (let id_t of exam.tasks) {
+                            queries.push(this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_t]));
+                        }
+                        Promise.all(queries).then(() => {
+                            resolve(exam);
                         });
-                }).catch(err => {
-                    reject(err)
-                });
+                    })
             } else {
                 reject(Error('Type Assertion Failed'));
             }

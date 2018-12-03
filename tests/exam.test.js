@@ -8,7 +8,6 @@ const EXAMS = [{
 }];
 
 const singleExam = {
-	id: expect.any(Number),
 	id_creator: expect.any(Number),
 	tasks: expect.any(Array)
 }
@@ -87,6 +86,16 @@ test('GET /api/exams/:id - error if parameter type is wrong', () => {
 test('GET /api/exams/:id - get exam item by id', () => {
 	expect.assertions(1);
 	return expect(db.exam.getOne(examId)).resolves.toMatchObject(singleExam);
+});
+
+test('PUT /api/exams/:id - edit a specific exam', () => {
+	expect.assertions(1);
+
+	let exam = {
+		id_creator: 2,
+		tasks: [4, 5, 6]
+	}
+	return expect(db.exam.edit(examId, exam)).resolves.toMatchObject(singleExam);
 });
 
 test('DELETE /api/exams/:id - deletes a specific exam', () => {
