@@ -162,3 +162,8 @@ test('PUT /api/exams/:id - edit with task not of positive int', () => {
 
 	return expect(db.exam.edit(1, exam)).rejects.toBeInstanceOf(Error);
 });
+
+afterAll(() => {
+	console.warn("Closing DB");
+	db.close();
+});
