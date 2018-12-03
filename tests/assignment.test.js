@@ -28,17 +28,17 @@ test('Function Definition', () => {
 	}
 });
 
-test('GET /api/exams - get all exams', () => {
+test('GET /api/assignments - get all assignments', () => {
 	expect.assertions(1);
 	return expect(db.assignment.getAll()).resolves.toEqual(expect.arrayContaining(Assignments));
 });
 
-test('GET /api/exams/:id - error if parameter type is wrong', () => {
+test('GET /api/assignments/:id - error if parameter type is wrong', () => {
 	expect.assertions(1);
 	return expect(db.assignment.getOne('wrong parameter type')).rejects.toBeInstanceOf(Error);
 });
 
-test('GET /api/exams/:id - get exam item by id', () => {
+test('GET /api/assignments/:id - get assignment item by id', () => {
 	expect.assertions(1);
 	return expect(db.assignment.getOne(1)).resolves.toMatchObject(singleAssignment);
 });

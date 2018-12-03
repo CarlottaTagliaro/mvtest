@@ -21,7 +21,7 @@ test('Function Definition', () => {
 	}
 });
 
-test('GET /api/exams - get all exams', () => {
+/*test('GET /api/exams - get all exams', () => {
 	return expect(db.exam.getAll()).resolves.toEqual(expect.arrayContaining([Exam]));
 });
 
@@ -104,7 +104,7 @@ test('DELETE /api/exams/:id - error if parameter is null', () => {
 
 test('DELETE /api/exams/:id - error if parameter is negative', () => {
     return expect(db.exam.delete(-1)).rejects.toBeInstanceOf(Error);
-});
+});*/
 
 /*test('PUT /api/exams/:id - edit with negative id', () => {
     let exam = {
