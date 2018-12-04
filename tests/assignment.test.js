@@ -43,6 +43,23 @@ test('GET /api/assignments/:id - get assignment item by id', () => {
 	return expect(db.assignment.getOne(1)).resolves.toMatchObject(singleAssignment);
 });
 
+test('POST /assignments - creates an assignment and returns its id', () => {
+    expect.assertions(1);
+    let assignment = {
+        date : '2018-12-3',
+        review: true,
+        id_user: 2,
+        id_exam: 2,
+        id_class: 2
+    }
+    
+    ID = {
+        id: expect.any(Number)
+    }
+
+    return expect(db.assignment.create(assignment)).resolves.toMatchObject(ID);
+});
+
 
 afterAll(() => {
 	console.warn("Closing DB");
