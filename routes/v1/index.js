@@ -3,6 +3,7 @@ var express = require('express'),
 const db = require('../../controllers/db');
 
 router.use('/auth', require('./auth.js'));
+router.use('/users', require('./users.js'));
 
 router.get('/tasks', (req, res) => {
   db.task.getAll().then((data) => {
@@ -19,13 +20,7 @@ router.get('/tasks/:id', (req, res) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
-    switch (err.errno) {
-      case 404:
-        res.status(404);
-        res.send(err.message);
-        break;
-    }
-    res.status(500);
+    res.status(err.errno || 500);
     res.send(err.message);
   });
 });
