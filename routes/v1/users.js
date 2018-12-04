@@ -33,4 +33,24 @@ router.post('/', (req, res) => {
   });
 });
 
+router.put('/:id', (req, res) => {
+  db.user.update(parseInt(req.params.id), req.body).then(data => {
+    res.status(204);
+    res.send();
+  }).catch(err => {
+    res.status(500);
+    res.send(err);
+  });
+});
+
+router.delete('/:id', (req, res) => {
+  db.user.delete(parseInt(req.params.id)).then(data => {
+    res.status(204);
+    res.send();
+  }).catch(err => {
+    res.status(500);
+    res.send(err);
+  });
+});
+
 module.exports = router;

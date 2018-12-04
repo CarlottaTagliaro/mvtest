@@ -23,6 +23,26 @@ router.get('/:id', (req, res) => {
 	});
 });
 
+router.put('/:id', (req, res) => {
+	db.task.update(parseInt(req.params.id), req.body).then((data) => {
+		res.status(204);
+		res.send();
+	}).catch((err) => {
+		res.status(err.errno || 500);
+		res.send(err.message);
+	});
+});
+
+router.delete('/:id', (req, res) => {
+	db.task.delete(parseInt(req.params.id)).then((data) => {
+		res.status(204);
+		res.send();
+	}).catch((err) => {
+		res.status(err.errno || 500);
+		res.send(err.message);
+	});
+});
+
 router.post('/', (req, res) => {
 
 	let text = {
