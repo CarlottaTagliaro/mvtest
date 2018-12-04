@@ -27,10 +27,14 @@ function DB() {
 
 	self.close = () => {
 		self._piergiorgio.end();
+		//self._piergiorgio.on('drain', self._piergiorgio.end.bind(self._piergiorgio));
 	};
 
 	self.task = new Task(self._piergiorgio);
 	self.exam = new Exam(self._piergiorgio);
+
+
+
   self._piergiorgio.multiquery = function(qas){
     to_exec = [];
     for(query_args of qas){
