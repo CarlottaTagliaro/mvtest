@@ -29,11 +29,11 @@ module.exports = class Exam {
             if (this._typeCheck(id, 0) &&
                 this._positiveId(id)) {
 
-                var Id = parseInt(id);
                 var exam;
 
-                this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [Id])
+                this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [id])
                     .then(res => {
+                        console.warn(id);
                         if (res.rows.length == 0) {
                             let error = new Error("Exam not found");
                             error.errno = 404;

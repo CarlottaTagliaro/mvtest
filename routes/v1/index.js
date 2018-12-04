@@ -15,7 +15,7 @@ router.get('/tasks', (req, res) => {
 });
 
 router.get('/tasks/:id', (req, res) => {
-  db.task.getOne(req.params.id).then((data) => {
+  db.task.getOne(parseInt(req.params.id)).then((data) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
@@ -62,7 +62,7 @@ router.post('/tasks', (req, res) => {
 });
 
 router.delete('/tasks/:id', (req, res) => {
-  db.task.delete(req.params.id).then(data => {
+  db.task.delete(parseInt(req.params.id)).then(data => {
     res.status(204);
     res.send();
   }).catch(err => {
