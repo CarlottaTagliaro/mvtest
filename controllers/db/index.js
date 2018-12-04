@@ -31,6 +31,16 @@ function DB() {
 
 	self.task = new Task(self._piergiorgio);
 	self.exam = new Exam(self._piergiorgio);
+  self._piergiorgio.multiquery = function(qas){
+    to_exec = [];
+    for(query_args of qas){
+      q = query_args[0];
+      a = query_args[1];
+      to_exec.push(self._piergiorgio.query(q,a));
+    }
+    console.warn(">>>>>>>>>>>>>>>>>>>>>>>>>" + to_exec);
+    return Promise.all(to_exec);
+  }
 }
 
 const instance = new DB();
