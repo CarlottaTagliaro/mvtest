@@ -33,10 +33,9 @@ module.exports = class Exam {
 
                 this._piergiorgio.query(GET_SINGLE_EXAM_QUERY, [id])
                     .then(res => {
-                        console.warn(id);
                         if (res.rows.length == 0) {
                             let error = new Error("Exam not found");
-                            error.errno = 404;
+                            error.code = 404;
                             reject(error);
                         } else {
                             let tasks = res.rows.map(r => {
@@ -66,26 +65,17 @@ module.exports = class Exam {
                 this._typeCheck(exam.tasks, []) &&
                 this._positiveArray(exam.tasks)) {
 
-                let id;
-                let Id;
                 this._piergiorgio.query(CREATE_EXAM_QUERY, [exam.id_creator])
                     .then(res => {
-                        id = res.rows[0].id;
-                        Id = res.rows[0];
-                        //console.warn(id);
                         for (var id_task of exam.tasks) {
                             this._typeCheck(id_task, 1);
                             this._positiveId(id_task);
-                            this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_task]);
+                            this._piergiorgio.query(INSERT_TASK_IN_EXAM, [res.rows[0].id, id_task]);
                         };
 
+                        resolve(res.rows[0]);
                     })
-                    .then(() => {
-                        resolve(Id);
-                    })
-                    .catch(err => {
-                        reject(err);
-                    });
+                    .catch(err => reject(err));
             } else {
                 reject(Error('Type Assertion Failed'));
             }
@@ -123,15 +113,15 @@ module.exports = class Exam {
                 this._positiveId(exam.id_creator) &&
                 this._typeCheck(exam.tasks, []) &&
                 this._positiveArray(exam.tasks)) {
+
                 this._piergiorgio.query(DELETE_TASKEXAM_QUERY, [id])
                     .then(() => {
                         var queries = [];
                         for (let id_t of exam.tasks) {
                             queries.push(this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_t]));
                         }
-                        Promise.all(queries).then(() => {
-                            resolve(exam);
-                        });
+                        Promise.all(queries)
+                            .then(() => resolve(exam));
                     })
             } else {
                 reject(Error('Type Assertion Failed'));
