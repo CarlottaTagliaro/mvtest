@@ -66,9 +66,6 @@ router.delete('/tasks/:id', (req, res) => {
   });
 });
 
-
-//router.put('/tasks/:id', db.editTask);
-
 router.get('/exams', (req, res) => {
   db.exam.getAll().then((data) => {
     res.status(200);
@@ -121,5 +118,30 @@ router.delete('/exams/:id', (req, res) => {
     res.send(err.message);
   });
 });
+
+router.get('/assignments', (req, res) => {
+  db.assignment.getAll().then((data) => {
+    res.status(200);
+    res.json(data);
+  }).catch((err) => {
+    res.status(500);
+    res.send(err.message);
+  });
+});
+
+router.get('/assignments/:id', (req, res) => {
+  db.assignment.getOne(parseInt(req.params.id)).then((data) => {
+    res.status(200);
+    res.json(data);
+  }).catch((err) => {
+    switch (err.errno) {
+      case 404:
+        res.status(404);
+        res.send(err.message);
+        break;
+    }
+  });
+});
+
 
 module.exports = router;
