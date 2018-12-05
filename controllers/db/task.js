@@ -36,7 +36,7 @@ module.exports = class Task {
 					.then(res => {
 						if (res.rows.length == 0) {
 							let error = new Error('Task ' + id + ' not found');
-							error.errno = 404;
+							error.code = 404;
 							reject(error);
 						} else {
 							this.getRights(id).then(rights => {
@@ -121,6 +121,8 @@ module.exports = class Task {
 
 	create(task) {
 		return new Promise((resolve, reject) => {
+			console.log('adding', task);
+
 			if (this._typeCheck(task, {}) &&
 				this._typeCheck(task.id_type, 0) &&
 				this._typeCheck(task.text, '') &&

@@ -34,15 +34,15 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    db.assignment.create(parseInt(req.params.id), req.body)
-    .then( data => {
-        res.status(201);
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(404);
-        res.send(err.message);
-    })
+	db.assignment.edit(parseInt(req.params.id), req.body)
+		.then(data => {
+			res.status(204);
+			res.send();
+		})
+		.catch(err => {
+			res.status(404);
+			res.send(err.message);
+		})
 
 });
 

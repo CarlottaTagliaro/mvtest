@@ -51,3 +51,7 @@ INSERT INTO ClassUser VALUES(2,4);
 --Assignment
 INSERT INTO Assign VALUES(DEFAULT,'2018-12-3',true,2,1,1);
 INSERT INTO Assign VALUES(DEFAULT,'2018-12-3',false,2,2,2);
+--Submission
+INSERT INTO Submission VALUES(DEFAULT,'2018-12-3 22:47','the answer is 42',1,2,1);
+INSERT INTO Submission VALUES(DEFAULT,'2018-12-3 22:50','the answer is NaN',1,2,2);
+
