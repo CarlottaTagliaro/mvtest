@@ -7,7 +7,8 @@ const Task = require('./task.js');
 const Exam = require('./exam.js');
 const User = require('./user.js');
 const Assignment = require('./assignment.js');
-const Class_v = require('./class_view.js')
+const Class_v = require('./class_view.js');
+const Submission = require('./submission.js');
 
 function DB() {
 	var self = this;
@@ -38,6 +39,7 @@ function DB() {
 	self.user = new User(self._piergiorgio);
 	self.assignment = new Assignment(self._piergiorgio);
 	self.class_v = new Class_v(self._piergiorgio);
+	self.submission = new Submission(self._piergiorgio);
 
 
 	self._piergiorgio.multiquery = function (qas) {

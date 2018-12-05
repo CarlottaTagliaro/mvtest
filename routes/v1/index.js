@@ -8,5 +8,6 @@ router.use('/tasks', require('./tasks.js'));
 router.use('/exams', require('./exams.js'));
 router.use('/assignments', require('./assignments.js'));
 router.use('/classes', require('./class.js'));
+router.use('/assignments', require('./submission.js'));
 
 module.exports = router;
