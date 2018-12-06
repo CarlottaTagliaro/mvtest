@@ -21,3 +21,6 @@ Se voglio fare un esame con gli stessi task allora faccio direttamente una copia
 
 # Studenti
 Matteo Bonora, Carlotta Tagliaro, Francesco Cadei, Girardi Massimiliano
+
+### SWAGGER 
+Il file "ufficiale" è sul branch master
