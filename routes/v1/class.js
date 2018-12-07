@@ -4,7 +4,7 @@ var express = require('express'),
 const db = require('../../controllers/db/index.js');
 
 router.get('/', (req, res) => {
-	db.class_view.getAll().then((data) => {
+	db.class.getAll().then((data) => {
 		res.status(200);
 		res.json(data);
 	}).catch((err) => {
@@ -14,7 +14,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-	db.class_view.getById(parseInt(req.params.id)).then((data) => {
+	db.class.getById(parseInt(req.params.id)).then((data) => {
+		console.warn("aaaaaaaaaaaaa",parseInt(req.params.id));
 		res.status(200);
 		res.json(data);
 	}).catch((err) => {
@@ -24,7 +25,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	db.class_view.create(req.body).then(data => {
+	db.class.create(req.body).then(data => {
 		res.status(201);
 		res.send(data);
 	}).catch(err => {
@@ -34,7 +35,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    db.class_view.create(parseInt(req.params.id), req.body)
+    db.class.create(parseInt(req.params.id), req.body)
     .then( data => {
         res.status(201);
         res.send(data);
@@ -47,7 +48,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-	db.class_view.delete(parseInt(req.params.id)).then(data => {
+	db.class.delete(parseInt(req.params.id)).then(data => {
 		res.status(204);
 		res.send();
 	}).catch(err => {
