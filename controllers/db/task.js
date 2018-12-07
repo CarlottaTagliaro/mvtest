@@ -1,5 +1,5 @@
-const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id_Type = Type.Id;";
-const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Name AS type FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;";
+const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Id AS type FROM Task, Type WHERE Task.Id_Type = Type.Id;";
+const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Id AS type FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;";
 const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text, Points) VALUES($1, $2, $3) RETURNING Id;";
 const UPDATE_TASK_QUERY = "UPDATE Task SET Id_Type=$1, Text=$2, Points=$3 WHERE Id=$4 RETURNING *;";
 const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;";
@@ -47,6 +47,13 @@ module.exports = class Task {
 										owner: right.owner,
 										modifier: right.modifier
 									});
+								}
+
+								for (let i in res.rows) {
+									let text = JSON.parse(res.rows[i].text);
+									if (text.choices)
+										res.rows[i].choices = text.choices;
+									res.rows[i].text = text.question;
 								}
 
 								resolve(res.rows[0]);
@@ -126,8 +133,19 @@ module.exports = class Task {
 			if (this._typeCheck(task, {}) &&
 				this._typeCheck(task.id_type, 0) &&
 				this._typeCheck(task.text, '') &&
+				(task.id_type == 1 || this._typeCheck(task.choices, [])) &&
 				this._typeCheck(task.points, 0) &&
 				this._typeCheck(task.users, [])) {
+
+				task.text = {
+					question: task.text,
+				};
+				if (task.choices) {
+					task.text.choices = task.choices;
+					delete task.choices;
+				}
+
+				task.text = JSON.stringify(task.text);
 
 				this._piergiorgio.query(CREATE_SINGLE_TASK_QUERY, [task.id_type, task.text, task.points])
 					.then(res => {
@@ -148,10 +166,19 @@ module.exports = class Task {
 				this._typeCheck(task, {}) &&
 				this._typeCheck(task.users, []) &&
 				this._typeCheck(task.id_type, 0) &&
+				(task.id_type == 1 || this._typeCheck(task.choices, [])) &&
 				this._typeCheck(task.text, '') &&
 				this._typeCheck(task.points, 0)) {
 
 				this.getOne(id).then(() => {
+
+					task.text = {
+						question: task.text,
+					};
+					if (task.choices)
+						task.text.choices = task.choices;
+
+					task.text = JSON.stringify(task.text);
 
 					this._piergiorgio.query(UPDATE_TASK_QUERY, [task.id_type, task.text, task.points, id])
 						.then(res => {

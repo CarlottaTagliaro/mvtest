@@ -1,5 +1,5 @@
 const GET_ALL_EXAMS_QUERY = "SELECT * FROM Exam;"
-const GET_SINGLE_EXAM_QUERY = "SELECT Exam.Id_Creator, ExamTask.Id_Task FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam AND Exam.Id=$1;"
+const GET_SINGLE_EXAM_QUERY = "SELECT Exam.Id, Exam.Id_Creator, ExamTask.Id_Task FROM Exam, ExamTask WHERE Exam.Id=ExamTask.Id_Exam AND Exam.Id=$1;"
 const DELETE_EXAM_QUERY = "DELETE FROM Exam WHERE Id=$1;"
 const DELETE_TASKEXAM_QUERY = "DELETE FROM ExamTask WHERE Id_Exam=$1;";
 const CREATE_EXAM_QUERY = "INSERT INTO Exam(Id_Creator) VALUES($1) RETURNING Id;";
@@ -43,6 +43,7 @@ module.exports = class Exam {
               });
 
               exam = {
+                id: res.rows[0].id,
                 id_creator: res.rows[0].id_creator,
                 tasks: tasks
               };
@@ -121,7 +122,9 @@ module.exports = class Exam {
               queries.push(this._piergiorgio.query(INSERT_TASK_IN_EXAM, [id, id_t]));
             }
             Promise.all(queries)
-              .then(() => resolve(exam));
+              .then(() => {
+                exam.id = id;
+                resolve(exam)});
           })
       } else {
         reject(Error('Type Assertion Failed'));

@@ -8,6 +8,7 @@ const EXAMS = [{
 }];
 
 const singleExam = {
+	id: expect.any(Number),
 	id_creator: expect.any(Number),
 	tasks: expect.any(Array)
 }
