@@ -7,7 +7,8 @@ const classes_v = [{
 
 const class_template = {
 	id : expect.any(Number),
-	name : expect.any(String)
+	name : expect.any(String),
+	users: expect.any(Array)
 }
 
 let gc_class = -1;
@@ -26,15 +27,14 @@ test('constructor_type_inference', ()=>{
   }  
 });
 
-test('GET /api/class - get all classes', () => {
+test('GET /api/classes - get all classes', () => {
 	return expect(db.class.getAll()).resolves.toEqual(expect.arrayContaining(classes_v));
 });
 
-test('POST /api/class - creates a class and returns its id', () => {
+test('POST /api/classes - creates a class and returns its id', () => {
 	let class_tmp = {
-		  id: 200,
-			name: "name"
-			//users: [1,2,3]
+			name: "name",
+			users: [1,2,3]
 		},
 		expected = {
 			id: expect.any(Number)
@@ -48,11 +48,24 @@ test('POST /api/class - creates a class and returns its id', () => {
 	});
 });
 
-test('GET /api/class/:id - get class by id', () => {
+test('GET /api/classes/:id - get class by id', () => {
+	console.warn("ahahahahaha",gc_class);
 	return expect(db.class.getById(gc_class)).resolves.toMatchObject(class_template);
 });
 
-test('DELETE /api/class/:id - deletes class', () => {
+
+test('PUT /api/classes/:id - edit a specific exam', () => {
+	expect.assertions(1);
+
+	let class_tmp = {
+		name: "OKOKOK",
+		users: [1,2]
+	}
+	return expect(db.class.edit(gc_class, class_tmp)).resolves.toMatchObject(class_template);
+});
+
+
+test('DELETE /api/classes/:id - deletes class', () => {
 	console.warn(">>>>>>>>>>" + gc_class);
 	expect.assertions(1);
 	return expect(db.class.delete(gc_class)).resolves.toBeUndefined();
