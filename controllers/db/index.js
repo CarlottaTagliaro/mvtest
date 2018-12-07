@@ -9,6 +9,8 @@ const User = require('./user.js');
 const Assignment = require('./assignment.js');
 const Class = require('./class_view.js');
 const Submission = require('./submission.js');
+const Review = require('./review.js');
+
 
 function DB() {
 	var self = this;
@@ -40,7 +42,7 @@ function DB() {
 	self.assignment = new Assignment(self._piergiorgio);
 	self.class = new Class(self._piergiorgio);
 	self.submission = new Submission(self._piergiorgio);
-
+	self.review = new Review(self._piergiorgio);
 
 	self._piergiorgio.multiquery = function (qas) {
 		to_exec = [];
