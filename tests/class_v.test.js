@@ -20,6 +20,20 @@ test('as_defined_in_spec', ()=>{
   }
 });
 
+it('value checking', async ()=>{
+	let values = [
+		['getById',[-1, null, undefined, NaN, {}]],
+		['create', [-1, null, undefined, NaN, {}]],
+		['edit', [[-1,null], [{}, undefined]]],
+		['delete', [-1, null, undefined, NaN, {}]]
+	]
+	for(val of values){
+		let fun = val[0];
+		let args = val[1];
+		await expect(()=>db.class[fun](...args)).toThrow();
+	}
+});
+
 test('constructor_type_inference', ()=>{
   let not_working_values = [true, 0, "", undefined, null];
   for(val of not_working_values){

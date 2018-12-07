@@ -7,7 +7,10 @@ function typecheck(a, a_std_value) {
   throw new Error("Type assertion failed");
   return false; //consistency in returns, not of real value;
 }
-
+function ge(v, t){
+  if(v<t){throw new Error("Value constraint failed");}
+  return v>=t;
+}
 //The view that gives access to the db
 //working with the classes
 //the proposed functions are get, edit, and delete
@@ -33,7 +36,7 @@ function class_v(_db) {
 
   self.getById = _id => {
     typecheck(_id, 0);
-
+    ge(_id, 0);
     return new Promise((res, rej) => {
       self.db.query(GET_CLASS_BY_ID_QUERY, [_id])
         .then(_r => {
@@ -76,6 +79,7 @@ function class_v(_db) {
 
   self.edit = (_id, _c) => {
     typecheck(_id, 0);
+    ge(_id, 0);
     typecheck(_c["name"], "");
     return new Promise((res, rej) => {
       self.db.query(DELETE_CLASSUSER_QUERY, [_id])
@@ -99,6 +103,7 @@ function class_v(_db) {
 
   self.delete = _id => {
     typecheck(_id, 0);
+    ge(_id, 0);
     return new Promise((res, rej) => {
       self.db.query(DELETE_CLASS_QUERY, [_id])
         .then(_res => res())
