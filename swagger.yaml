@@ -454,13 +454,13 @@ paths:
           $ref: "#/responses/404"
 
     
-  /submissions/{idSubmission}/reviews:
+  /assignments/{idAssignment}/reviews:
     get:
       tags:
       - "Review"
       summary: "Get all reviews you've done"      
       parameters:
-      - name: "idSubmission"
+      - name: "idAssignment"
         in: "path"
         required: true
         type: "integer"
@@ -476,7 +476,7 @@ paths:
       - "Review"
       summary: "Create a new review"
       parameters:
-      - name: "idSubmission"
+      - name: "idAssignment"
         in: "path"
         required: true
         type: integer
@@ -491,13 +491,13 @@ paths:
         403:
           $ref: "#/responses/403"
 
-  /submissions/{idSubmission}/reviews/{idReview}:
+  /assignments/{idAssignment}/reviews/{idReview}:
     put:
       tags:
       - "Review"
       summary: "Edit a specific review"
       parameters:
-      - name: "idSubmission"
+      - name: "idAssignment"
         in: "path"
         required: true
         type: integer
@@ -752,7 +752,7 @@ definitions:
         items:
           type: "string"
     required:
-    - id
+    - "id"
     example:
       id: 2
       choices:
@@ -767,7 +767,7 @@ definitions:
       id:
         type: "number"
         description: "unique ID of the task"
-      question:
+      text:
         type: "string"
         description: "text of the asked question"
       points:
@@ -775,8 +775,14 @@ definitions:
         format: "integer"
         description: "value of the task in points"
       type:
-        description: "type of the task"
-        $ref: "#/definitions/TaskType"
+        type: "number"
+        format: "integer"
+        description: "The type of question. can be 1 for open; 2 for multiple choice; 3 for single choice."
+      choices:
+        description: "An array of choices. This field can be non-existent"
+        type: "array"
+        items:
+          type: "string"
       users:
         type: "array"
         description: "users who have access to the task"
@@ -784,25 +790,27 @@ definitions:
           $ref: "#/definitions/UserPerms"
     required:
       - "id"
-      - "question"
+      - "text"
+      - "points"
+      - "type"
+      - "users"
     example:
       id:  0
-      question: "Example question"
+      text: "Example question"
       points: 10
-      type:
-        id: 2
-        choices:
+      type: 2
+      choices:
           - "First Answer"
           - "Second Answer"
           - "Third Answer"
-          - "Fourth Answer"   
+          - "Fourth Answer"  
       users:
         - email: "owner@mail.com"
           owner: true
-          canWrite: true
+          modifier: true
         - email: "user@mail.com"
           owner: false
-          canwrite: false
+          modifier: false
   UserRequest:
     title: "UserRequest"
     type: "object"
@@ -855,12 +863,12 @@ definitions:
         description: "users who belong to the class"
         type: "array"
         items:
-          $ref: "#/definitions/User"
+          type: "number"
     example:
       name: "Software Engeneering"
       users:
-      - email: "student@mail.com"
-        name: "Good Student"
+      - 1
+      - 2
   Class:
     title: "Class"
     type: "object"
@@ -889,13 +897,14 @@ definitions:
       id:
         description: "unique ID of the exam"
         type: "number"
-      owner:
+      id_creator:
         description: "user who created the exam"
-        $ref: "#/definitions/User"
-      totalPoints:
-        description: "total points of the exam"
         type: "number"
         format: "integer"
+      #totalPoints: TO  BE DONE
+      #  description: "total points of the exam"
+      #  type: "number"
+      #  format: "integer"
       tasks:
         description: "questions contained in the exam"
         type: "array"
@@ -903,10 +912,8 @@ definitions:
           type: "number"
     example:
       id: 0
-      owner:
-        email: "g.s@agg.it"
-        name: "Mario"
-      totalPoints: 60
+      id_creator: 2
+      #totalPoints: 60
       tasks:
         - 0
         - 1
@@ -914,11 +921,7 @@ definitions:
     title: "ExamRequest"
     type: "object"
     properties:
-      owner:
-        description: "user who created the exam"
-        $ref: "#/definitions/User"
-      totalPoints:
-        description: "total points of the exam"
+      id_creator:
         type: "number"
         format: "integer"
       tasks:
@@ -927,10 +930,7 @@ definitions:
         items:
           type: "number"
     example:
-      owner:
-        email: "g.s@agg.it"
-        name: "Mario"
-      totalPoints: 60
+      id_creator: 2
       tasks:
         - 0
         - 1
@@ -944,47 +944,55 @@ definitions:
       owner:
         description: "isOwner flag"
         type: "boolean"
-      canWrite:
-        description: "canWrite flag"
+      modifier:
+        description: "modifier flag"
         type: "boolean"
   TaskRequest:
     title: "TaskRequest"
     type: "object"
     properties:
-      question:
+      text:
         type: "string"
         description: "text of the asked question"
       points:
         type: "number"
         format: "integer"
         description: "value of the task in points"
+      choices:
+        description: "The possible answers for the question"
+        type: "array"
+        items:
+          type: "string"
       type:
+        type: "number"
+        format: "integer"
         description: "type of the task"
-        $ref: "#/definitions/TaskType"
       users:
         type: "array"
         description: "users who have access to the task"
         items:
           $ref: "#/definitions/UserPerms"
     required:
-      - "question"
+      - "text"
+      - "points"
+      - "type"
+      - "users"
     example:
-      question: "Example question"
+      text: "Example question"
       points: 10
-      type:
-        id: 2
-        choices:
-          - "First Answer"
-          - "Second Answer"
-          - "Third Answer"
-          - "Fourth Answer"   
+      choices:
+        - "Answer 1"
+        - "Answer 2"
+        - "Answer 3"
+        - "Answer 4"
+      type: 2
       users:
         - email: "owner@mail.com"
           owner: true
-          canWrite: true
+          modifier: true
         - email: "user@mail.com"
           owner: false
-          canwrite: false
+          modifier: false
   AssignmentRequest:
     title: "AssignmentRequest"
     type: "object"
@@ -1124,25 +1132,27 @@ definitions:
     title: "ReviewRequest"
     type: "object"
     properties:
-      submission-id:
-        description: "unique ID of the submission that is being rewieved"
-        type: "number"
-      author:
-        description: "author of the review"
-        $ref: "#/definitions/User"
       mark:
         description: "mark assigned to a specific submission"
         type: "number"
       comment:
         description: "provides corrections, possible answer or other comments"
         type: "string"
+      id_assign:
+        description: "unique ID of the submission that is being rewieved"
+        type: "number"
+      id_user:
+        description: "author of the review"
+        type: "number"
+      id_task:
+        description: "author of the review"
+        type: "number"
     example:
-      submission-id : 1 
-      author:
-        email: "g.s@agg.com"
-        name: "Giovanni Storti"
       mark: 27
       comment: "good work, well done"
+      id_assign : 1 
+      id_user: 2
+      id_task: 3
   Review:
     title: "Review"
     type: "object"
@@ -1150,23 +1160,25 @@ definitions:
       id: 
         description: "unique ID of the review"
         type: "number"
-      submission-id:
-        description: "unique ID of the submission that is being rewieved"
-        type: "number"
-      author:
-        description: "author of the review"
-        $ref: "#/definitions/User"
       mark:
         description: "mark assigned to a specific submission"
         type: "number"
       comment:
         description: "provides corrections, possible answer or other comments"
         type: "string"
+      id_assign:
+        description: "unique ID of the submission that is being rewieved"
+        type: "number"
+      id_user:
+        description: "author of the review"
+        type: "number"
+      id_task:
+        description: "author of the review"
+        type: "number"
     example:
       id: 0
-      submission-id : 1 
-      author:
-        email: "g.s@agg.com"
-        name: "Giovanni Storti"
       mark: 27
       comment: "good work, well done"
+      id_assign : 1 
+      id_user: 2
+      id_task: 3
