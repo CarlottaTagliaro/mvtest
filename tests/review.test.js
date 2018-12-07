@@ -62,17 +62,17 @@ test('getAll should return an array of reviews', () => {
 
 test('getOne with wrong id should reject error', () => {
   expect.assertions(1);
-  return expect(db.review.getOne(-1)).rejects.toThrow();
+  return expect(db.review.getOne(0, -1)).rejects.toThrow();
 });
 
 test('getOne with wrong id type should reject error', () => {
   expect.assertions(1);
-  return expect(db.review.getOne('not a number')).rejects.toThrow();
+  return expect(db.review.getOne(1, 'not a number')).rejects.toThrow();
 });
 
 test('getOne should return a review', () => {
   expect.assertions(1);
-  return expect(db.review.getOne(reviewId)).resolves.toMatchObject(EXPECTED_REVIEW);
+  return expect(db.review.getOne(ASSIGN_ID, reviewId)).resolves.toMatchObject(EXPECTED_REVIEW);
 });
 
 test('update with wrong id should reject an error', () => {
@@ -106,17 +106,17 @@ test('update should update and return a review', () => {
 
 test('delete with wrong id type should reject an error', () => {
   expect.assertions(1);
-  return expect(db.review.delete('not a number')).rejects.toThrow();
+  return expect(db.review.delete(1, 'not a number')).rejects.toThrow();
 });
 
 test('delete should delete a review', () => {
   expect.assertions(1);
-  return expect(db.review.delete(reviewId)).resolves.toBeUndefined();
+  return expect(db.review.delete(ASSIGN_ID, reviewId)).resolves.toBeUndefined();
 });
 
 test('delete with wrong id should reject an error', () => {
   expect.assertions(1);
-  return expect(db.review.delete(reviewId)).rejects.toThrow();
+  return expect(db.review.delete(ASSIGN_ID, reviewId)).rejects.toThrow();
 });
 
 afterAll(() => {

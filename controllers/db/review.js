@@ -1,5 +1,5 @@
 const GET_ALL_REVIEWS_FOR_ASSIGN = 'SELECT Review.* FROM Review WHERE Review.Id_Assign=$1';
-const GET_ONE_REVIEW_FOR_ASSIGN = 'SELECT Review.*,Task.* FROM Review, Task WHERE Review.Id_Task=Task.Id AND Review.Id=$1';
+const GET_ONE_REVIEW_FOR_ASSIGN = 'SELECT Review.* FROM Review WHERE Review.Id_Assign=$1 AND Review.Id=$2';
 const CREATE_REVIEW = 'INSERT INTO Review(Mark, Comment, Id_Assign, Id_User, Id_Task) VALUES($1, $2, $3, $4, $5) RETURNING Id;';
 const UPDATE_REVIEW = 'UPDATE Review SET Mark = $1, Comment = $2 WHERE Id = $3 RETURNING *;';
 const DELETE_REVIEW = 'DELETE FROM Review WHERE Id = $1;';
@@ -23,11 +23,11 @@ module.exports = class Review {
     });
   }
 
-  getOne(id) {
+  getOne(assignId, id) {
     return new Promise((resolve, reject) => {
       if (this._typeCheck(id, 1)) {
 
-        this.db.query(GET_ONE_REVIEW_FOR_ASSIGN, [id])
+        this.db.query(GET_ONE_REVIEW_FOR_ASSIGN, [assignId, id])
           .then(res => {
             if (res.rows.length == 0) {
               let error = new Error("Review not found");
@@ -73,7 +73,6 @@ module.exports = class Review {
 
         this.db.query(UPDATE_REVIEW, [review.mark, review.comment, id])
           .then(res => {
-            console.warn(res.rows);
             if (res.rows.length == 0) {
               let error = new Error("Review not found");
               error.errno = 404;
@@ -89,12 +88,11 @@ module.exports = class Review {
     });
   }
 
-  delete(id) {
+  delete(assignId, id) {
     return new Promise((resolve, reject) => {
       if (this._typeCheck(id, 0)) {
 
-        this.getOne(id).then(() => {
-
+        this.getOne(assignId, id).then(() => {
           this.db.query(DELETE_REVIEW, [id])
             .then(res => resolve())
             .catch(err => reject(err));

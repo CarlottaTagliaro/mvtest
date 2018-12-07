@@ -14,7 +14,7 @@ router.get('/:assignId/reviews', (req, res) => {
 });
 
 router.get('/:assignId/reviews/:id', (req, res) => {
-  db.review.getOne(parseInt(req.params.id)).then((data) => {
+  db.review.getOne(parseInt(req.params.assignId), parseInt(req.params.id)).then((data) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
@@ -48,7 +48,7 @@ router.put('/:assignId/reviews/:id ', (req, res) => {
 });
 
 router.delete('/:assignId/reviews/:id', (req, res) => {
-  db.review.delete(parseInt(req.params.id)).then(data => {
+  db.review.delete(parseInt(req.params.assignId), parseInt(req.params.id)).then(data => {
     res.status(204);
     res.send();
   }).catch(err => {
