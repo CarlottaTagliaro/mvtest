@@ -12,14 +12,14 @@ const EXPECTED_TASK = [{
 	id: expect.any(Number),
 	text: expect.any(String),
 	points: expect.any(Number),
-	type: expect.any(Number)
+	id_type: expect.any(Number)
 }];
 
 const EXPECTED_TASK_RIGHTS = {
 	id: expect.any(Number),
 	text: expect.any(String),
 	points: expect.any(Number),
-	type: expect.any(Number),
+	id_type: expect.any(Number),
 	users: expect.arrayContaining(EXPECTED_RIGHTS)
 };
 

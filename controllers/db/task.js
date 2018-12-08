@@ -1,5 +1,5 @@
-const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Id AS type FROM Task, Type WHERE Task.Id_Type = Type.Id;";
-const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Type.Id AS type FROM Task, Type WHERE Task.Id=$1 AND Task.Id_Type = Type.Id;";
+const GET_ALL_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Task.Id_Type FROM Task;";
+const GET_SINGLE_TASK_QUERY = "SELECT Task.Id, Task.Text, Task.Points, Task.Id_Type FROM Task WHERE Task.Id=$1;";
 const CREATE_SINGLE_TASK_QUERY = "INSERT INTO Task(Id_Type, Text, Points) VALUES($1, $2, $3) RETURNING Id;";
 const UPDATE_TASK_QUERY = "UPDATE Task SET Id_Type=$1, Text=$2, Points=$3 WHERE Id=$4 RETURNING *;";
 const DELETE_TASK_QUERY = "DELETE FROM Task WHERE id=$1;";
@@ -36,7 +36,7 @@ module.exports = class Task {
 					.then(res => {
 						if (res.rows.length == 0) {
 							let error = new Error('Task ' + id + ' not found');
-							error.code = 404;
+							error.errno = 404;
 							reject(error);
 						} else {
 							this.getRights(id).then(rights => {
@@ -128,7 +128,6 @@ module.exports = class Task {
 
 	create(task) {
 		return new Promise((resolve, reject) => {
-			console.log('adding', task);
 
 			if (this._typeCheck(task, {}) &&
 				this._typeCheck(task.id_type, 0) &&
