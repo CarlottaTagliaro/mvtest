@@ -18,8 +18,8 @@ const sess = {
 	saveUninitialized: false
 };
 
-if (app.get('env') === 'production') {
-	app.set('trust proxy', 1);
+if (router.get('env') === 'production') {
+	router.set('trust proxy', 1);
 	sess.cookie.secure = true;
 }
 

@@ -51,7 +51,7 @@ function DB() {
 		}
 		console.warn(">>>>>>>>>>>>>>>>>>>>>>>>>" + to_exec);
 		return Promise.all(to_exec);
-	}
+	};
 }
 
 const instance = new DB();
