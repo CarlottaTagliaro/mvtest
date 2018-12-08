@@ -94,21 +94,6 @@ module.exports = class Assignment {
 
   //////////////////////////////////////////////////////
 
-  _positiveArray(a) {
-    if (a.every(Number.isInteger) && this._positivity(a)) {
-      return true;
-    }
-    return false;
-  }
-
-  _positivity(a) {
-    for (var item of a) {
-      if (item <= 0)
-        return false;
-    }
-    return true;
-  }
-
   _positiveId(a) {
     if (a > 0) {
       return true;
