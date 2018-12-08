@@ -310,7 +310,7 @@ paths:
     get:
       tags: 
       - "Assignment"
-      summary: "Get all assignments you've done"
+      summary: "Get all assignments done"
       responses:
         200:
           $ref: "#/responses/200Assignments"
@@ -398,7 +398,7 @@ paths:
     get:
       tags: 
       - "Assignment"
-      summary: "Get all submission you've done for that assignment"
+      summary: "Get all submission done for that assignment"
       parameters:
         - name: "idAssignment"
           in: "path"
@@ -439,12 +439,19 @@ paths:
     delete:
       tags:
       - "Assignment"
-      summary: "deletes all submission for an assignment" #retire
+      summary: "Deletes all submission for an assignment" #retire
       parameters:
       - name: "idAssignment"
         in: "path"
         required: true
         type: "integer"
+      - in: "body" #while there is no auth
+        name: "idUser"
+        required: true
+        schema:
+          type: "number"
+          example:
+          - 1
       responses:
         204:
           $ref: "#/responses/204"
@@ -522,7 +529,7 @@ paths:
   /session:
     get:
       tags:
-      - "Session"
+      - "Session (not implemented yet)"
       summary: "Returns the user in the session"
       produces:
       - "text/plain"
@@ -597,6 +604,25 @@ paths:
         403:
           $ref: "#/responses/403"
   /users/{idUser}:
+    get:
+      tags:
+      - "User"
+      summary: "Find user by id"
+      parameters:
+      - name: "idUser"
+        in: "path"
+        description: "ID of the user to return"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          $ref: "#/responses/200User"
+        304:
+          $ref: "#/responses/304"
+        403:
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
     put:
       tags:
       - "Users"
@@ -822,13 +848,9 @@ definitions:
       name:
         description: "username of the user"
         type: "string"
-      admin:
-        description: "isAdmin flag"
-        type: "boolean"
     example:
       email: "user@mail.com"
       name: "User Name"
-      admin: false
   User:
     title: "User"
     type: "object"
@@ -844,14 +866,10 @@ definitions:
       name:
         description: "username of the user"
         type: "string"
-      admin:
-        description: "isAdmin flag"
-        type: "boolean"
     example:
       id: 3
       email: "user@mail.com"
       name: "User Name"
-      admin: false
   ClassRequest:
     title: "ClassRequest"
     type: "object"
@@ -1004,26 +1022,24 @@ definitions:
       review:
         description: "flag is setted if classmates will be able to review submissions"
         type: "boolean"
-      TA:
+      id_user:
         description: "TA who assigned the exam"
-        $ref: "#/definitions/User"
-      class:
+        type: "number"
+        format: "integer"
+      id_exam:
+        type: "number"
+        format: "integer"
+        description: "exam assigned"
+      id_class:
         description: "class to which the exam is assigned"
-        type: "array"
-        items:
-          $ref: "#/definitions/Class"
+        type: "number"
+        format: "integer"
     example:
       deadline: "12-12-2018"
       review: true
-      TA:
-        email: "g.s@agg.it"
-        name: "Mario"
-      class:
-      - id: 0
-        name: "Software Engeneering"
-        users:
-        - email: "student@mail.com"
-          name: "Good Student"
+      id_user: 2
+      id_exam: 3
+      id_class: 1
   Assignment:
     title: "Assignment"
     type: "object"
@@ -1038,27 +1054,25 @@ definitions:
       review:
         description: "flag is setted if classmates will be able to review submissions"
         type: "boolean"
-      TA:
+      id_user:
         description: "TA who assigned the exam"
-        $ref: "#/definitions/User"
-      class:
+        type: "number"
+        format: "integer"
+      id_exam:
+        type: "number"
+        format: "integer"
+        description: "exam assigned"
+      id_class:
         description: "class to which the exam is assigned"
-        type: "array"
-        items:
-          $ref: "#/definitions/Class"
+        type: "number"
+        format: "integer"
     example:
       id: 0
       deadline: "12-12-2018"
       review: true
-      TA: 
-        email: "g.s@agg.it"
-        name: "Mario"
-      class:
-      - id: 0
-        name: "Software Engeneering"
-        users:
-        - email: "student@mail.com"
-          name: "Good Student"
+      id_user: 2
+      id_exam: 3
+      id_class: 1
   SubmissionRequest:
     title: "SubmissionRequest"
     type: "object"
@@ -1070,23 +1084,22 @@ definitions:
         description: "time of submission"
         type: "string"
         format: "date-time"
-      task-id: 
+      id_task: 
         description: "unique ID of the task whose submission is being done"
         type: "number"
-      Author: 
+      id_user: 
         description: "student who did the submission"
-        $ref: "#/definitions/User" #is the id enough?
-      assignment-id:
+        type: "number"
+        format: "integer"
+      id_assign:
         description: "unique ID of the assignment"
         type: "number"
     example:
       answer: "the correct answer is number 2"
       time: "12-12-2018"
-      task-id: 3
-      Author:
-        email: "g.s@agg.com"
-        name: "Giovanni Storti"
-      assignment-id: 4
+      id_task: 3
+      id_user: 1
+      id_assign: 4
   Submission:
     title: "Submission"
     type: "object"
@@ -1101,33 +1114,23 @@ definitions:
         description: "time of submission"
         type: "string"
         format: "date-time"
-      task-id: 
+      id_task: 
         description: "unique ID of the task whose submission is being done"
         type: "number"
-      mark: # ???????
-        description: "mark that will be assigned by TA"
+      id_user: 
+        description: "student who did the submission"
         type: "number"
         format: "integer"
-      needsRevision:
-        description: "flag setted if the revision is done by students"
-        type: "boolean"
-      Author: 
-        description: "student who did the submission"
-        $ref: "#/definitions/User" #is the id enough?
-      assignment-id:
+      id_assign:
         description: "unique ID of the assignment"
         type: "number"
     example:
       id: 0
       answer: "the correct answer is number 2"
       time: "12-12-2018"
-      task-id: 3
-      mark: 8
-      needsRevision: false
-      Author:
-        email: "g.s@agg.com"
-        name: "Giovanni Storti"
-      assignment-id: 4
+      id_task: 3
+      id_user: 1
+      id_assign: 4
   ReviewRequest:
     title: "ReviewRequest"
     type: "object"
