@@ -3,7 +3,7 @@ const createError = require('http-errors');
 const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
-const session = require('express-session')
+const session = require('express-session');
 
 const apiV1 = require('./routes/v1');
 
