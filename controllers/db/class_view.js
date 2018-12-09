@@ -8,7 +8,6 @@ function typecheck(a, a_std_value) {
   return false; //consistency in returns, not of real value;
 }
 function ge(v, t){
-  if(v<t){throw new Error("Value constraint failed");}
   return v>=t;
 }
 //The view that gives access to the db
@@ -36,7 +35,13 @@ function class_v(_db) {
 
   self.getById = _id => {
     typecheck(_id, 0);
-    ge(_id, 0);
+    if(!ge(_id, 0)){
+      return new Promise((res, rej)=>{
+        let error = new Error("Wrong number");
+        error.code = 404;
+        rej(error);
+      });
+    }
     return new Promise((res, rej) => {
       self.db.query(GET_CLASS_BY_ID_QUERY, [_id])
         .then(_r => {
@@ -70,8 +75,8 @@ function class_v(_db) {
         .then(_res => {
           var queries = [];
           var id = _res.rows[0];
-          for (let id_user of _c.users) {
-            queries.push(self.db.query(INSERT_USER_IN_CLASS,[_res.rows[0].id,id_user]));
+          for (let user of _c.users) {
+            queries.push(self.db.query(INSERT_USER_IN_CLASS,[_res.rows[0].id,user.id]));
           };
 
           Promise.all(queries)

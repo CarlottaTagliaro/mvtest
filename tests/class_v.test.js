@@ -22,13 +22,13 @@ test('as_defined_in_spec', () => {
 
 it('value checking', async () => {
 	let values = [
-		['getById', [-1, null, undefined, NaN, {}]],
-		['create', [-1, null, undefined, NaN, {}]],
+		['getById', [ null, undefined, NaN, {}]],
+		['create', [null, undefined, NaN, {}]],
 		['edit', [
-			[-1, null],
+			[10001, null],
 			[{}, undefined]
 		]],
-		['delete', [-1, null, undefined, NaN, {}]]
+		['delete', [ null, undefined, NaN, {}]]
 	]
 	for (val of values) {
 		let fun = val[0];
@@ -53,7 +53,7 @@ test('GET /api/classes - get all classes', () => {
 test('POST /api/classes - creates a class and returns its id', () => {
 	let class_tmp = {
 			name: "name",
-			users: [1, 2, 3]
+			users: [{id:1},{id: 2},{id: 3}]
 		},
 		expected = {
 			id: expect.any(Number)
