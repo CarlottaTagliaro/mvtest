@@ -25,7 +25,7 @@ router.post('/:assignId/submissions', (req, res) => {
 });
 
 router.delete('/:assignId/submissions', (req, res) => {
-	db.exam.delete(parseInt(req.params.assignId), parseInt(req.body.id_user)).then(data => {
+	db.submission.delete(parseInt(req.params.assignId), parseInt(req.body.id_user)).then(data => {
 		res.status(204);
 		res.send();
 	}).catch(err => {
