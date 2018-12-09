@@ -27,8 +27,8 @@ module.exports = class Submission {
                 this._typeCheck(submission.id_user, 0) && this._positiveId(submission.id_user) &&
                 this._typeCheck(id_assign, 0) && this._positiveId(id_assign) &&
                 this._typeCheck(submission.id_task, 0) && this._positiveId(submission.id_task)) {
-                var currentdate = new Date();
-                var datetime = "" + currentdate.getFullYear() + "-" + currentdate.getMonth() + "-" + currentdate.getDay();
+
+                let datetime = new Date().toISOString();
 
                 this._piergiorgio.query(CHECK_USER, [submission.id_user, id_assign]) //check if user is in the class
                     .then((utente) => {

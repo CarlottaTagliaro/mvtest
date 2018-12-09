@@ -3,8 +3,8 @@ var express = require('express'),
 
 const db = require('../../controllers/db/index.js');
 
-router.get('/:id/submissions', (req, res) => {
-	db.submission.getAll(parseInt(req.params.id)).then((data) => {
+router.get('/:assignId/submissions', (req, res) => {
+	db.submission.getAll(parseInt(req.params.assignId)).then((data) => {
 		res.status(200);
 		res.json(data);
 	}).catch((err) => {
@@ -14,8 +14,8 @@ router.get('/:id/submissions', (req, res) => {
 });
 
 
-router.post('/:id/submissions', (req, res) => {
-	db.submission.create(parseInt(req.params.id),req.body).then(data => {
+router.post('/:assignId/submissions', (req, res) => {
+	db.submission.create(parseInt(req.params.assignId), req.body).then(data => {
 		res.status(201);
 		res.send(data);
 	}).catch(err => {
@@ -24,8 +24,8 @@ router.post('/:id/submissions', (req, res) => {
 	});
 });
 
-router.delete('/:id/submissions', (req, res) => {
-	db.exam.delete(parseInt(req.params.id),parseInt(req.body.id_user)).then(data => {
+router.delete('/:assignId/submissions', (req, res) => {
+	db.exam.delete(parseInt(req.params.assignId), parseInt(req.body.id_user)).then(data => {
 		res.status(204);
 		res.send();
 	}).catch(err => {
