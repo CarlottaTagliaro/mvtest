@@ -19,7 +19,7 @@ module.exports = class User {
 
   getOne(id) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(id, 1)) {
+      if (this._typeCheck(id, 0)) {
 
         this.db.query(GET_ONE_USER, [id])
           .then(res => {
