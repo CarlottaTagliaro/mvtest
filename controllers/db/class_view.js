@@ -41,6 +41,12 @@ function class_v(_db) {
       self.db.query(GET_CLASS_BY_ID_QUERY, [_id])
         .then(_r => {
 
+          if(_r.rows.length == 0){
+            let error = new Error("Class not found");
+            error.code = 404;
+            rej(error);
+          }
+
           let users = _r.rows.map(r => {
             return r.id_user;
           });

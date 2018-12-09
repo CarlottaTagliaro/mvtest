@@ -15,7 +15,6 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
 	db.class.getById(parseInt(req.params.id)).then((data) => {
-		console.warn("aaaaaaaaaaaaa",parseInt(req.params.id));
 		res.status(200);
 		res.json(data);
 	}).catch((err) => {

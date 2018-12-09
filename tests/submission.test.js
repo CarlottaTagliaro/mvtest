@@ -37,7 +37,6 @@ test('POST /api/assignments/:id/submissions - creates a submission and returns i
 		};
 
 	return db.submission.create(2, submission).then((res) => {
-		console.log('CREATE RETURNS', res)
 		subId = res.id;
 		expect(res).toMatchObject(expected);
 	});
@@ -92,6 +91,5 @@ test('DELETE /api/exams/:id - error if parameter is a string', () => {
 });
 
 afterAll(() => {
-	console.warn("Closing DB");
 	db.close();
 });

@@ -100,7 +100,7 @@ test('POST /assignments - error if one parameter is missing', () => {
   return expect(db.assignment.create(assignment)).rejects.toThrow();
 });
 
-test('EDIT /asssignments/:id - Edits assignment and returns the updated one', () => {
+test('EDIT /assignments/:id - Edits assignment and returns the updated one', () => {
   expect.assertions(1);
 
   let assignment = {
@@ -114,7 +114,7 @@ test('EDIT /asssignments/:id - Edits assignment and returns the updated one', ()
   return expect(db.assignment.edit(assignId, assignment)).resolves.toMatchObject(singleAssignment);
 });
 
-test('EDIT /asssignments/:id - Error if a foreign key costraint is not respected', () => {
+test('EDIT /assignments/:id - Error if a foreign key costraint is not respected', () => {
   expect.assertions(1);
 
   let assignment = {
@@ -141,7 +141,6 @@ test('DELETE /assignments/:id - Delete with wrong id should throw', () => {
 });
 
 afterAll(() => {
-  console.warn("Closing DB");
   db.close();
 });
 

@@ -26,8 +26,7 @@ module.exports = class Exam {
 
   getOne(id) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(id, 0) &&
-        this._positiveId(id)) {
+      if (this._typeCheck(id, 0)) {
 
         var exam;
 

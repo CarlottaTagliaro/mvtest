@@ -39,7 +39,6 @@ test('POST /api/exams - creates an exam and returns its id', () => {
 
 	//expect.assertions(1);
 	return db.exam.create(exam).then((res) => {
-		console.log('CREATE RETURNS', res)
 		examId = res.id;
 		expect(res).toMatchObject(expected);
 	});
@@ -174,6 +173,5 @@ test('PUT /api/exams/:id - edit with task not of positive int', () => {
 });
 
 afterAll(() => {
-	console.warn("Closing DB");
 	db.close();
 });

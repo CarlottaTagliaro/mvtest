@@ -23,7 +23,7 @@ module.exports = class Assignment {
 
   getOne(id) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(id, 0) && this._positiveId(id)) {
+      if (this._typeCheck(id, 0)) {
         this._piergiorgio.query(GET_SINGLE_ASSIGNMENT, [id])
           .then(res => {
             if (res.rows.length == 0) {
