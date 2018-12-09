@@ -1,4 +1,4 @@
-const db = require('../controllers/db');
+const db = require('./connection.js');
 
 const classes_v = [{
 	id: expect.any(Number),
@@ -6,39 +6,44 @@ const classes_v = [{
 }];
 
 const class_template = {
-	id : expect.any(Number),
-	name : expect.any(String),
+	id: expect.any(Number),
+	name: expect.any(String),
 	users: expect.any(Array)
 }
 
 let gc_class = -1;
 
-test('as_defined_in_spec', ()=>{
-  let spec = ['getAll', 'getById', 'create', 'edit', 'delete'];
-  for(method of spec){
-    expect(db.class[method]).toBeDefined();
-  }
-});
-
-it('value checking', async ()=>{
-	let values = [
-		['getById',[-1, null, undefined, NaN, {}]],
-		['create', [-1, null, undefined, NaN, {}]],
-		['edit', [[-1,null], [{}, undefined]]],
-		['delete', [-1, null, undefined, NaN, {}]]
-	]
-	for(val of values){
-		let fun = val[0];
-		let args = val[1];
-		await expect(()=>db.class[fun](...args)).toThrow();
+test('as_defined_in_spec', () => {
+	let spec = ['getAll', 'getById', 'create', 'edit', 'delete'];
+	for (method of spec) {
+		expect(db.class[method]).toBeDefined();
 	}
 });
 
-test('constructor_type_inference', ()=>{
-  let not_working_values = [true, 0, "", undefined, null];
-  for(val of not_working_values){
-    expect(()=>{ new db.class(val); }).toThrow();
-  }  
+it('value checking', async () => {
+	let values = [
+		['getById', [-1, null, undefined, NaN, {}]],
+		['create', [-1, null, undefined, NaN, {}]],
+		['edit', [
+			[-1, null],
+			[{}, undefined]
+		]],
+		['delete', [-1, null, undefined, NaN, {}]]
+	]
+	for (val of values) {
+		let fun = val[0];
+		let args = val[1];
+		await expect(() => db.class[fun](...args)).toThrow();
+	}
+});
+
+test('constructor_type_inference', () => {
+	let not_working_values = [true, 0, "", undefined, null];
+	for (val of not_working_values) {
+		expect(() => {
+			new db.class(val);
+		}).toThrow();
+	}
 });
 
 test('GET /api/classes - get all classes', () => {
@@ -48,7 +53,7 @@ test('GET /api/classes - get all classes', () => {
 test('POST /api/classes - creates a class and returns its id', () => {
 	let class_tmp = {
 			name: "name",
-			users: [1,2,3]
+			users: [1, 2, 3]
 		},
 		expected = {
 			id: expect.any(Number)
@@ -63,7 +68,7 @@ test('POST /api/classes - creates a class and returns its id', () => {
 });
 
 test('GET /api/classes/:id - get class by id', () => {
-	console.warn("ahahahahaha",gc_class);
+	console.warn("ahahahahaha", gc_class);
 	return expect(db.class.getById(gc_class)).resolves.toMatchObject(class_template);
 });
 
@@ -73,7 +78,7 @@ test('PUT /api/classes/:id - edit a specific exam', () => {
 
 	let class_tmp = {
 		name: "OKOKOK",
-		users: [1,2]
+		users: [1, 2]
 	}
 	return expect(db.class.edit(gc_class, class_tmp)).resolves.toMatchObject(class_template);
 });

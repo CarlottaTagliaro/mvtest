@@ -1,4 +1,4 @@
-const db = require('../controllers/db');
+const db = require('./connection.js');
 
 const functions = ['getAll', 'create', 'delete'];
 

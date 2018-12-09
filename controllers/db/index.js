@@ -19,6 +19,8 @@ function DB() {
 		ssl: true
 	});
 
+	console.log('DB CONNECTION STRING', connString);
+
 	self._piergiorgio.connect((err) => {
 		if (err) {
 			console.error('DB connection error: ', err.stack);
