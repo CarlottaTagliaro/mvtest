@@ -2,7 +2,7 @@ var express = require('express'),
   router = express.Router();
 const db = require('../../controllers/db');
 
-router.use('/auth', require('./auth.js'));
+router.use('/session', require('./session.js'));
 router.use('/users', require('./users.js'));
 router.use('/tasks', require('./tasks.js'));
 router.use('/exams', require('./exams.js'));

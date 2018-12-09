@@ -10,7 +10,7 @@ const router = express.Router();
 
 const sess = {
 	store: new pgSession(),
-	secret: process.env.FOO_COOKIE_SECRET,
+	secret: 'kekkeke',
 	resave: false,
 	cookie: {
 		maxAge: 30 * 24 * 60 * 60 * 1000
@@ -19,6 +19,7 @@ const sess = {
 };
 
 if (router.get('env') === 'production') {
+	console.log('production!!');
 	router.set('trust proxy', 1);
 	sess.cookie.secure = true;
 }
@@ -53,25 +54,25 @@ passport.deserializeUser((id, done) => {
 
 
 router.use(passport.initialize());
-router.use(passport.session());
+router.use(passport.session()); 
 
-router.post('/session', passport.authenticate('local'), (req, res) => {
+router.post('/', passport.authenticate('local'), (req, res) => {
 	res.status(200);
 	res.send(req.user);
 	// res.redirect('/tasks');
 });
 
-router.delete('/session', (req, res) => {
+router.delete('/', (req, res) => {
 	req.logout();
 	// res.redirect('/');
 });
 
-router.get('/session', (req, res) => {
+router.get('/', (req, res) => {
 	if (req.user) {
 		res.status(200);
 		res.send(req.user);
 	} else {
-		res.status(403);
+		res.status(204);
 		res.send();
 	}
 });

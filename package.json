@@ -28,7 +28,8 @@
     "pug": "^2.0.3"
   },
   "devDependencies": {
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "superagent": "^4.0.0"
   },
   "jest": {
     "verbose": true,
