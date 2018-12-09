@@ -1,7 +1,3 @@
-var app = require('../../routes/v1/tasks.js');
-
-const PORT = process.env.PORT || 3000
-
 const EXPECTED_TASK = {
 	id: expect.any(Number),
 	text: expect.any(String),
@@ -10,53 +6,7 @@ const EXPECTED_TASK = {
 };
 
 var taskId = null;
-var request = require('supertest')('http://localhost:' + PORT);
-
-describe('GET', () => {
-
-	test('GET /tasks should return a list of tasks', () => {
-		expect.assertions(2);
-
-		return request.get('/api/tasks').then(res => {
-			expect(res.statusCode).toBe(200);
-			expect(JSON.parse(res.text)).toEqual(expect.arrayContaining([EXPECTED_TASK]));
-		});
-	});
-
-	test('GET /tasks/1 should return task', () => {
-		expect.assertions(2);
-
-		return request.get('/api/tasks/1').then(res => {
-			expect(res.statusCode).toBe(200);
-			expect(JSON.parse(res.text)).toEqual(expect.objectContaining(EXPECTED_TASK));
-		});
-	});
-
-	test('GET /tasks/1 should return task', () => {
-		expect.assertions(2);
-
-		return request.get('/api/tasks/1').then(res => {
-			expect(res.statusCode).toBe(200);
-			expect(JSON.parse(res.text)).toEqual(expect.objectContaining(EXPECTED_TASK));
-		});
-	});
-
-	test('GET /tasks/25556 should return 404', () => {
-		expect.assertions(1);
-
-		return request.get('/api/tasks/25556').then(res => {
-			expect(res.statusCode).toBe(404);
-		});
-	});
-
-	test('GET /tasks/-10 with wrong id should return an error', () => {
-		expect.assertions(1);
-
-		return request.get('/api/tasks/-10').then(res => {
-			expect(res.statusCode).toBe(404);
-		});
-	});
-});
+var request = require('supertest')(require('../../app.js'));
 
 describe('POST', () => {
 	test('POST /tasks with wrong data should return error', () => {
@@ -96,6 +46,42 @@ describe('POST', () => {
 			console.log(taskId);
 			expect(res.statusCode).toBe(201);
 			expect(JSON.parse(res.text)).toEqual(expect.objectContaining(expected));
+		});
+	});
+});
+
+describe('GET', () => {
+	test('GET /tasks should return a list of tasks', () => {
+		expect.assertions(2);
+
+		return request.get('/api/tasks').then(res => {
+			expect(res.statusCode).toBe(200);
+			expect(JSON.parse(res.text)).toEqual(expect.arrayContaining([EXPECTED_TASK]));
+		});
+	});
+
+	test('GET /tasks/:id should return task', () => {
+		expect.assertions(2);
+
+		return request.get('/api/tasks/' + taskId).then(res => {
+			expect(res.statusCode).toBe(200);
+			expect(JSON.parse(res.text)).toEqual(expect.objectContaining(EXPECTED_TASK));
+		});
+	});
+
+	test('GET /tasks/25556 should return 404', () => {
+		expect.assertions(1);
+
+		return request.get('/api/tasks/25556').then(res => {
+			expect(res.statusCode).toBe(404);
+		});
+	});
+
+	test('GET /tasks/-10 with wrong id should return an error', () => {
+		expect.assertions(1);
+
+		return request.get('/api/tasks/-10').then(res => {
+			expect(res.statusCode).toBe(404);
 		});
 	});
 });

@@ -1,7 +1,7 @@
 var express = require('express'),
 	router = express.Router();
 
-const db = require('../../controllers/db/index.js');
+const db = require('../../controllers/db');
 
 router.get('/', (req, res) => {
 	db.task.getAll().then((data) => {
@@ -18,6 +18,7 @@ router.get('/:id', (req, res) => {
 		res.status(200);
 		res.json(data);
 	}).catch((err) => {
+		console.error(err, err.errno);
 		res.status(err.errno || 500);
 		res.send(err.message);
 	});
