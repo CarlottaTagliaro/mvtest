@@ -34,6 +34,7 @@
   "jest": {
     "verbose": true,
     "collectCoverage": true,
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "forceExit": true
   }
 }
