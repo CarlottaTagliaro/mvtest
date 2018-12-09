@@ -4,9 +4,33 @@ block head
   title mvtest
 
 block body
-    h3=task.text
+  div.d-flex.justify-content-between.align-items-center.mb-1
+    h3='Task ' + task.id
       small.text-muted=' by '+task.users[0].email
+    .btn-group(role='group', aria-label='Basic example')
+      button.btn.btn-warning(type='button' data-toggle="modal" data-target="#edit") Edit
+      button.btn.btn-danger(type='button' data-toggle="modal" data-target="#delete") Delete
+
+  p=task.text
+  if task.choices
+    h4 Answers
     ol
-      if task.choices
-        each choice in task.choices
-          li=choice
+      each choice in task.choices
+        li=choice
+
+block foot
+  include includes/taskManage.pug
+
+  script.
+    $('#delete').on('show.bs.modal',()=>{
+      $('#taskId').text(' !{task.id}"?')
+    });
+
+    $('#deleteBtn').click(() => {
+      $.ajax({
+        url: "/api/tasks/!{task.id}",
+        type: 'DELETE'
+      }).then(()=>{
+        window.location.replace('/tasks');
+      });
+    });
