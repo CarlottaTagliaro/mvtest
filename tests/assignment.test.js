@@ -6,7 +6,7 @@ const Assignments = [{
   id: expect.any(Number),
   deadline: expect.any(Date),
   review: expect.any(Boolean),
-  id_user: expect.any(Number),
+  id_teacher: expect.any(Number),
   id_exam: expect.any(Number),
   id_class: expect.any(Number)
 }];
@@ -15,7 +15,7 @@ const singleAssignment = {
   id: expect.any(Number),
   deadline: expect.any(Date),
   review: expect.any(Boolean),
-  id_user: expect.any(Number),
+  id_teacher: expect.any(Number),
   id_exam: expect.any(Number),
   id_class: expect.any(Number)
 }
@@ -48,7 +48,7 @@ test('POST /assignments - creates an assignment and returns its id', () => {
   let assignment = {
     deadline: '2018-12-3',
     review: true,
-    id_user: 2,
+    id_teacher: 2,
     id_exam: 2,
     id_class: 2
   }
@@ -67,7 +67,7 @@ test('POST /assignments - error if parameter has wrong structure', () => {
   expect.assertions(1);
   let assignment = {
     deadline: '2018-12-3',
-    id_user: 2,
+    id_teacher: 2,
     id_exam: 2,
     id_class: 2
   };
@@ -80,7 +80,7 @@ test('POST /assignments - error if id_user type is wrong', () => {
   let assignment = {
     deadline: '2018-12-3',
     review: true,
-    id_user: 'not a number',
+    id_teacher: 'not a number',
     id_exam: 2,
     id_class: 2
   };
@@ -92,7 +92,7 @@ test('POST /assignments - error if one parameter is missing', () => {
   expect.assertions(1);
   let assignment = {
     deadline: '2018-12-3',
-    id_user: 1,
+    id_teacher: 1,
     id_exam: 2,
     id_class: 2
   };
@@ -106,7 +106,7 @@ test('EDIT /assignments/:id - Edits assignment and returns the updated one', () 
   let assignment = {
     deadline: '2018-12-13',
     review: false,
-    id_user: 2,
+    id_teacher: 2,
     id_exam: 2,
     id_class: 2
   };
@@ -120,7 +120,7 @@ test('EDIT /assignments/:id - Error if a foreign key costraint is not respected'
   let assignment = {
     deadline: '2018-12-13',
     review: false,
-    id_user: 2,
+    id_teacher: 2,
     id_exam: 500,
     id_class: 2
   };

@@ -1,7 +1,7 @@
 const GET_ALL_ASSIGNMENTS = "SELECT * FROM Assign;"
 const GET_SINGLE_ASSIGNMENT = "SELECT * FROM Assign WHERE Id=$1;"
 const DELETE_ASSIGNMENT = "DELETE FROM Assign WHERE Id=$1;"
-const CREATE_ASSIGNMENT = "INSERT INTO Assign(Deadline,Review,Id_User,Id_Exam,Id_Class) VALUES($1,$2,$3,$4,$5) RETURNING Id;"
+const CREATE_ASSIGNMENT = "INSERT INTO Assign(Deadline,Review,Id_Teacher,Id_Exam,Id_Class) VALUES($1,$2,$3,$4,$5) RETURNING Id;"
 const UPDATE_ASSIGNMENT = "UPDATE Assign SET Deadline=$1, Review=$2, Id_Exam=$3, Id_Class=$4 WHERE Id=$5 RETURNING *;"
 
 module.exports = class Assignment {
@@ -45,10 +45,10 @@ module.exports = class Assignment {
     return new Promise((resolve, reject) => {
       if (this._typeCheck(assign.review, true) &&
         Date.parse(assign.deadline) != NaN &&
-        this._typeCheck(assign.id_user, 0) && this._positiveId(assign.id_user) &&
+        this._typeCheck(assign.id_teacher, 0) && this._positiveId(assign.id_teacher) &&
         this._typeCheck(assign.id_exam, 0) && this._positiveId(assign.id_exam) &&
         this._typeCheck(assign.id_class, 0) && this._positiveId(assign.id_class)) {
-        this._piergiorgio.query(CREATE_ASSIGNMENT, [assign.deadline, assign.review, assign.id_user, assign.id_exam, assign.id_class])
+        this._piergiorgio.query(CREATE_ASSIGNMENT, [assign.deadline, assign.review, assign.id_teacher, assign.id_exam, assign.id_class])
           .then((res) => {
             console.warn('CREATED ', res.rows[0]);
             resolve(res.rows[0]);

@@ -2,7 +2,7 @@ const EXPECTED_ASSIGN = {
     id: expect.any(Number),
     deadline: expect.any(String),
     review: expect.any(Boolean),
-    id_user: expect.any(Number),
+    id_teacher: expect.any(Number),
     id_exam: expect.any(Number),
     id_class: expect.any(Number)
 };
@@ -27,7 +27,7 @@ describe('POST', () => {
         let assign = {
                 deadline: '2018-12-3',
                 review: true,
-                id_user: 2,
+                id_teacher: 2,
                 id_exam: 2,
                 id_class: 2
             },
@@ -85,7 +85,7 @@ describe('PUT', () => {
     let assign = {
         deadline: '2018-12-13',
         review: false,
-        id_user: 2,
+        id_teacher: 2,
         id_exam: 2,
         id_class: 2
     };
