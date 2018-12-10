@@ -3,18 +3,18 @@ var express = require('express'),
 
 const db = require('../../controllers/db/index.js');
 
-router.get('/:assignId/reviews', (req, res) => {
-  db.review.getAll(parseInt(req.params.assignId)).then(data => {
+router.get('/', (req, res) => {
+  db.review.getAll(parseInt(req.idAssign), parseInt(req.body.sessionUser)).then(data => {
     res.status(200);
     res.json(data);
   }).catch(err => {
-    res.status(500);
+    res.status(err.errno || 500);
     res.send(err.message);
   });
 });
 
-router.get('/:assignId/reviews/:id', (req, res) => {
-  db.review.getOne(parseInt(req.params.assignId), parseInt(req.params.id)).then((data) => {
+router.get('/:idReview', (req, res) => {
+  db.review.getOne(parseInt(req.idAssign), parseInt(req.params.idReview), parseInt(req.body.sessionUser)).then((data) => {
     res.status(200);
     res.json(data);
   }).catch((err) => {
@@ -23,36 +23,32 @@ router.get('/:assignId/reviews/:id', (req, res) => {
   });
 });
 
-router.post('/:assignId/reviews', (req, res) => {
-  req.body.id_assign = parseInt(req.params.assignId);
-
-  db.review.create(req.body).then(data => {
+router.post('/', (req, res) => {
+  db.review.create(parseInt(req.idAssign), req.body.payload, parseInt(req.body.sessionUser)).then(data => {
     res.status(201);
     res.send(data);
   }).catch(err => {
-    res.status(500);
+    res.status(err.errno || 500);
     res.send(err);
   });
 });
 
-router.put('/:assignId/reviews/:id ', (req, res) => {
-  req.body.id_assign = parseInt(req.params.assignId);
-
-  db.review.update(parseInt(req.params.id), req.body).then(data => {
+router.put('/:idReview', (req, res) => {
+  db.review.update(parseInt(req.idAssign), parseInt(req.params.idReview), req.body.payload, parseInt(req.body.sessionUser)).then(data => {
     res.status(204);
     res.send();
   }).catch(err => {
-    res.status(500);
+    res.status(err.errno || 500);
     res.send(err);
   });
 });
 
-router.delete('/:assignId/reviews/:id', (req, res) => {
-  db.review.delete(parseInt(req.params.assignId), parseInt(req.params.id)).then(data => {
+router.delete('/:idReview', (req, res) => {
+  db.review.delete(parseInt(req.idAssign), parseInt(req.params.idReview), parseInt(req.body.sessionUser)).then(data => {
     res.status(204);
     res.send();
   }).catch(err => {
-    res.status(500);
+    res.status(err.errno || 500);
     res.send(err);
   });
 });

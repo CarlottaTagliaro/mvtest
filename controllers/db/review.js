@@ -1,19 +1,50 @@
-const GET_ALL_REVIEWS_FOR_ASSIGN = 'SELECT Review.* FROM Review WHERE Review.Id_Assign=$1';
-const GET_ONE_REVIEW_FOR_ASSIGN = 'SELECT Review.* FROM Review WHERE Review.Id_Assign=$1 AND Review.Id=$2';
-const CREATE_REVIEW = 'INSERT INTO Review(Mark, Comment, Id_Assign, Id_User, Id_Task) VALUES($1, $2, $3, $4, $5) RETURNING Id;';
+const GET_ALL_REVIEWS_FOR_SUBMISSION = 'SELECT Review.* FROM Review, Submission WHERE Review.Id_Submission=$1 AND (Review.Id_Creator=$2 OR Submission.Id_User=$2) AND Review.Id_Submission=Submission.Id';
+const GET_ONE_REVIEW_FOR_SUBMISSION = 'SELECT Review.* FROM Review, Submission WHERE Review.Id_Submission=$1 AND Review.Id=$2 AND (Review.Id_Creator=$3 OR Submission.Id_User=$3) AND Review.Id_Submission = Submission.Id;';
+
+/// AAAAAAAAAAA
+const CHECK_USER = 'SELECT * FROM Review, Submission, Assign, Class, ClassUser  WHERE Review.Id_Submission=Submission.Id AND Submission.Id_Assign=Assign.Id AND Assign.Id_Class=Class.Id AND Class.Id=ClassUser.Id_Class AND Submission.Id=$1 AND (Submission.Id_User!=$2 OR ClassUser.Id_User=$2 OR Assign.Id_Teacher=$2);';
+
+const CHECK_USER_CREATE = 'SELECT * FROM Submission, Assign, Class, ClassUser WHERE Submission.Id_Assign=Assign.Id AND Assign.Id_Class=Class.Id AND Class.Id=ClassUser.Id_Class AND Submission.Id=$1 AND (Submission.Id_User!=$2 OR ClassUser.Id_User=$2 OR Assign.Id_Teacher=$2);';
+const CREATE_REVIEW = 'INSERT INTO Review(Mark, Comment, Id_Creator, Id_Submission) VALUES($1, $2, $3, $4) RETURNING Id;';
+
 const UPDATE_REVIEW = 'UPDATE Review SET Mark = $1, Comment = $2 WHERE Id = $3 RETURNING *;';
 const DELETE_REVIEW = 'DELETE FROM Review WHERE Id = $1;';
+const GET_LATEST_SUBMISSION_ID = 'SELECT Id FROM Submission WHERE Id_Assign=$1 AND Id_User=$2 ORDER BY Time DESC LIMIT 1;';
 
 module.exports = class Review {
   constructor(db) {
     this.db = db;
   }
 
-  getAll(assignId) {
+  /*getLatestSubmission(idAssign, idUser) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(assignId, 1)) {
+      if (this._typeCheck(idAssign, 0) &&
+        this._typeCheck(idUser, 0)) {
 
-        this.db.query(GET_ALL_REVIEWS_FOR_ASSIGN, [assignId])
+        this.db.query(GET_LATEST_SUBMISSION_ID, [idAssign, idUser])
+          .then(res => {
+            if (res.rows[0])
+              resolve(res.rows[0].id);
+            else {
+              let err = Error('Submission not found.');
+              err.errno = 404;
+              reject(err);
+            }
+          }).catch(err => reject(err));
+
+      } else {
+        reject(Error('Type Assertion Failed in getLatestSubmission'));
+      }
+    });
+  }*/
+
+  getAll(idSubmission, sessionUser) {
+
+    return new Promise((resolve, reject) => {
+      if (this._typeCheck(idSubmission, 0) &&
+        this._typeCheck(sessionUser, 0)) {
+
+        this.db.query(GET_ALL_REVIEWS_FOR_SUBMISSION, [idSubmission, sessionUser])
           .then(res => resolve(res.rows))
           .catch(err => reject(err));
 
@@ -23,82 +54,112 @@ module.exports = class Review {
     });
   }
 
-  getOne(assignId, id) {
+  getOne(idSubmission, idReview, sessionUser) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(id, 1)) {
+      if (this._typeCheck(idSubmission, 0) &&
+        this._typeCheck(idReview, 0)) {
 
-        this.db.query(GET_ONE_REVIEW_FOR_ASSIGN, [assignId, id])
+        this.db.query(GET_ONE_REVIEW_FOR_SUBMISSION, [idSubmission, idReview, sessionUser])
           .then(res => {
             if (res.rows.length == 0) {
-              let error = new Error("Review not found");
+              let error = new Error(`Review not found ${idReview}`);
               error.errno = 404;
               reject(error);
             } else {
               resolve(res.rows[0]);
             }
-          })
-          .catch(err => reject(err));
+          }).catch(err => reject(err));
 
       } else {
-        reject(Error('Type Assertion Failed'));
+        reject(Error('Type Assertion Failed in getOne'));
       }
     });
   }
 
-  create(review) {
+  _checkCreate(idSubmission, sessionUser) {
+
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(review, {}) &&
-        this._typeCheck(review.mark, 0) &&
-        this._typeCheck(review.comment, '') &&
-        this._typeCheck(review.id_assign, 0) &&
-        this._typeCheck(review.id_user, 0) &&
-        this._typeCheck(review.id_task, 0)) {
-
-        this.db.query(CREATE_REVIEW, [review.mark, review.comment, review.id_assign, review.id_user, review.id_task])
-          .then(res => resolve(res.rows[0]))
-          .catch(err => reject(err));
-
-      } else {
-        reject(Error('Type Assertion Failed'));
-      }
+      this.db.query(CHECK_USER_CREATE, [idSubmission, sessionUser])
+        .then(res => {
+          if (res.rows[0])
+            resolve();
+          else {
+            let err = Error('Unauthorized.');
+            err.errno = 403;
+            reject(err);
+          }
+        });
     });
   }
 
-  update(id, review) {
+  create(idSubmission, review, sessionUser) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(id, 0) &&
+      if (this._typeCheck(idSubmission, 0) &&
+        this._typeCheck(sessionUser, 0) &&
         this._typeCheck(review, {}) &&
         this._typeCheck(review.mark, 0) &&
         this._typeCheck(review.comment, '')) {
 
-        this.db.query(UPDATE_REVIEW, [review.mark, review.comment, id])
-          .then(res => {
-            if (res.rows.length == 0) {
-              let error = new Error("Review not found");
-              error.errno = 404;
-              reject(error);
-            } else {
-              resolve(res.rows[0]);
-            }
-          })
-          .catch(err => reject(err));
+        this._checkCreate(idSubmission, sessionUser)
+          .then(() => {
+
+            this.db.query(CREATE_REVIEW, [review.mark, review.comment, sessionUser, idSubmission])
+              .then(res => resolve(res.rows[0]))
+              .catch(err => reject(err));
+
+          }).catch(err => reject(err));
+
       } else {
         reject(Error('Type Assertion Failed'));
       }
     });
   }
 
-  delete(assignId, id) {
+  update(idSubmission, idReview, review, sessionUser) {
     return new Promise((resolve, reject) => {
-      if (this._typeCheck(id, 0)) {
 
-        this.getOne(assignId, id).then(() => {
-          this.db.query(DELETE_REVIEW, [id])
-            .then(res => resolve())
-            .catch(err => reject(err));
+      if (this._typeCheck(idSubmission, 0) &&
+        this._typeCheck(idReview, 0) &&
+        this._typeCheck(sessionUser, 0) &&
+        this._typeCheck(review, {}) &&
+        this._typeCheck(review.mark, 0) &&
+        this._typeCheck(review.comment, '')) {
 
-        }).catch(err => reject(err));
+        this._checkCreate(idSubmission, sessionUser)
+          .then(() => {
 
+            this.getOne(idSubmission, idReview, sessionUser)
+              .then(() => {
+
+                this.db.query(UPDATE_REVIEW, [review.mark, review.comment, idReview])
+                  .then(res => resolve(res.rows[0]))
+
+                  .catch(err => reject(err));
+              }).catch(err => reject(err));
+          }).catch(err => reject(err));
+      } else {
+        reject(Error('Type Assertion Failed in Update'));
+      }
+    });
+  }
+
+  delete(idSubmission, idReview, sessionUser) {
+    return new Promise((resolve, reject) => {
+      if (this._typeCheck(idSubmission, 0) &&
+        this._typeCheck(sessionUser, 0) &&
+        this._typeCheck(idReview, 0)) {
+
+        this._checkCreate(idSubmission, sessionUser)
+          .then(() => {
+
+            this.getOne(idSubmission, idReview, sessionUser)
+              .then(() => {
+                this.db.query(DELETE_REVIEW, [idReview])
+                  .then(res => resolve())
+
+                  .catch(err => reject(err));
+              }).catch(err => reject(err));
+          }).catch(err => reject(err));
       } else {
         reject(Error('Type Assertion Failed'));
       }
