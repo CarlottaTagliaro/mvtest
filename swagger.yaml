@@ -461,7 +461,7 @@ paths:
           $ref: "#/responses/404"
 
     
-  /assignments/{idAssignment}/reviews:
+  /assignments/{idAssignment}/submissions/reviews:
     get:
       tags:
       - "Review"
@@ -498,7 +498,29 @@ paths:
         403:
           $ref: "#/responses/403"
 
-  /assignments/{idAssignment}/reviews/{idReview}:
+  /assignments/{idAssignment}/submissions/reviews/{idReview}:
+    get:
+      tags:
+      - "Review"
+      summary: "Find review by id"
+      parameters:
+      - name: "idAssignment"
+        in: "path"
+        required: true
+        type: integer
+      - name: "idReview"
+        in: "path"
+        required: true
+        type: "number"
+      responses:
+        200:
+          $ref: "#/responses/200Review"
+        304:
+          $ref: "#/responses/304"
+        403:
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
     put:
       tags:
       - "Review"
@@ -517,6 +539,26 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/ReviewRequest'
+      responses:
+        204:
+          $ref: "#/responses/204"
+        403:
+          $ref: "#/responses/403"
+        404:
+          $ref: "#/responses/404"
+    delete:
+      tags:
+      - "Review"
+      summary: "Deletes a review"
+      parameters:
+      - name: "idAssignment"
+        in: "path"
+        required: true
+        type: integer
+      - name: "idReview"
+        in: "path"
+        required: true
+        type: "number"
       responses:
         204:
           $ref: "#/responses/204"
@@ -1141,21 +1183,17 @@ definitions:
       comment:
         description: "provides corrections, possible answer or other comments"
         type: "string"
-      id_assign:
+      id_sub:
         description: "unique ID of the submission that is being rewieved"
         type: "number"
-      id_user:
-        description: "author of the review"
-        type: "number"
-      id_task:
+      id_creator:
         description: "author of the review"
         type: "number"
     example:
       mark: 27
       comment: "good work, well done"
-      id_assign : 1 
-      id_user: 2
-      id_task: 3
+      id_sub : 1 
+      id_creator: 2
   Review:
     title: "Review"
     type: "object"
@@ -1169,19 +1207,15 @@ definitions:
       comment:
         description: "provides corrections, possible answer or other comments"
         type: "string"
-      id_assign:
+      id_sub:
         description: "unique ID of the submission that is being rewieved"
         type: "number"
-      id_user:
-        description: "author of the review"
-        type: "number"
-      id_task:
+      id_creator:
         description: "author of the review"
         type: "number"
     example:
       id: 0
       mark: 27
       comment: "good work, well done"
-      id_assign : 1 
-      id_user: 2
-      id_task: 3
+      id_sub : 1 
+      id_creator: 2
