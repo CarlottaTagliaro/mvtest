@@ -104,7 +104,7 @@ describe('DELETE', () => {
 	test('DELETE /users/:id with wrong id should return error', () => {
 		expect.assertions(1);
 
-		return request.delete('/api/user/notanumber')
+		return request.delete('/api/users/notanumber')
 			.then(res => {
 				expect(res.statusCode).toBe(500);
 			});
