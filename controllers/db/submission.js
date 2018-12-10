@@ -34,7 +34,7 @@ module.exports = class Submission {
                     .then((utente) => {
                         if (utente.rows.length == 0) {
                             let error = new Error("User not in class");
-                            error.code = 404;
+                            error.errno = 404;
                             reject(error);
                         } else {
                             this._piergiorgio.query(CHECK_TASK, [id_assign, submission.id_task]) //check task in exam
