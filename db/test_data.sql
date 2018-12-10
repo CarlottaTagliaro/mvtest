@@ -16,6 +16,18 @@ INSERT INTO Task VALUES(DEFAULT,'{"question": "Domanda aperta generica1" }', 7, 
 INSERT INTO Task VALUES(DEFAULT,'{"question": "Single choice 1", "choices": ["First","Second"]}', 10, 2);
 INSERT INTO Task VALUES(DEFAULT,'{"question": "Single choice 2", "choices": ["First","Second"]}', 12, 2);
 INSERT INTO Task VALUES(DEFAULT,'{"question": "Multiple Choice", "choices": ["First","Second"]}', 10, 3);
+--Rights
+INSERT INTO Rights VALUES(1, 1, true, true);
+INSERT INTO Rights VALUES(2, 1, false, true);
+INSERT INTO Rights VALUES(3, 1, false, false);
+INSERT INTO Rights VALUES(2, 2, true, true);
+INSERT INTO Rights VALUES(4, 2, false, true);
+INSERT INTO Rights VALUES(3, 3, true, true);
+INSERT INTO Rights VALUES(1, 3, false, true);
+INSERT INTO Rights VALUES(2, 4, true, true);
+INSERT INTO Rights VALUES(1, 5, true, true);
+INSERT INTO Rights VALUES(4, 6, true, true);
+INSERT INTO Rights VALUES(2, 6, false, true);
 --Exam
 INSERT INTO Exam VALUES(DEFAULT,1);
 INSERT INTO Exam VALUES(DEFAULT,2);
@@ -39,3 +51,9 @@ INSERT INTO ClassUser VALUES(2,4);
 --Assignment
 INSERT INTO Assign VALUES(DEFAULT,'2018-12-3',true,2,1,1);
 INSERT INTO Assign VALUES(DEFAULT,'2018-12-3',false,2,2,2);
+--Submission
+INSERT INTO Submission VALUES(DEFAULT,'2018-12-3 22:47','the answer is 42',1,2,1);
+INSERT INTO Submission VALUES(DEFAULT,'2018-12-3 22:50','the answer is NaN',1,2,2);
+-- Review
+INSERT INTO Review VALUES(DEFAULT,8,'Okay',1,1,1);
+INSERT INTO Review VALUES(DEFAULT,3,'Okay',2,2,2);
