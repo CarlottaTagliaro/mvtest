@@ -1,0 +1,12 @@
+doctype html
+head
+  title Session
+form(action='/api/session' method='post')
+  div
+    label Id:
+    input(type='text' name='id')
+  div
+    label Pwd:
+    input(type='password' name='pwd')
+  div
+    input(type='submit' value='Log In')

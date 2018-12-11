@@ -21,6 +21,9 @@ router.get('/', (req, res) => {
 		}, {
 			url: '/reviews',
 			name: 'Reviews'
+		}, {
+			url: '/session',
+			name: 'Session'
 		}]
 	});
 });
@@ -77,6 +80,19 @@ router.get('/exams', (req, res) => {
 			desc: 'First midterm for the Software engeneering course'
 		}]
 	})
+});
+
+router.get('/session', (req, res) => {
+	res.render('../views/form.pug');
+	// res.render('index', {
+	// 	page: 'session',
+	// 	title: 'Your Exams',
+	// 	objects: [{
+	// 		url: 'api/session/',
+	// 		name: 'User',
+	// 		desc: 'Logged user'
+	// 	}]
+	// })
 });
 
 module.exports = router;

@@ -9,22 +9,23 @@ const passport = require('passport'),
 
 const router = express.Router();
 
-// const sess = {
-// 	//store: new pgSession(),
-// 	secret: 'keyboard cat',
-// 	cookie: {
-// 		maxAge: 30 * 24 * 60 * 60 * 1000
-// 	}, // 30 days
-// 	resave: false,
-// 	saveUninitialized: false
-// };
+const sess = {
+	//store: new pgSession(),
+	secret: 'keyboard cat',
+	cookie: {
+		maxAge: 30 * 24 * 60 * 60 * 1000,
+		secure: true
+	}, // 30 days
+	resave: false,
+	saveUninitialized: false
+};
 
-// // if (router.get('env') === 'production') {
-// // 	router.set('trust proxy', 1);
-// // 	sess.cookie.secure = true;
-// // }
+// if (router.get('env') === 'production') {
+// 	router.set('trust proxy', 1);
+// 	sess.cookie.secure = true;
+// }
 
-// router.use(session(sess));
+router.use(session(sess));
 
 
 passport.use(new LocalStrategy({
@@ -54,29 +55,34 @@ passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
 
+
 passport.deserializeUser((id, done) => {
-	console.log('des!!!:' + user.id);
-	db.user.getOne(id)
-		.then(res => {
-			done(null, res);
-		})
-		.catch(err => {
-			if (err.errno === 404) {
-				done(null, false);	
-			} else{
-				done(err);
-			}
-		});
-	// db.user.getOne(id)
-	// 	.then(res => done(null, res))
-	// 	.catch(err => done(err));
-	// db.user.findById(id, (err, user) => {
-	// 	done(err, user);
-	// });
-	// User.findById(id, function(err, user) {
-	// 	done(err, user);
-	// });
+	console.log('des!!!:' + id);
 });
+
+// passport.deserializeUser((user, done) => {
+// 	console.log('des!!!:' + user.id);
+// 	db.user.getOne(id)
+// 		.then(res => {
+// 			done(null, res);
+// 		})
+// 		.catch(err => {
+// 			if (err.errno === 404) {
+// 				done(null, false);	
+// 			} else{
+// 				done(err);
+// 			}
+// 		});
+// 	// db.user.getOne(id)
+// 	// 	.then(res => done(null, res))
+// 	// 	.catch(err => done(err));
+// 	// db.user.findById(id, (err, user) => {
+// 	// 	done(err, user);
+// 	// });
+// 	// User.findById(id, function(err, user) {
+// 	// 	done(err, user);
+// 	// });
+// });
 
 router.use(passport.session());
 
@@ -91,7 +97,7 @@ router.delete('/', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-	console.log(req.session);
+	console.log(req.user);
 	if (req.isAuthenticated()) {
 		res.status(200);
 		res.send(req.user);
