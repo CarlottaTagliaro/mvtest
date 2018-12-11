@@ -6,6 +6,7 @@ GRANT ALL ON SCHEMA public TO public;
 CREATE TABLE IF NOT EXISTS Users(
   Id SERIAL,
   Email VARCHAR(255) NOT NULL,
+  Pwd VARCHAR(255) NOT NULL,
   Name VARCHAR(255) NOT NULL,
   PRIMARY KEY(Id)
 );
@@ -62,11 +63,11 @@ CREATE TABLE IF NOT EXISTS Assign(
   Deadline DATE NOT NULL,
   Review BOOLEAN DEFAULT FALSE,
 
-  Id_User INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
-  Id_Exam INTEGER NOT NULL REFERENCES Exam(Id) ON DELETE CASCADE,
-  Id_Class INTEGER NOT NULL REFERENCES Class(Id) ON DELETE CASCADE,
+Id_User INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
+Id_Exam INTEGER NOT NULL REFERENCES Exam(Id) ON DELETE CASCADE,
+Id_Class INTEGER NOT NULL REFERENCES Class(Id) ON DELETE CASCADE,
 
-  PRIMARY KEY(Id)
+PRIMARY KEY(Id)
 );
 
 CREATE TABLE IF NOT EXISTS Submission(
@@ -94,14 +95,14 @@ CREATE OR REPLACE FUNCTION GetExamTasks (_id_exam INTEGER)
     Text VARCHAR(4000),
     Id_Type INTEGER,
     Type_Name VARCHAR(255)
-) AS $$
+  ) AS $$
 BEGIN
   RETURN QUERY 
     SELECT Task.Id AS Id_Task, Task.Text, Task.Id_Type, Type.Name AS Type_Name 
     FROM Task JOIN ExamTask ON Task.Id = ExamTask.Id_Task
     JOIN Type ON Task.Id_Type = Type.Id
     WHERE ExamTask.Id_Exam = _id_exam
-  ;
+	;
 END; $$
 LANGUAGE 'plpgsql';
 
@@ -110,15 +111,15 @@ CREATE OR REPLACE FUNCTION GetAssignmentsForUser(_id_user INTEGER)
     Id_Exam INTEGER,
     Id_Creator INTEGER,
     Deadline DATE
-) AS $$
+  ) AS $$
 BEGIN
   RETURN QUERY
     SELECT Exam.Id as Id_Exam, Exam.Id_Creator, Assign.Deadline
     FROM Exam JOIN Assign ON Exam.Id = Assign.Id_Exam
     WHERE _id_user IN (
       SELECT ClassUser.Id_User FROM ClassUser
-      WHERE ClassUser.Id_Class = Assign.Id_Class
+       WHERE ClassUser.Id_Class = Assign.Id_Class
     ) 
-  ;
+	;
 END; $$
 LANGUAGE 'plpgsql';

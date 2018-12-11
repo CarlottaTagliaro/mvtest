@@ -1,74 +1,98 @@
 const db = require('../../controllers/db/index.js');
 
 const express = require('express'),
-      session = require('express-session'),
-      pgSession = require('connect-pg-simple')(session);
+      session = require('express-session');
+// pgSession = require('connect-pg-simple')(session)
+
 const passport = require('passport'),
       LocalStrategy = require('passport-local').Strategy;
 
 const router = express.Router();
 
-const sess = {
-	store: new pgSession(),
-	secret: 'kekkeke',
-	resave: false,
-	cookie: {
-		maxAge: 30 * 24 * 60 * 60 * 1000
-	}, // 30 days
-	saveUninitialized: false
-};
+// const sess = {
+// 	//store: new pgSession(),
+// 	secret: 'keyboard cat',
+// 	cookie: {
+// 		maxAge: 30 * 24 * 60 * 60 * 1000
+// 	}, // 30 days
+// 	resave: false,
+// 	saveUninitialized: false
+// };
 
-if (router.get('env') === 'production') {
-	console.log('production!!');
-	router.set('trust proxy', 1);
-	sess.cookie.secure = true;
-}
+// // if (router.get('env') === 'production') {
+// // 	router.set('trust proxy', 1);
+// // 	sess.cookie.secure = true;
+// // }
 
-router.use(session(sess));
+// router.use(session(sess));
 
 
-passport.use(new LocalStrategy((username, password, done) => {
-	db.users.findByUsername(username, (err, user) => {
-		if (err) {
-			return done(err);
-		}
-		if (!user) {
-			return done(null, false, { message: 'Incorrect username.' });
-		}
-		if (user.verifyPassword(password)) {
-			return done(null, false, { message: 'Incorrect password.' });
-		}
-		return done(null, user);
-	});
+passport.use(new LocalStrategy({
+	usernameField: 'id',
+	passwordField: 'pwd'
+}, (id, pwd, done) => {
+	db.user.getOne(id)
+		.then(res => {
+			if (true) { //res.pwd === pwd
+				done(null, res);
+			} else {
+				done(null, false, { message: 'Incorrect password.' });
+			} 
+		})
+		.catch(err => {
+			if (err.errno === 404) {
+				done(null, false, { message: 'No existing user.' });	
+			} else{
+				done(err);
+			}
+		});
 }));
+
+router.use(passport.initialize());
 
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-	db.users.findById(id, (err, user) => {
-		done(err, user);
-	});
+	console.log('des!!!:' + user.id);
+	db.user.getOne(id)
+		.then(res => {
+			done(null, res);
+		})
+		.catch(err => {
+			if (err.errno === 404) {
+				done(null, false);	
+			} else{
+				done(err);
+			}
+		});
+	// db.user.getOne(id)
+	// 	.then(res => done(null, res))
+	// 	.catch(err => done(err));
+	// db.user.findById(id, (err, user) => {
+	// 	done(err, user);
+	// });
+	// User.findById(id, function(err, user) {
+	// 	done(err, user);
+	// });
 });
 
+router.use(passport.session());
 
-router.use(passport.initialize());
-router.use(passport.session()); 
 
 router.post('/', passport.authenticate('local'), (req, res) => {
 	res.status(200);
-	res.send(req.user);
-	// res.redirect('/tasks');
+	res.send(req.body);
 });
 
 router.delete('/', (req, res) => {
 	req.logout();
-	// res.redirect('/');
 });
 
 router.get('/', (req, res) => {
-	if (req.user) {
+	console.log(req.session);
+	if (req.isAuthenticated()) {
 		res.status(200);
 		res.send(req.user);
 	} else {
