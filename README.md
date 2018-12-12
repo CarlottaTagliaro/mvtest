@@ -26,4 +26,4 @@ Matteo Bonora, Carlotta Tagliaro, Francesco Cadei, Girardi Massimiliano
 
 Per il file swagger fare riferimento alla versione nel branch master. Per poter eseguire i test è necessario usare il seguente comando:
 
-**DATABASE_URL=postgres://prbjgesvzrkqak:8759cabbe30552daa88ce6868a3635b8dde37faf3b929ce84755bc5bd350a294@ec2-54-217-217-142.eu-west-1.compute.amazonaws.com:5432/darbmu1c0hf038 npm test**
+`DATABASE_URL=postgres://prbjgesvzrkqak:8759cabbe30552daa88ce6868a3635b8dde37faf3b929ce84755bc5bd350a294@ec2-54-217-217-142.eu-west-1.compute.amazonaws.com:5432/darbmu1c0hf038 npm test`
