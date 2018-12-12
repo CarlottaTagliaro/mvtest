@@ -577,7 +577,7 @@ paths:
         304:
           $ref: "#/responses/304"
         403:
-          $ref: "#responses/403"
+          $ref: "#/responses/403"
     post:
       tags:
       - "Users"
@@ -594,7 +594,7 @@ paths:
         201:
           $ref: "#/responses/201"
         403:
-          $ref: "#responses/403"
+          $ref: "#/responses/403"
   /users/{idUser}:
     put:
       tags:
