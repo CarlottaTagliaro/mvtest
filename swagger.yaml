@@ -617,7 +617,7 @@ paths:
   /users:
     get:
       tags:
-      - "Users"
+      - "User"
       summary: "Returns the list of users"
       produces:
       - "text/plain"
@@ -630,7 +630,7 @@ paths:
           $ref: "#/responses/403"
     post:
       tags:
-      - "Users"
+      - "User"
       summary: "Creates a new user"
       produces:
       - "text/plain"
@@ -667,7 +667,7 @@ paths:
           $ref: "#/responses/404"
     put:
       tags:
-      - "Users"
+      - "User"
       summary: "Edits a user"
       parameters:
       - name: "idUser"
@@ -689,7 +689,7 @@ paths:
           $ref: "#/responses/404"
     delete:
       tags:
-      - "Users"
+      - "User"
       summary: "Deletes a user"
       parameters:
       - name: "idUser"
