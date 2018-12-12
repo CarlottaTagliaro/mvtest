@@ -36,5 +36,12 @@
     "collectCoverage": true,
     "testEnvironment": "node",
     "forceExit": true
+  },
+  "standard": {
+    "globals": [
+      "test",
+      "expect",
+	  "afterAll"
+    ]
   }
 }
