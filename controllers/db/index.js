@@ -1,64 +1,63 @@
 const {
-	Client
-} = require('pg');
+  Client
+} = require('pg')
 
-const connString = process.env.DATABASE_URL;
-const Task = require('./task.js');
-const Exam = require('./exam.js');
-const User = require('./user.js');
-const Assignment = require('./assignment.js');
-const Class = require('./class_view.js');
-const Submission = require('./submission.js');
-const Review = require('./review.js');
+const connString = process.env.DATABASE_URL
+const Task = require('./task.js')
+const Exam = require('./exam.js')
+const User = require('./user.js')
+const Assignment = require('./assignment.js')
+const Class = require('./class_view.js')
+const Submission = require('./submission.js')
+const Review = require('./review.js')
 
+function DB () {
+  var self = this
+  self._piergiorgio = new Client({
+    connectionString: connString,
+    ssl: true
+  })
 
-function DB() {
-	var self = this;
-	self._piergiorgio = new Client({
-		connectionString: connString,
-		ssl: true
-	});
+  console.log('DB CONNECTION STRING', connString)
 
-	console.log('DB CONNECTION STRING', connString);
+  self._piergiorgio.connect((err) => {
+    if (err) {
+      console.error('DB connection error: ', err.stack)
+    } else {
+      console.log('DB connected.')
+    }
+  })
 
-	self._piergiorgio.connect((err) => {
-		if (err) {
-			console.error('DB connection error: ', err.stack);
-		} else {
-			console.log('DB connected.');
-		}
-	});
+  self._piergiorgio.on('error', (err) => {
+    console.error('DB error: ', err.stack)
+  })
 
-	self._piergiorgio.on('error', (err) => {
-		console.error('DB error: ', err.stack);
-	});
+  self.close = () => {
+    self._piergiorgio.end()
+    // self._piergiorgio.on('drain', self._piergiorgio.end.bind(self._piergiorgio));
+  }
 
-	self.close = () => {
-		self._piergiorgio.end();
-		//self._piergiorgio.on('drain', self._piergiorgio.end.bind(self._piergiorgio));
-	};
+  self.task = new Task(self._piergiorgio)
+  self.exam = new Exam(self._piergiorgio)
+  self.user = new User(self._piergiorgio)
+  self.assignment = new Assignment(self._piergiorgio)
+  self.class = new Class(self._piergiorgio)
+  self.submission = new Submission(self._piergiorgio)
+  self.review = new Review(self._piergiorgio)
 
-	self.task = new Task(self._piergiorgio);
-	self.exam = new Exam(self._piergiorgio);
-	self.user = new User(self._piergiorgio);
-	self.assignment = new Assignment(self._piergiorgio);
-	self.class = new Class(self._piergiorgio);
-	self.submission = new Submission(self._piergiorgio);
-	self.review = new Review(self._piergiorgio);
-
-	self._piergiorgio.multiquery = function (qas) {
-		to_exec = [];
-		for (query_args of qas) {
-			q = query_args[0];
-			a = query_args[1];
-			to_exec.push(self._piergiorgio.query(q, a));
-		}
-		console.warn(">>>>>>>>>>>>>>>>>>>>>>>>>" + to_exec);
-		return Promise.all(to_exec);
-	}
+  self._piergiorgio.multiquery = function (qas) {
+    let to_exec = []
+    for (let query_args of qas) {
+      let q = query_args[0]
+      let a = query_args[1]
+      to_exec.push(self._piergiorgio.query(q, a))
+    }
+    console.warn('>>>>>>>>>>>>>>>>>>>>>>>>>' + to_exec)
+    return Promise.all(to_exec)
+  }
 }
 
-const instance = new DB();
-Object.freeze(instance);
+const instance = new DB()
+Object.freeze(instance)
 
-module.exports = instance;
+module.exports = instance
