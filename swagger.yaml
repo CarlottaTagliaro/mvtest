@@ -489,7 +489,7 @@ paths:
         type: integer
       - name: "body"
         in: "body"
-        required: true  
+        required: true
         schema:
           $ref: '#/definitions/ReviewRequest'
       responses:
@@ -856,12 +856,6 @@ definitions:
         description: "users who have access to the task"
         items:
           $ref: "#/definitions/UserPerms"
-    required:
-      - "id"
-      - "text"
-      - "points"
-      - "type"
-      - "users"
     example:
       id:  0
       text: "Example question"
@@ -890,9 +884,13 @@ definitions:
       name:
         description: "username of the user"
         type: "string"
+    required:
+    - "email"
+    - "name"
     example:
       email: "user@mail.com"
       name: "User Name"
+      
   User:
     title: "User"
     type: "object"
@@ -912,6 +910,8 @@ definitions:
       id: 3
       email: "user@mail.com"
       name: "User Name"
+      
+      
   ClassRequest:
     title: "ClassRequest"
     type: "object"
@@ -924,11 +924,15 @@ definitions:
         type: "array"
         items:
           type: "number"
+    required:
+    - "name"
+    - "users"
     example:
       name: "Software Engeneering"
       users:
       - 1
       - 2
+      
   Class:
     title: "Class"
     type: "object"
@@ -950,6 +954,8 @@ definitions:
       users:
       - email: "student@mail.com"
         name: "Good Student"
+        
+        
   Exam:
     title: "Exam"
     type: "object"
@@ -977,6 +983,7 @@ definitions:
       tasks:
         - 0
         - 1
+        
   ExamRequest:
     title: "ExamRequest"
     type: "object"
@@ -989,11 +996,16 @@ definitions:
         type: "array"
         items:
           type: "number"
+    required:
+      - "id_creator"
+      - "tasks"
     example:
       id_creator: 2
       tasks:
         - 0
         - 1
+        
+        
   UserPerms:
     title: "User Perms"
     type: "object"
@@ -1007,6 +1019,8 @@ definitions:
       modifier:
         description: "modifier flag"
         type: "boolean"
+        
+        
   TaskRequest:
     title: "TaskRequest"
     type: "object"
@@ -1053,6 +1067,8 @@ definitions:
         - email: "user@mail.com"
           owner: false
           modifier: false
+          
+          
   AssignmentRequest:
     title: "AssignmentRequest"
     type: "object"
@@ -1076,12 +1092,19 @@ definitions:
         description: "class to which the exam is assigned"
         type: "number"
         format: "integer"
+    required:
+      - "deadline"
+      - "review"
+      - "id_user"
+      - "id_exam"
+      - "id_class"
     example:
       deadline: "12-12-2018"
       review: true
       id_user: 2
       id_exam: 3
       id_class: 1
+      
   Assignment:
     title: "Assignment"
     type: "object"
@@ -1115,6 +1138,8 @@ definitions:
       id_user: 2
       id_exam: 3
       id_class: 1
+      
+      
   SubmissionRequest:
     title: "SubmissionRequest"
     type: "object"
@@ -1136,12 +1161,19 @@ definitions:
       id_assign:
         description: "unique ID of the assignment"
         type: "number"
+    required:
+      - "answer"
+      - "time"
+      - "id_task"
+      - "id_user"
+      - "id_assign"
     example:
       answer: "the correct answer is number 2"
       time: "12-12-2018"
       id_task: 3
       id_user: 1
       id_assign: 4
+      
   Submission:
     title: "Submission"
     type: "object"
@@ -1183,16 +1215,21 @@ definitions:
       comment:
         description: "provides corrections, possible answer or other comments"
         type: "string"
-      id_sub:
+      id_submission:
         description: "unique ID of the submission that is being rewieved"
         type: "number"
       id_creator:
         description: "author of the review"
         type: "number"
+    required:
+      - "mark"
+      - "comment"
+      - "id_submission"
+      - "id_creator"
     example:
       mark: 27
       comment: "good work, well done"
-      id_sub : 1 
+      id_submission : 1 
       id_creator: 2
   Review:
     title: "Review"
@@ -1207,7 +1244,7 @@ definitions:
       comment:
         description: "provides corrections, possible answer or other comments"
         type: "string"
-      id_sub:
+      id_submission:
         description: "unique ID of the submission that is being rewieved"
         type: "number"
       id_creator:
@@ -1217,5 +1254,5 @@ definitions:
       id: 0
       mark: 27
       comment: "good work, well done"
-      id_sub : 1 
+      id_submission : 1 
       id_creator: 2
