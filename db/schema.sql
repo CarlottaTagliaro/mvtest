@@ -62,11 +62,11 @@ CREATE TABLE IF NOT EXISTS Assign(
   Deadline DATE NOT NULL,
   Review BOOLEAN DEFAULT FALSE,
 
-  Id_Teacher INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
-  Id_Exam INTEGER NOT NULL REFERENCES Exam(Id) ON DELETE CASCADE,
-  Id_Class INTEGER NOT NULL REFERENCES Class(Id) ON DELETE CASCADE,
+Id_Teacher INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
+Id_Exam INTEGER NOT NULL REFERENCES Exam(Id) ON DELETE CASCADE,
+Id_Class INTEGER NOT NULL REFERENCES Class(Id) ON DELETE CASCADE,
 
-  PRIMARY KEY(Id)
+PRIMARY KEY(Id)
 );
 
 CREATE TABLE IF NOT EXISTS Submission(
@@ -74,10 +74,10 @@ CREATE TABLE IF NOT EXISTS Submission(
   Time DATE NOT NULL,
   Answer VARCHAR(2048) NOT NULL,
 
-  Id_Assign INTEGER NOT NULL REFERENCES Assign(Id) ON DELETE CASCADE,
-  Id_User INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
-  Id_Task INTEGER NOT NULL REFERENCES Task(Id) ON DELETE CASCADE,
-  PRIMARY KEY(Id)
+Id_Assign INTEGER NOT NULL REFERENCES Assign(Id) ON DELETE CASCADE,
+Id_User INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
+Id_Task INTEGER NOT NULL REFERENCES Task(Id) ON DELETE CASCADE,
+PRIMARY KEY(Id)
 );
 
 CREATE TABLE IF NOT EXISTS Review(
@@ -85,9 +85,9 @@ CREATE TABLE IF NOT EXISTS Review(
   Mark INTEGER NOT NULL,
   Comment VARCHAR(1024),
 
-  Id_Creator INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
-  Id_Submission INTEGER NOT NULL REFERENCES Assign(Id) ON DELETE CASCADE,
-  PRIMARY KEY(Id, Id_Creator, Id_Submission)
+Id_Creator INTEGER NOT NULL REFERENCES Users(Id) ON DELETE CASCADE,
+Id_Submission INTEGER NOT NULL REFERENCES Assign(Id) ON DELETE CASCADE,
+PRIMARY KEY(Id, Id_Creator, Id_Submission)
 );
 
 CREATE OR REPLACE FUNCTION GetExamTasks (_id_exam INTEGER)
@@ -96,14 +96,14 @@ CREATE OR REPLACE FUNCTION GetExamTasks (_id_exam INTEGER)
     Text VARCHAR(4000),
     Id_Type INTEGER,
     Type_Name VARCHAR(255)
-) AS $$
+  ) AS $$
 BEGIN
   RETURN QUERY 
     SELECT Task.Id AS Id_Task, Task.Text, Task.Id_Type, Type.Name AS Type_Name 
     FROM Task JOIN ExamTask ON Task.Id = ExamTask.Id_Task
     JOIN Type ON Task.Id_Type = Type.Id
     WHERE ExamTask.Id_Exam = _id_exam
-  ;
+	;
 END; $$
 LANGUAGE 'plpgsql';
 
@@ -112,15 +112,15 @@ CREATE OR REPLACE FUNCTION GetAssignmentsForUser (_id_user INTEGER)
     Id_Exam INTEGER,
     Id_Creator INTEGER,
     Deadline DATE
-) AS $$
+  ) AS $$
 BEGIN
   RETURN QUERY
     SELECT Exam.Id as Id_Exam, Exam.Id_Creator, Assign.Deadline
     FROM Exam JOIN Assign ON Exam.Id = Assign.Id_Exam
     WHERE _id_user IN (
       SELECT ClassUser.Id_User FROM ClassUser
-      WHERE ClassUser.Id_Class = Assign.Id_Class
+       WHERE ClassUser.Id_Class = Assign.Id_Class
     ) 
-  ;
+	;
 END; $$
 LANGUAGE 'plpgsql';
